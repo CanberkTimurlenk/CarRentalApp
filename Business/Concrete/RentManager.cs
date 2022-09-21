@@ -13,34 +13,35 @@ namespace Business.Concrete
 
     public class RentManager : IRentService
     {
-        IRentDal _RentDal;
+        private readonly IRentDal _rentDal;
+
         //newlemek yerine dependency injection yapıyoruz
         
 
-        public RentManager(IRentDal RentDal)
-        {
-            _RentDal = RentDal;  
+        public RentManager(IRentDal rentDal)  //constructor oluşturduk
+        { 
+            _rentDal = rentDal;   //newlemek yerine dependency injection yapıyoruz
 
         }
 
-        //constructor oluşturduk
+       
 
         public List<Car> GetAll()
         {
-            return _RentDal.GetAll();
+            return _rentDal.GetAll();
 
         }
 
         public List<Car> GetById(int Id)
         {
-            return _RentDal.GetById(Id);
+            return _rentDal.GetById(Id);
 
         }
 
         public void Add(Car car)
         {
 
-            _RentDal.Add(car);
+            _rentDal.Add(car);
 
 
         }
@@ -48,7 +49,7 @@ namespace Business.Concrete
         public void Update(Car car)
         {
 
-            _RentDal.Update(car);
+            _rentDal.Update(car);
 
 
         }
@@ -57,7 +58,7 @@ namespace Business.Concrete
         public void Delete(Car car)
         {
 
-            _RentDal.Delete(car);
+            _rentDal.Delete(car);
 
 
         }
