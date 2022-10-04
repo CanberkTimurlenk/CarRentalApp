@@ -1,0 +1,27 @@
+﻿
+Oluşturulan her nesneye 
+
+add update delete get all 
+
+metodlarını yazmak yerine 
+
+temel bir generic IEntityRepository kullanabiliriz 
+
+bu T ile çalışır, T yi sadece Entityleri alacak şekilde kısıtlarız
+
+Sonradan her bir class kendi Entity yapısıyla birlikte IEntityRepository yi implemente eder
+
+örn : IProductDal:IEntityRepository<Product> 
+
+yada biz entity framework ile generic bir class yaratabiliriz (car,brand,color için)
+
+IEntityRepository sadece method isimlerini ve imzalarını taşır (add,update,delete ) gibi
+
+Entity framework için bunları ayrı
+
+hibarnate kullanıyorsak 
+
+ayrı doldururuz
+
+gibi..
+
