@@ -7,10 +7,10 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ColorController : ControllerBase
+    public class ColorsController : ControllerBase
     {
         private readonly IColorService _colorService;
-        public ColorController(IColorService colorService)
+        public ColorsController(IColorService colorService)
         {
             _colorService = colorService;
 

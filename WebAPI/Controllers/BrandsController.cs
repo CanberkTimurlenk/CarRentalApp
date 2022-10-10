@@ -7,13 +7,15 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RentalController : ControllerBase
-    {
+    public class BrandsController : ControllerBase
 
-        private readonly IRentalService _rentalService;
-        public RentalController(IRentalService rentalService)
+    {
+        private readonly IBrandService _brandService;
+
+        public BrandsController(IBrandService brandService)
         {
-            _rentalService = rentalService; 
+            _brandService = brandService;
+
         }
 
         /*
@@ -28,10 +30,10 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Add(Rental rental)
+        public IActionResult Add(Brand brand)
         {
 
-            var result = _rentalService.Add(rental);
+            var result = _brandService.Add(brand);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -49,9 +51,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Rental rental)
+        public IActionResult Update(Brand brand)
         {
-            var result = _rentalService.Update(rental);
+            var result = _brandService.Update(brand);
 
             if (result.Success)
             {
@@ -64,9 +66,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Rental rental)
+        public IActionResult Delete(Brand brand)
         {
-            var result = _rentalService.Delete(rental);
+            var result = _brandService.Delete(brand);
 
             if (result.Success)
             {
@@ -82,7 +84,7 @@ namespace WebAPI.Controllers
         [HttpPost("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _rentalService.GetById(id);
+            var result = _brandService.GetById(id);
 
             if (result.Success)
             {
@@ -99,7 +101,7 @@ namespace WebAPI.Controllers
         public IActionResult GetAll()
 
         {
-            var result = _rentalService.GetAll();
+            var result = _brandService.GetAll();
 
             if (result.Success)
             {

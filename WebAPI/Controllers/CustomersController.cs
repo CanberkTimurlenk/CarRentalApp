@@ -7,31 +7,32 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class CustomersController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        
+        private readonly ICustomerService _customerService;
+        
+        public CustomersController(ICustomerService customerService)
         {
-            _userService = userService;
+            _customerService = customerService;
         }
 
-
         /*
-         * List of Operations
-         * Add
-         * Update
-         * Delete
-         * GetById
-         * GetAll
-         * 
-         */
+        * List of Operations
+        * Add
+        * Update
+        * Delete
+        * GetById
+        * GetAll
+        * 
+        */
 
 
         [HttpPost("add")]
-        public IActionResult Add(User user)
+        public IActionResult Add(Customer customer)
         {
 
-            var result = _userService.Add(user);
+            var result = _customerService.Add(customer);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -49,9 +50,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(User user)
+        public IActionResult Update(Customer customer)
         {
-            var result = _userService.Update(user);
+            var result = _customerService.Update(customer);
 
             if (result.Success)
             {
@@ -64,9 +65,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(User user)
+        public IActionResult Delete(Customer customer)
         {
-            var result = _userService.Delete(user);
+            var result = _customerService.Delete(customer);
 
             if (result.Success)
             {
@@ -82,7 +83,7 @@ namespace WebAPI.Controllers
         [HttpPost("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _userService.GetById(id);
+            var result = _customerService.GetById(id);
 
             if (result.Success)
             {
@@ -99,7 +100,7 @@ namespace WebAPI.Controllers
         public IActionResult GetAll()
 
         {
-            var result = _userService.GetAll();
+            var result = _customerService.GetAll();
 
             if (result.Success)
             {
