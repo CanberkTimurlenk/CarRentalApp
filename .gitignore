@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/CORE/DataAccess/IEntitiyRepoDefn.txt
+/CORE/CrossCuttingConcerns/CrossCuttingDefn.txt
+/CORE/Aspects/AspectInfo.txt

@@ -14,9 +14,11 @@ namespace Business.ValidationRules.FluentValidation
         public CarValidator()
         {
             
+            
             RuleFor(c => c.CarName)
                 .NotEmpty()
                 .WithMessage("Please specify a car name");
+
 
 
             RuleFor(c => c.DailyPrice)
