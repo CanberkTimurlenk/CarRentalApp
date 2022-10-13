@@ -15,6 +15,7 @@ namespace Business.Constants
         public static readonly string RentalAdded = "Rental Added.";
         public static readonly string UserAdded = "User Added.";
         public static readonly string CustomerAdded = "Customer Added.";
+        public static readonly string CarImageAdded = "CarImage Added.";
 
         public static readonly string DescriptionLengthException = "Description must contain at least 2 characters";
         public static readonly string DailyPriceException = "Daily price must be greater than zero";
@@ -26,6 +27,7 @@ namespace Business.Constants
         public static readonly string RentalUpdated = "Color updated.";
         public static readonly string UserUpdated = "Color updated.";
         public static readonly string CustomerUpdated = "Customer updated.";
+        public static readonly string CarImageUpdated = "CarImage updated.";
 
 
         public static readonly string CarDeleted = "Car deleted.";
@@ -34,19 +36,31 @@ namespace Business.Constants
         public static readonly string RentalDeleted = "Rental deleted.";
         public static readonly string UserDeleted = "User deleted.";
         public static readonly string CustomerDeleted = "Customer deleted.";
+        public static readonly string CarImageDeleted = "CarImage deleted.";
 
 
 
         public static readonly string CarsListed = "Cars listed.";
-        public static readonly string BrandListed = "Brands listed.";
-        public static readonly string ColorListed = "Colors listed.";
+        public static readonly string BrandsListed = "Brands listed.";
+        public static readonly string ColorsListed = "Colors listed.";
         public static readonly string RentalsListed = "Rentals listed.";
         public static readonly string UsersListed = "Users listed.";
         public static readonly string CustomersListed = "Customers listed.";
+        public static readonly string CarImagesListed = "CarImages listed.";
+
+        public static readonly string EmptyImage = "Since there is not such an image, default image will be displayed.";
+
+
 
 
         public static readonly string SuccessListedById = "Object matched with the related Id was fetched.";
 
         public static readonly string InvalidRentalAdd = "The car have already been rented.";
+
+        public static readonly string CarImageLimitExceed = "Image limit exceed for the car. You could only add 5 image per Car. ";
+        
+        public static readonly string SuccessListedByCarId = "Images listed by carId";
+
+
     }
 }
