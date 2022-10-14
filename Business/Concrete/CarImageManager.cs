@@ -17,7 +17,7 @@ using Core.Utilities.Business;
 
 namespace Business.Concrete
 {
-    public class CarImageManager // : ICarImageService
+    public class CarImageManager : ICarImageService
 
     {
         private readonly ICarImageDal _carImageDal;
@@ -31,20 +31,19 @@ namespace Business.Concrete
 
         public IResult Add(IFormFile file, CarImage addedFileEntity)
         {
-            _fileHelper.UploadFile(file, Paths.CarImageFolder);
+
 
             var ruleCheck = BusinessRules.Run(
                 CheckIfCarImageLimitExceed(addedFileEntity.CarId)
 
                 );
 
-            if (ruleCheck != null)
+            if (ruleCheck == null)
             {
-                addedFileEntity.ImagePath = file.FileName;
+
                 addedFileEntity.Date = DateTime.Now;
+                addedFileEntity.ImagePath = _fileHelper.UploadFile(file, Paths.CarImageFolder).Data;
                 _carImageDal.Add(addedFileEntity);
-
-
 
                 return new SuccessResult();
             }
@@ -53,31 +52,52 @@ namespace Business.Concrete
             return new ErrorResult();
 
         }
+        
+
         public IResult Update(IFormFile file, CarImage updatedFileEntity)   // updatedFileEntity indicates the old image
         {
 
-            var oldImageRelativePath = _carImageDal.Get(c => c.CarImageId == updatedFileEntity.CarImageId).ImagePath;
 
-            var result = _fileHelper.UpdateFile(file, Path.Combine(Paths.CarImageFolder, oldImageRelativePath));
 
-            if (result.Success) return new SuccessResult();
+            var carImage = _carImageDal.Get(c => c.CarImageId == updatedFileEntity.CarImageId);
 
+            if (carImage != null )
+            {
+                var oldImageRelativePath = carImage.ImagePath;
+
+                
+
+                var result = _fileHelper.UpdateFile(file, Path.Combine(Paths.CarImageFolder, oldImageRelativePath));
+
+                carImage.Date = DateTime.Now;
+
+                carImage.ImagePath = result.Data;
+
+                _carImageDal.Update(carImage);
+
+                // veritabanındaki ef car image daki değişime bak, resmi değiştiriyorum ama veritabanındaki bilgiler değişiyor mu ?
+                if (result.Success) return new SuccessResult();
+            }   
+            
             return new ErrorResult();
-
-
-
-
         }
+        
+
         public IResult Delete(CarImage carImage)
         {
+            var deletedImage = _carImageDal.Get(c => c.CarImageId == carImage.CarImageId);
+            var deletedImagePath = deletedImage.ImagePath;
 
-            var result = _fileHelper.DeleteFile(Path.Combine(Paths.CarImageFolder, carImage.ImagePath));
+            var result = _fileHelper.DeleteFile(Path.Combine(Paths.CarImageFolder, deletedImagePath));
+
+            _carImageDal.Delete(deletedImage);
 
             if (result.Success) return new SuccessResult(Messages.CarImageDeleted);
             return new ErrorResult();
 
 
         }
+        
         public IDataResult<List<CarImage>> GetByCarId(int carId)    //  If there is not such an image, it returns ErrorResult
         {
             var ruleCheck = BusinessRules.Run(
@@ -86,7 +106,7 @@ namespace Business.Concrete
 
             List<CarImage> result = new List<CarImage>();
 
-            if(!ruleCheck.Success)
+            if (ruleCheck != null)
             {
                 result = new List<CarImage> { GetDefaultImage(carId).Data };
                 return new ErrorDataResult<List<CarImage>>(result, Messages.EmptyImage);
@@ -95,8 +115,9 @@ namespace Business.Concrete
 
             result = _carImageDal.GetAll(c => c.CarId == carId);
             return new SuccessDataResult<List<CarImage>>(result, Messages.SuccessListedById);
-            
+
         }
+        
         public IDataResult<CarImage> GetById(int carImageId)
         {
             var result = _carImageDal.Get(c => c.CarImageId == carImageId);
@@ -104,31 +125,35 @@ namespace Business.Concrete
             return new SuccessDataResult<CarImage>(result, Messages.SuccessListedByCarId);
 
         }
+        
         public IDataResult<List<CarImage>> GetAll()
         {
             var result = _carImageDal.GetAll();
 
             return new SuccessDataResult<List<CarImage>>(result, Messages.CarImagesListed);
         }
+        
+
         /*
-         *      Logics..
+         *      More logics..
          * 
          */
+
         private IResult CheckIfCarImageLimitExceed(int carId)
         {
             var result = _carImageDal.GetAll(c => c.CarId == carId).Count();
 
-            if (result > 5) return new ErrorResult(Messages.CarImageLimitExceed);
+            if (result >= Restrictions.CarImageLimit) return new ErrorResult(Messages.CarImageLimitExceed);
 
             return new SuccessResult();
 
         }
         private IResult CheckIfMentionedCarHaveAnyImage(int carId)
-        
+
         {
             var result = _carImageDal.GetAll(c => c.CarId == carId);
 
-            if(!result.Any())
+            if (!result.Any())
             {
                 return new ErrorResult();
 
@@ -136,18 +161,19 @@ namespace Business.Concrete
 
             return new SuccessResult();
 
-        }
+        }        
         private IDataResult<CarImage> GetDefaultImage(int carId)
         {
 
             return new SuccessDataResult<CarImage>(new CarImage
             {
-                
+
                 CarId = carId,
                 Date = DateTime.Now,
                 ImagePath = "Default.jpg"
-                
+
             });
         }
+        
     }
 }

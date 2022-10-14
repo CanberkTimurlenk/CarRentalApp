@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface ICarImageService : IBusinessFileRepository<IFormFile,CarImage>
+    public interface ICarImageService : IBusinessFileRepository<IFormFile, CarImage>
     {
 
-        
-        IDataResult<CarImage> GetByCarId(int carId);
+
+        IDataResult<List<CarImage>> GetByCarId(int carId);
 
 
 
