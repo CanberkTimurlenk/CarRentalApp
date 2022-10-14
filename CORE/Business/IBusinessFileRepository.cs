@@ -15,8 +15,8 @@ namespace Core.Business
             where TFileEntity : class, IFileEntity, new()
     {
 
-        IResult Add(TFormFile files, TFileEntity addedFileEntity);
-        IResult Update(TFormFile files, TFileEntity updatedFileEntity);
+        IResult Add(TFormFile file, TFileEntity addedFileEntity);
+        IResult Update(TFormFile file, TFileEntity updatedFileEntity);
         IResult Delete(TFileEntity deletedFileEntity);
         IDataResult<List<TFileEntity>> GetAll();
         IDataResult<TFileEntity> GetById(int id);

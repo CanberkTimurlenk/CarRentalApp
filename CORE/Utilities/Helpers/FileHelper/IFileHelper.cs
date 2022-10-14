@@ -13,7 +13,7 @@ namespace Core.Utilities.Helpers.FileHelper
 
         IDataResult<string> UploadFile(IFormFile uploadedFile, string root);
         IResult DeleteFile(string deletedFileAbsoluteFilepath);
-        IResult UpdateFile(IFormFile newFile, string oldFileAbsoluteFilepath);
+        IDataResult<string> UpdateFile (IFormFile newFile, string oldFileAbsoluteFilepath);
         //IDataResult<object> ShowFileContent();
 
 

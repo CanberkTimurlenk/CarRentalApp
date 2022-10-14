@@ -48,7 +48,7 @@ namespace Core.Utilities.Helpers.FileHelper
 
 
                 }
-                return new SuccessDataResult<string>(relativeFilepath);
+                return new SuccessDataResult<string>(relativeFilepath,FileHelperMessages.FileUploaded);    // has two string parameter, indicate call with data
             }
 
             return null;
@@ -76,7 +76,7 @@ namespace Core.Utilities.Helpers.FileHelper
 
 
         }
-        public IResult UpdateFile(IFormFile newFile, string oldFileAbsoluteFilepath)
+        public IDataResult<string> UpdateFile(IFormFile newFile, string oldFileAbsoluteFilepath)
         {
             //
             // Summary:
@@ -90,14 +90,14 @@ namespace Core.Utilities.Helpers.FileHelper
                 File.Delete(oldFileAbsoluteFilepath);
                 
 
-                UploadFile(newFile, newFilePath);
+                var result = UploadFile(newFile, newFilePath).Data;
 
-                return new SuccessResult(FileHelperMessages.FileUpdated);
+                return new SuccessDataResult<string>(result,FileHelperMessages.FileUpdated);
 
 
             }
 
-            return new ErrorResult(FileHelperMessages.FileNotExist);
+            return new ErrorDataResult<string>(message:FileHelperMessages.FileNotExist);
         }
     }
 }
