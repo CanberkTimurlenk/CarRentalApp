@@ -13,6 +13,7 @@ using Core.Utilities.Results.Concrete;
 using Core.CrossCuttingConcerns.Validation;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
@@ -45,7 +46,7 @@ namespace Business.Concrete
         {
 
 
-            return new SuccessDataResult<Car>(_carDal.Get(c => c.CarId == id), Messages.SuccessListedById);
+            return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == id), Messages.SuccessListedById);
             //return _carDal.Get(c => c.CarId == id);
 
             //  Burda paramatre olarak belirttiğimiz id aslında primary key yani o id ye sahip
@@ -54,7 +55,7 @@ namespace Business.Concrete
             //  listeye gerek yok..
 
         }
-
+        [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {

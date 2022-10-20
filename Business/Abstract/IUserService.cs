@@ -1,4 +1,6 @@
 ﻿using Core.Business;
+using Core.Entities.Concrete;
+using Core.Utilities.Results.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,10 @@ namespace Business.Abstract
 {
     public interface IUserService : IBusinessRepository<User>
     {
+
+        IDataResult<List<OperationClaim>> GetOperationClaims (User user);
+        IDataResult<User> GetByEmail(string email);
+
 
     }
 }

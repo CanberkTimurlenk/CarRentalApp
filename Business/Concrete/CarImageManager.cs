@@ -59,7 +59,7 @@ namespace Business.Concrete
 
 
 
-            var carImage = _carImageDal.Get(c => c.CarImageId == updatedFileEntity.CarImageId);
+            var carImage = _carImageDal.Get(c => c.Id == updatedFileEntity.Id);
 
             if (carImage != null )
             {
@@ -85,7 +85,7 @@ namespace Business.Concrete
 
         public IResult Delete(CarImage carImage)
         {
-            var deletedImage = _carImageDal.Get(c => c.CarImageId == carImage.CarImageId);
+            var deletedImage = _carImageDal.Get(c => c.Id == carImage.Id);
             var deletedImagePath = deletedImage.ImagePath;
 
             var result = _fileHelper.DeleteFile(Path.Combine(Paths.CarImageFolder, deletedImagePath));
@@ -120,7 +120,7 @@ namespace Business.Concrete
         
         public IDataResult<CarImage> GetById(int carImageId)
         {
-            var result = _carImageDal.Get(c => c.CarImageId == carImageId);
+            var result = _carImageDal.Get(c => c.Id == carImageId);
 
             return new SuccessDataResult<CarImage>(result, Messages.SuccessListedByCarId);
 
