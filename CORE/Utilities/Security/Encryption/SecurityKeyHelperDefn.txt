@@ -1,0 +1,11 @@
+﻿SecurityKeyHelper bizim api tarafındaki 
+
+appsettings.json daki string olan security key i byte array haline getirir
+
+çünkü string lerle encyription a parametre geçemiyoruz, parametre geçebiliyor olmamız için bize byte array gerekli..
+
+new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey))
+
+securitykey imizin byte ını alıp onu symmetric key security key haline getiriyoruz
+
+istersen symmetric key in ne olduğunu araştırabilirsin.. 
