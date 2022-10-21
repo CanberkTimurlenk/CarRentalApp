@@ -4,7 +4,7 @@ using Business.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete;
 using DataAccess.Concrete.EntityFramework;
-
+using System.Text;
 
 namespace Program;
 
@@ -13,12 +13,12 @@ namespace Program;
 
     static void Main(string[] args)
     {
-
+       
 
 
     }
-        
- 
-   
+
+
+
 }
 

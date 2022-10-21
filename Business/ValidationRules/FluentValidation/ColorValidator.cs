@@ -14,7 +14,7 @@ namespace Business.ValidationRules.FluentValidation
         public ColorValidator()
         {
 
-            RuleFor(c => c.ColorId)
+            RuleFor(c => c.Id)
                 .NotEmpty();
 
 

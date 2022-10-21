@@ -12,6 +12,7 @@ using Core.Utilities.Results.Abstract;
 using Core.Aspects.Autofac.Validation;
 using Business.ValidationRules.FluentValidation;
 using Business.BusinessAspects.Autofac;
+using Core.Aspects.Autofac.Performance;
 
 namespace Business.Concrete
 {
@@ -26,8 +27,10 @@ namespace Business.Concrete
         }
         [SecuredOperation("brand.add,admin")]
         [ValidationAspect(typeof(BrandValidator))]
+        [PerformanceAspect(5)]        
         public IResult Add(Brand brand)
         {
+            //Thread.Sleep(2000); to test PerformanceAspect
             _brandDal.Add(brand);
             return new SuccessResult(Messages.BrandAdded);
         }

@@ -14,7 +14,7 @@ namespace Business.ValidationRules.FluentValidation
         public CustomerValidator()
         {
 
-            RuleFor(c => c.CustomerId)
+            RuleFor(c => c.Id)
                 .NotEmpty()
                 .WithMessage("Please specify a customer id");
 

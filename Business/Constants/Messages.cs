@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -60,7 +61,14 @@ namespace Business.Constants
         public static readonly string CarImageLimitExceed = "Image limit exceed for the car. You could only add 5 image per Car. ";
         
         public static readonly string SuccessListedByCarId = "Images listed by carId";
-
-
+        public static readonly string UserOperationClaimNotFound = "User does not have an operation Claim";
+        public static readonly string DoesNotMatchAnUserAccount = "Does not match with an user account.";
+        public static readonly string UserNotExist ="User does not exist";
+        public static readonly string UserExists ="User exists";
+        public static readonly string WrongPassword = "Wrong Password";
+        public static readonly string SuccessfullLogin = "Correct Password, login successfully";
+        public static readonly string UserRegistered = "User registered successfully";
+        public static readonly string AccessTokenCreated = "Access Token Created.";
+        public static readonly string AuthorizationDenied ="Authorization denied.";
     }
 }

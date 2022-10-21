@@ -364,3 +364,7 @@ FodyWeavers.xsd
 /CORE/DataAccess/IEntitiyRepoDefn.txt
 /CORE/CrossCuttingConcerns/CrossCuttingDefn.txt
 /CORE/Aspects/AspectInfo.txt
+/CORE/Aspects/Autofac/Cache/CacheDefn.txt
+/CORE/Aspects/Autofac/Performance/PerformanceDefn.txt
+/CORE/Aspects/Autofac/Transaction/TransactionDefn.txt
+/CORE/CrossCuttingConcerns/Caching/CacheDefn.txt

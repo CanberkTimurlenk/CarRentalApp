@@ -14,7 +14,7 @@ namespace Business.ValidationRules.FluentValidation
         public RentalValidator()
         {
 
-            RuleFor(r => r.RentalId)
+            RuleFor(r => r.Id)
                 .NotEmpty()
                 .WithMessage("Please specify a car name");
 
