@@ -11,7 +11,7 @@ namespace DataAccess.Abstract
 {
     public interface ICarDal : IEntityRepository<Car>
     {
-        public List<CarDetailDto> GetAllCarDetails();
+        List<CarDetailDto> GetAllCarDetails();
         // yeni oluşturduğumuz CarDetailDto isimli entity class ı istediğimiz verileri prop olarak tutuyor
         // return type ı bu class ait objectler olan bir list 
         // parametre almıyor tüm araçların detayını dökecek.

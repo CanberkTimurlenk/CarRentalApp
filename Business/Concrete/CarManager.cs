@@ -14,6 +14,7 @@ using Core.CrossCuttingConcerns.Validation;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Business.BusinessAspects.Autofac;
+using Core.Aspects.Autofac.Cache;
 
 namespace Business.Concrete
 {
@@ -33,7 +34,7 @@ namespace Business.Concrete
         }
 
 
-
+        [CacheAspect]
         public IDataResult<List<Car>> GetAll()
         {
 
@@ -55,6 +56,7 @@ namespace Business.Concrete
             //  listeye gerek yok..
 
         }
+        
         [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
@@ -103,6 +105,7 @@ namespace Business.Concrete
 
         }
 
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetAllCarDetails()
         {
 

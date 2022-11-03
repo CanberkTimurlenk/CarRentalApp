@@ -23,6 +23,7 @@ namespace WebAPI.Controllers
          * Delete
          * GetById
          * GetAll
+         * GetAllRentalDetails
          * 
          */
 
@@ -100,6 +101,22 @@ namespace WebAPI.Controllers
 
         {
             var result = _rentalService.GetAll();
+
+            if (result.Success)
+            {
+                return Ok(result);
+
+            }
+
+            return BadRequest(result);
+
+        }
+
+
+        [HttpGet("getallrentaldetails")]
+        public IActionResult GetAllRentalDetails()
+        {
+            var result = _rentalService.GetAllRentalDetails();
 
             if (result.Success)
             {

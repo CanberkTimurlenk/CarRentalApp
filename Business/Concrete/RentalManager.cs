@@ -1,11 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Cache;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Concrete.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +61,7 @@ namespace Business.Concrete
 
         }
 
+        [CacheAspect]
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentDal.GetAll(), Messages.RentalsListed);
@@ -74,6 +77,18 @@ namespace Business.Concrete
         {
             _rentDal.Update(updatedItem);
             return new SuccessResult(Messages.RentalUpdated);
+        }
+
+        [CacheAspect]
+        public IDataResult<List<RentalDetailDto>> GetAllRentalDetails()
+        {
+
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentDal.GetAllRentalDetails(),Messages.SuccessListedRentals);
+
+
+            
+
+            
         }
 
 

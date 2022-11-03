@@ -70,5 +70,6 @@ namespace Business.Constants
         public static readonly string UserRegistered = "User registered successfully";
         public static readonly string AccessTokenCreated = "Access Token Created.";
         public static readonly string AuthorizationDenied ="Authorization denied.";
+        public static readonly string SuccessListedRentals = "Rentals listed.";
     }
 }
