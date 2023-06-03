@@ -62,6 +62,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
@@ -72,3 +73,4 @@ app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
+
