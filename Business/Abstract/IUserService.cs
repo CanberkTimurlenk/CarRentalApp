@@ -13,7 +13,7 @@ namespace Business.Abstract
     public interface IUserService : IBusinessRepository<User>
     {
 
-        IDataResult<List<OperationClaim>> GetOperationClaims (User user);
+        IDataResult<IEnumerable<OperationClaim>> GetOperationClaims (User user);
         IDataResult<User> GetByEmail(string email);
 
 
