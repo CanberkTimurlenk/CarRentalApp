@@ -48,7 +48,7 @@ namespace Business.Constants
         public static readonly string UsersListed = "Users listed.";
         public static readonly string CustomersListed = "Customers listed.";
         public static readonly string CarImagesListed = "CarImages listed.";
-
+        
         public static readonly string EmptyImage = "Since there is not such an image, default image will be displayed.";
 
 
@@ -64,6 +64,9 @@ namespace Business.Constants
         public static readonly string UserOperationClaimNotFound = "User does not have an operation Claim";
         public static readonly string DoesNotMatchAnUserAccount = "Does not match with an user account.";
         public static readonly string UserNotExist ="User does not exist";
+        public static readonly string CartItemNotExist = "Cart item does not exist.";
+
+
         public static readonly string UserExists ="User exists";
         public static readonly string WrongPassword = "Wrong Password";
         public static readonly string SuccessfullLogin = "Correct Password, login successfully";
