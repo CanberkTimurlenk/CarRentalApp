@@ -12,7 +12,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfRentalDal : EfEntityRepositoryBase<Rental,CarAppContext> , IRentalDal
     {
-        public List<RentalDetailDto> GetAllRentalDetails()
+        public IEnumerable<RentalDetailDto> GetAllRentalDetails()
         {
             using (CarAppContext context = new CarAppContext())
             {

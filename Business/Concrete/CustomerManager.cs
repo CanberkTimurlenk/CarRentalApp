@@ -40,9 +40,9 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CustomerDeleted);
         }
 
-        public IDataResult<List<Customer>> GetAll()
+        public IDataResult<IEnumerable<Customer>> GetAll()
         {
-            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll(), Messages.CustomersListed);
+            return new SuccessDataResult<IEnumerable<Customer>>(_customerDal.GetAll(), Messages.CustomersListed);
           
         }
 

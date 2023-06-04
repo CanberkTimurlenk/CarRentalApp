@@ -62,9 +62,9 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        public IDataResult<List<Rental>> GetAll()
+        public IDataResult<IEnumerable<Rental>> GetAll()
         {
-            return new SuccessDataResult<List<Rental>>(_rentDal.GetAll(), Messages.RentalsListed);
+            return new SuccessDataResult<IEnumerable<Rental>>(_rentDal.GetAll(), Messages.RentalsListed);
         }
 
         public IDataResult<Rental> GetById(int id)
@@ -80,10 +80,10 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
-        public IDataResult<List<RentalDetailDto>> GetAllRentalDetails()
+        public IDataResult<IEnumerable<RentalDetailDto>> GetAllRentalDetails()
         {
 
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentDal.GetAllRentalDetails(),Messages.SuccessListedRentals);
+            return new SuccessDataResult<IEnumerable<RentalDetailDto>>(_rentDal.GetAllRentalDetails(),Messages.SuccessListedRentals);
 
 
             

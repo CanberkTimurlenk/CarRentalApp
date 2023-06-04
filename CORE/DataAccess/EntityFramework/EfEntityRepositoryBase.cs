@@ -67,7 +67,7 @@ namespace Core.DataAccess.EntityFramework
 
         }
 
-        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
+        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
             //  heap tarafındaki CarpAppContext using bloğu using() {} tamamlandıktan sonra bellekten yok edilecek
             //  IDisposible

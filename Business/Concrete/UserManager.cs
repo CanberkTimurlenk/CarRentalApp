@@ -39,10 +39,10 @@ namespace Business.Concrete
             _userDal.Delete(deletedItem);
             return new SuccessResult(Messages.UserDeleted);
         }
-        public IDataResult<List<User>> GetAll()
+        public IDataResult<IEnumerable<User>> GetAll()
         {
 
-            return new SuccessDataResult<List<User>>(_userDal.GetAll(),Messages.UsersListed);
+            return new SuccessDataResult<IEnumerable<User>>(_userDal.GetAll(),Messages.UsersListed);
         }
         public IDataResult<User> GetByEmail(string email)
         {
@@ -62,16 +62,16 @@ namespace Business.Concrete
 
             
         }
-        public IDataResult<List<OperationClaim>> GetOperationClaims(User user)
+        public IDataResult<IEnumerable<OperationClaim>> GetOperationClaims(User user)
         {
             var result = _userDal.GetOperationClaims(user);
 
             if (!result.Any())
             { 
-                return new ErrorDataResult<List<OperationClaim>>(result,Messages.UserOperationClaimNotFound); 
+                return new ErrorDataResult<IEnumerable<OperationClaim>>(result,Messages.UserOperationClaimNotFound); 
             }
 
-            return new SuccessDataResult<List<OperationClaim>>(result);
+            return new SuccessDataResult<IEnumerable<OperationClaim>>(result);
 
             
 

@@ -18,7 +18,7 @@ namespace Core.Business
         IResult Add(TFormFile file, TFileEntity addedFileEntity);
         IResult Update(TFormFile file, TFileEntity updatedFileEntity);
         IResult Delete(TFileEntity deletedFileEntity);
-        IDataResult<List<TFileEntity>> GetAll();
+        IDataResult<IEnumerable<TFileEntity>> GetAll();
         IDataResult<TFileEntity> GetById(int id);
 
 

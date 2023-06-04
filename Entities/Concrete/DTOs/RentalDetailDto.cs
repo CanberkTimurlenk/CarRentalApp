@@ -9,8 +9,7 @@ namespace Entities.Concrete.DTOs
     public class RentalDetailDto
     {
         public int Id { get; set; }
-        public int CarId { get; set; }        
-        public int PaymentId { get; set; }
+        public int CarId { get; set; }                
         public int CustomerId { get; set; }
         public int TotalAmount { get; set; }        
         public string BrandName { get; set; }

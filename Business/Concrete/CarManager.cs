@@ -35,10 +35,10 @@ namespace Business.Concrete
 
 
         [CacheAspect]
-        public IDataResult<List<Car>> GetAll()
+        public IDataResult<IEnumerable<Car>> GetAll()
         {
 
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarsListed);
+            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(), Messages.CarsListed);
             //return _carDal.GetAll();
 
         }
@@ -92,24 +92,24 @@ namespace Business.Concrete
         }
 
 
-        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        public IDataResult<IEnumerable<Car>> GetCarsByColorId(int id)
         {
 
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == id).ToList());
+            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.ColorId == id).ToList());
 
         }
 
-        public IDataResult<List<Car>> GetCarsByBrandId(int id)
+        public IDataResult<IEnumerable<Car>> GetCarsByBrandId(int id)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.BrandId == id).ToList());
+            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.BrandId == id).ToList());
 
         }
 
         [CacheAspect]
-        public IDataResult<List<CarDetailDto>> GetAllCarDetails()
+        public IDataResult<IEnumerable<CarDetailDto>> GetAllCarDetails()
         {
 
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetAllCarDetails());
+            return new SuccessDataResult<IEnumerable<CarDetailDto>>(_carDal.GetAllCarDetails());
 
         }
 

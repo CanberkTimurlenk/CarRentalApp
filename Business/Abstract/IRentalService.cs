@@ -12,7 +12,7 @@ namespace Business.Abstract
 {
     public interface IRentalService : IBusinessRepository<Rental>
     {
-        IDataResult<List<RentalDetailDto>> GetAllRentalDetails();
+        IDataResult<IEnumerable<RentalDetailDto>> GetAllRentalDetails();
 
     }
 }

@@ -45,9 +45,9 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<List<Color>> GetAll()
+        public IDataResult<IEnumerable<Color>> GetAll()
         {
-            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(),Messages.ColorsListed);
+            return new SuccessDataResult<IEnumerable<Color>>(_colorDal.GetAll(),Messages.ColorsListed);
             //return _colorDal.GetAll();
         }
 

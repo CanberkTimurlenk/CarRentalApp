@@ -19,7 +19,7 @@ namespace DataAccess.Concrete.EntityFramework
     //  EfCarDal inherits EfEntityRepositoryBase with "Car" and "CarpAppContext" and implements "ICarDal"
 
     {
-        public List<CarDetailDto> GetAllCarDetails()
+        public IEnumerable<CarDetailDto> GetAllCarDetails()
         {
             using (CarAppContext context = new CarAppContext())
             {

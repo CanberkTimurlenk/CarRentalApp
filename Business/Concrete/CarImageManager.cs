@@ -98,23 +98,23 @@ namespace Business.Concrete
 
         }
         
-        public IDataResult<List<CarImage>> GetByCarId(int carId)    //  If there is not such an image, it returns ErrorResult
+        public IDataResult<IEnumerable<CarImage>> GetByCarId(int carId)    //  If there is not such an image, it returns ErrorResult
         {
             var ruleCheck = BusinessRules.Run(
                 CheckIfMentionedCarHaveAnyImage(carId)
                 );
 
-            List<CarImage> result = new List<CarImage>();
+            IEnumerable<CarImage> result = new List<CarImage>();
 
             if (ruleCheck != null)
             {
                 result = new List<CarImage> { GetDefaultImage(carId).Data };
-                return new ErrorDataResult<List<CarImage>>(result, Messages.EmptyImage);
+                return new ErrorDataResult<IEnumerable<CarImage>>(result, Messages.EmptyImage);
 
             }
 
             result = _carImageDal.GetAll(c => c.CarId == carId);
-            return new SuccessDataResult<List<CarImage>>(result, Messages.SuccessListedById);
+            return new SuccessDataResult<IEnumerable<CarImage>>(result, Messages.SuccessListedById);
 
         }
         
@@ -122,15 +122,15 @@ namespace Business.Concrete
         {
             var result = _carImageDal.Get(c => c.Id == carImageId);
 
-            return new SuccessDataResult<CarImage>(result, Messages.SuccessListedByCarId);
+            return new SuccessDataResult<CarImage>(result, Messages.SuccessListedById);
 
         }
         
-        public IDataResult<List<CarImage>> GetAll()
+        public IDataResult<IEnumerable<CarImage>> GetAll()
         {
             var result = _carImageDal.GetAll();
 
-            return new SuccessDataResult<List<CarImage>>(result, Messages.CarImagesListed);
+            return new SuccessDataResult<IEnumerable<CarImage>>(result, Messages.CarImagesListed);
         }
         
 

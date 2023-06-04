@@ -15,7 +15,7 @@ namespace Core.Business
         IResult Update(TEntity updatedItem);
         IResult Delete(TEntity deletedItem);
         IDataResult<TEntity> GetById(int id);
-        IDataResult<List<TEntity>> GetAll();
+        IDataResult<IEnumerable<TEntity>> GetAll();
 
 
     }

@@ -12,7 +12,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfUserDal : EfEntityRepositoryBase<User, CarAppContext>, IUserDal
     {
-        public List<OperationClaim> GetOperationClaims(User user)
+        public IEnumerable<OperationClaim> GetOperationClaims(User user)
         {
             using (var context = new CarAppContext())
             {
