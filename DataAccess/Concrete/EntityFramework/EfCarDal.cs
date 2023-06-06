@@ -9,6 +9,8 @@ using Entities.Concrete;
 using Core.DataAccess.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Entities.Concrete.DTOs;
+using DataAccess.Concrete.EntityFramework.Contexts;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -19,6 +21,12 @@ namespace DataAccess.Concrete.EntityFramework
     //  EfCarDal inherits EfEntityRepositoryBase with "Car" and "CarpAppContext" and implements "ICarDal"
 
     {
+        public EfCarDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
+            : base(contextFactory)
+        {
+
+        }
+
         public IEnumerable<CarDetailDto> GetAllCarDetails()
         {
             using (CarAppContext context = new CarAppContext())

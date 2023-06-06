@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using Core.Entities;
+using Entities.Abstract;
 
 namespace Core.DataAccess
 {

@@ -41,10 +41,10 @@ namespace Business.Concrete
             return new SuccessResult(Messages.BrandDeleted);
         }
 
-        public IDataResult<Brand> GetById(int id)
+        public IDataResult<Brand> GetById(int brandId)
         {
 
-            return new SuccessDataResult<Brand>(_brandDal.Get(c => c.Id == id),Messages.SuccessListedById);
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == brandId),Messages.SuccessListedById);
             
         }
 

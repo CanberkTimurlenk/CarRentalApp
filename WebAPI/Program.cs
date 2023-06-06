@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Core.Utilities.IoC;
 using Core.Extensions;
+using WebAPI.ContextFactory;
+using Microsoft.EntityFrameworkCore.Design;
+using DataAccess.Concrete.EntityFramework.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddDependencyResolvers(new ICoreModule[] { new CoreModule() });
 
+builder.Services.AddSingleton<IDesignTimeDbContextFactory<CarAppContext>> (new CarAppContextFactory());
 
 var app = builder.Build();
 

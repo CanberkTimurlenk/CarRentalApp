@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Core.Entities;
+using Entities.Abstract;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace Core.DataAccess.EntityFramework
 {
@@ -16,12 +18,18 @@ namespace Core.DataAccess.EntityFramework
         
         where TEntity : class,IEntity,new()
         where TContext : DbContext, new()
+
         
     {
+        private readonly IDesignTimeDbContextFactory<TContext> _contextFactory;
+        public EfEntityRepositoryBase(IDesignTimeDbContextFactory<TContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
     
         public void Add(TEntity entity)
         {
-            using (TContext context = new TContext())
+            using (var context = _contextFactory.CreateDbContext(new String[0]))
             {
                 var addedEntity = context.Entry(entity);
                 addedEntity.State = EntityState.Added; //state i added olarak deklare ettik, saveChanges çağrıldığı vakit eklenece
@@ -33,7 +41,7 @@ namespace Core.DataAccess.EntityFramework
 
         public void Delete(TEntity entity)
         {
-            using (TContext context = new TContext())
+            using (var context = _contextFactory.CreateDbContext(new String[0]))
             {
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;
@@ -45,7 +53,7 @@ namespace Core.DataAccess.EntityFramework
         }
         public void Update(TEntity entity)
         {
-            using (TContext context = new TContext())
+            using (var context = _contextFactory.CreateDbContext(new String[0]))
             {
                 var updatedEntity = context.Entry(entity);
                 updatedEntity.State = EntityState.Modified;
@@ -59,7 +67,7 @@ namespace Core.DataAccess.EntityFramework
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            using (TContext context = new TContext())
+            using (var context = _contextFactory.CreateDbContext(new String[0]))
             {
                 return context.Set<TEntity>().SingleOrDefault(filter);
 
@@ -72,7 +80,7 @@ namespace Core.DataAccess.EntityFramework
             //  heap tarafındaki CarpAppContext using bloğu using() {} tamamlandıktan sonra bellekten yok edilecek
             //  IDisposible
 
-            using (TContext context = new TContext())
+            using (var context = _contextFactory.CreateDbContext(new String[0]))
             {
                 return filter == null
                     ? context.Set<TEntity>().ToList() //null ise tümünü getir return et

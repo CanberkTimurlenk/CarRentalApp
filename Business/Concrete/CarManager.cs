@@ -43,12 +43,12 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<Car> GetById(int id)
+        public IDataResult<Car> GetById(int Id)
         {
 
 
-            return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == id), Messages.SuccessListedById);
-            //return _carDal.Get(c => c.CarId == id);
+            return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == Id), Messages.SuccessListedById);
+            //return _carDal.Get(c => c.Id == id);
 
             //  Burda paramatre olarak belirttiğimiz id aslında primary key yani o id ye sahip
             //  tek bir car mevcut, lambda expression olarak bunu bulduruyoruz
@@ -57,7 +57,7 @@ namespace Business.Concrete
 
         }
         
-        [SecuredOperation("car.add,admin")]
+        //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
@@ -92,16 +92,16 @@ namespace Business.Concrete
         }
 
 
-        public IDataResult<IEnumerable<Car>> GetCarsByColorId(int id)
+        public IDataResult<IEnumerable<Car>> GetCarsByColorId(int colorId)
         {
 
-            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.ColorId == id).ToList());
+            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.ColorId == colorId).ToList());
 
         }
 
-        public IDataResult<IEnumerable<Car>> GetCarsByBrandId(int id)
+        public IDataResult<IEnumerable<Car>> GetCarsByBrandId(int brandId)
         {
-            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.BrandId == id).ToList());
+            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.BrandId == brandId).ToList());
 
         }
 

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Entities;
-using Core.Utilities.Results.Abstract;
+﻿using Core.Utilities.Results.Abstract;
+using Entities.Abstract;
 
 namespace Core.Business
 {

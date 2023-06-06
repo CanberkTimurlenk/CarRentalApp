@@ -1,4 +1,4 @@
-﻿using Core.Entities.Concrete;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,8 @@ using Core.Utilities.Security.Encryption;
 using System.Security.Claims;
 using Core.Extensions;
 using Microsoft.Extensions.Configuration;
+using Core.Entities.Concrete;
+using Entities.Concrete;
 
 namespace Core.Utilities.Security.Jwt
 {

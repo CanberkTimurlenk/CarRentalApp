@@ -7,11 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities.Concrete;
+using DataAccess.Concrete.EntityFramework.Contexts;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace DataAccess.Concrete.EntityFramework
 {
     public class EfUserDal : EfEntityRepositoryBase<User, CarAppContext>, IUserDal
     {
+        public EfUserDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
+            : base(contextFactory)
+        {
+
+        }
         public IEnumerable<OperationClaim> GetOperationClaims(User user)
         {
             using (var context = new CarAppContext())

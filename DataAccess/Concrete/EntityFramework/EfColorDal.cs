@@ -8,7 +8,8 @@ using Entities.Concrete;
 using Core.DataAccess.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-
+using DataAccess.Concrete.EntityFramework.Contexts;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -18,6 +19,11 @@ namespace DataAccess.Concrete.EntityFramework
     //  EntityFramework methodlarını tutar (Repository)
     //  EfColorDal inherits EfEntityRepositoryBase with "Color" and "CarpAppContext" and implements "IColorDal"
     {
+        public EfColorDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
+            : base(contextFactory)
+        {
+
+        }
 
 
 
