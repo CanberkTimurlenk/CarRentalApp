@@ -51,8 +51,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddDependencyResolvers(new ICoreModule[] { new CoreModule() });
-
 builder.Services.AddSingleton<IDesignTimeDbContextFactory<CarAppContext>> (new CarAppContextFactory());
+
+//  Extension Methods
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
