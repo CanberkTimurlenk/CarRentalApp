@@ -2,8 +2,8 @@
 using Core.Entities.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Entities.Concrete;
 using Entities.Concrete.DTOs;
+using Entities.Concrete.Models;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;

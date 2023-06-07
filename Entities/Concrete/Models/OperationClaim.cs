@@ -1,12 +1,11 @@
-﻿using Entities.Concrete;
-using Entities.Abstract;
+﻿using Entities.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.Models
 {
     public class OperationClaim : IEntity
     {

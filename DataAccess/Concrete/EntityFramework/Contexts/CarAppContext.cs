@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Entities.Concrete;
 using Core.Entities.Concrete;
 using DataAccess.Concrete.EntityFramework.Contexts.Extensions;
+using Entities.Concrete.Models;
 
 namespace DataAccess.Concrete.EntityFramework.Contexts
 {

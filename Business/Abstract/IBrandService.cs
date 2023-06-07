@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Business;
-using Entities.Concrete;
+using Entities.Concrete.Models;
 
 namespace Business.Abstract
 {

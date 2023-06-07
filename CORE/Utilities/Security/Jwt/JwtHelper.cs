@@ -11,7 +11,7 @@ using System.Security.Claims;
 using Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Core.Entities.Concrete;
-using Entities.Concrete;
+using Entities.Concrete.Models;
 
 namespace Core.Utilities.Security.Jwt
 {

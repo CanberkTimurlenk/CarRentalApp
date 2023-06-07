@@ -1,7 +1,7 @@
 ﻿using Core.DataAccess;
 using Core.Entities.Concrete;
-using Entities.Concrete;
 using Entities.Concrete.DTOs;
+using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

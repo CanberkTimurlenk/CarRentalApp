@@ -1,6 +1,6 @@
 ﻿using Entities.Abstract;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.Models
 {
     public class UserOperationClaim : IEntity
     {

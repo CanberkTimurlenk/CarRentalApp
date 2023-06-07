@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Entities.Abstract;
 
-namespace Entities.Concrete
+namespace Entities.Concrete.Models
 {
     public class Brand : IEntity
     {
