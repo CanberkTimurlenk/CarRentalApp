@@ -40,13 +40,17 @@ namespace WebAPI.Utilities.AutoMapper
             CreateMap<CustomerDtoForManipulation, Customer>();
 
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<UserDtoForManipulation, User>();
+            CreateMap<UserDtoForManipulation, User>().ReverseMap();
 
             CreateMap<OperationClaim, OperationClaimDto>().ReverseMap();
             CreateMap<OperationClaimDtoForManipulation, OperationClaim>();
 
             CreateMap<UserOperationClaim, UserOperationClaimDto>().ReverseMap();
             CreateMap<UserOperationClaimDtoForManipulation, UserOperationClaim>();
+
+            CreateMap<UserDtoForManipulation, UserDto>();
+
+
 
         }
     }
