@@ -9,7 +9,7 @@ using Entities.Concrete.Models;
 
 namespace DataAccess.Abstract
 {
-    public interface IUserDal : IEntityRepository<User>
+    public interface IUserDal : IRepositoryBase<User>
     {
         IEnumerable<OperationClaim> GetOperationClaims(User user);
     }

@@ -9,7 +9,7 @@ using Entities.Concrete.Models;
 
 namespace DataAccess.Abstract
 {
-    public interface ICarDal : IEntityRepository<Car>
+    public interface ICarDal : IRepositoryBase<Car>
     {
         IEnumerable<CarDetailDto> GetAllCarDetails();
         // yeni oluşturduğumuz CarDetailDto isimli entity class ı istediğimiz verileri prop olarak tutuyor

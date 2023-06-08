@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
-using Core.Entities;
+﻿using System.Linq.Expressions;
 using Entities.Abstract;
 
 namespace Core.DataAccess
 {
-    public interface IEntityRepository<T> where T : class, IEntity, new()
+    public interface IRepositoryBase<T> where T : class, IEntity, new()
     {
 
         IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null);

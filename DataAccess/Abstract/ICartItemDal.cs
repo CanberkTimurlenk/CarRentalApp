@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface ICartItemDal : IEntityRepository<CartItem>
+    public interface ICartItemDal : IRepositoryBase<CartItem>
     {
         IEnumerable<CartItemDetailDto> GetAllCartItemDetails(Expression<Func<CartItemDetailDto, bool>> filter = null);
     } 

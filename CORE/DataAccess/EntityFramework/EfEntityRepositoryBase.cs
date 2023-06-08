@@ -14,7 +14,7 @@ namespace Core.DataAccess.EntityFramework
 {
     //  car, brand, color için gerekli methodların içeriğini barındıran generic repository
 
-    public class EfEntityRepositoryBase<TEntity,TContext> : IEntityRepository<TEntity>
+    public class EfEntityRepositoryBase<TEntity,TContext> : IRepositoryBase<TEntity>
         
         where TEntity : class,IEntity,new()
         where TContext : DbContext, new()
@@ -43,7 +43,7 @@ namespace Core.DataAccess.EntityFramework
         {
             using (var context = _contextFactory.CreateDbContext(new String[0]))
             {
-                var deletedEntity = context.Entry(entity);
+                var deletedEntity = context.Entry(entity);                
                 deletedEntity.State = EntityState.Deleted;
                 context.SaveChanges();
 

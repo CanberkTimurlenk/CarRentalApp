@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface IRentalDal : IEntityRepository<Rental>
+    public interface IRentalDal : IRepositoryBase<Rental>
     {
         IEnumerable<RentalDetailDto> GetAllRentalDetails();
 
