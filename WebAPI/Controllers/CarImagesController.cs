@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete.DTOs.CarImage;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,29 +17,29 @@ namespace WebAPI.Controllers
         {
 
             _carImageService = carImageService;
-           
 
-        }    
+
+        }
 
         [HttpPost("add")]
-        public IActionResult Add([FromForm] IFormFile newFile, [FromForm] CarImage newCarImage)
+        public IActionResult Add([FromForm] IFormFile newFile, [FromForm] CarImageDtoForManipulation carImageDtoForManipulation)
         {
 
             if (newFile != null)
             {
-                var result = _carImageService.Add(newFile, newCarImage);
+                var result = _carImageService.Add(newFile, carImageDtoForManipulation);
 
                 if (result.Success) return Ok();
-                
+
             }
 
             return BadRequest();
         }
         [HttpPost("update")]
-        public IActionResult Update([FromForm] IFormFile newFile,[FromForm] CarImage updatedCarImage)
+        public IActionResult Update([FromForm] IFormFile newFile, int id, [FromForm] CarImageDtoForManipulation carImageDtoForManipulation)
         {
 
-            var result = _carImageService.Update(newFile , updatedCarImage);
+            var result = _carImageService.Update(newFile, id, carImageDtoForManipulation);
 
             if (result.Success)
             {
@@ -49,12 +50,12 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
 
-        }       
+        }
         [HttpPost("delete")]
-        public IActionResult Delete([FromForm] CarImage carImage)
+        public IActionResult Delete([FromForm] int id)
         {
 
-            var result = _carImageService.Delete(carImage);
+            var result = _carImageService.Delete(id);
 
             if (result.Success)
             {
@@ -65,7 +66,7 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
 
-        }                
+        }
         [HttpGet("getbycarid")]
         public IActionResult GetByCarId([FromForm] int carImageId)
         {

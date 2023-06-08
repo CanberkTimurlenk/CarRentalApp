@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
+using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,10 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Add(User user)
+        public IActionResult Add(UserDtoForManipulation userDtoForManipulation)
         {
 
-            var result = _userService.Add(user);
+            var result = _userService.Add(userDtoForManipulation);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -51,24 +52,23 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(User user)
+        public IActionResult Update(int id,UserDtoForManipulation userDtoForManipulation)
         {
-            var result = _userService.Update(user);
+            var result = _userService.Update(id,userDtoForManipulation);
 
             if (result.Success)
             {
                 return Ok(result);
 
             }
-
             return BadRequest(result);
 
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(User user)
+        public IActionResult Delete(int id)
         {
-            var result = _userService.Delete(user);
+            var result = _userService.Delete(id);
 
             if (result.Success)
             {

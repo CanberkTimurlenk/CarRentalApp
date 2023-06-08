@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete.DTOs.Brand;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +29,11 @@ namespace WebAPI.Controllers
          * 
          */
 
-
         [HttpPost("add")]
-        public IActionResult Add(Brand brand)
+        public IActionResult Add(BrandDtoForManipulation brandDtoForManipulation)
         {
 
-            var result = _brandService.Add(brand);
+            var result = _brandService.Add(brandDtoForManipulation);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -51,9 +51,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Brand brand)
+        public IActionResult Update(int id, BrandDtoForManipulation brandDtoForManipulation)
         {
-            var result = _brandService.Update(brand);
+            var result = _brandService.Update(id,brandDtoForManipulation);
 
             if (result.Success)
             {
@@ -66,9 +66,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Brand brand)
+        public IActionResult Delete(int id)
         {
-            var result = _brandService.Delete(brand);
+            var result = _brandService.Delete(id);
 
             if (result.Success)
             {

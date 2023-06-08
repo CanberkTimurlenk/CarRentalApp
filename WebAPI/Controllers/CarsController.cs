@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete.DTOs.Car;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,10 +36,10 @@ namespace WebAPI.Controllers
          */
 
         [HttpPost("add")]
-        public IActionResult Add(Car car) 
+        public IActionResult Add(CarDtoForManipulation carDtoForManipulation)
         {
 
-            var result = _carService.Add(car);
+            var result = _carService.Add(carDtoForManipulation);
 
             // gönderdiğimiz car objesi business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -48,32 +49,17 @@ namespace WebAPI.Controllers
             if (result.Success)
             {
                 return Ok(result);
-            
+
             }
-            
+
             return BadRequest(result);
-        
+
         }
-        
+
         [HttpPost("update")]
-        public IActionResult Update(Car car) 
-        { 
-            var result = _carService.Update(car);
-
-            if (result.Success)
-            {
-                return Ok(result);
-
-            }
-
-            return BadRequest(result);
-
-        }
-           
-        [HttpPost("delete")]
-        public IActionResult Delete(Car car) 
+        public IActionResult Update(int id, CarDtoForManipulation carDtoForManipulation)
         {
-            var result = _carService.Delete(car );
+            var result = _carService.Update(id, carDtoForManipulation);
 
             if (result.Success)
             {
@@ -85,9 +71,24 @@ namespace WebAPI.Controllers
 
         }
 
-        
+        [HttpPost("delete")]
+        public IActionResult Delete(int id)
+        {
+            var result = _carService.Delete(id);
+
+            if (result.Success)
+            {
+                return Ok(result);
+
+            }
+
+            return BadRequest(result);
+
+        }
+
+
         [HttpGet("getallcardetails")]
-        public IActionResult GetAllCarDetails() 
+        public IActionResult GetAllCarDetails()
         {
             var result = _carService.GetAllCarDetails();
 
@@ -102,9 +103,9 @@ namespace WebAPI.Controllers
 
         }
 
-        
+
         [HttpPost("getcarsbycolorid")]
-        public IActionResult GetCarsByColorId(int id) 
+        public IActionResult GetCarsByColorId(int id)
         {
             var result = _carService.GetCarsByColorId(id);
 
@@ -118,10 +119,10 @@ namespace WebAPI.Controllers
 
         }
 
-        
+
         [HttpPost("getcarsbybrandid")]
-        public IActionResult GetCarsByBrandId(int id) 
-        { 
+        public IActionResult GetCarsByBrandId(int id)
+        {
             var result = _carService.GetCarsByBrandId(id);
 
             if (result.Success)
@@ -129,12 +130,12 @@ namespace WebAPI.Controllers
                 return Ok(result);
 
             }
-            return BadRequest(result);        
+            return BadRequest(result);
         }
 
-        
+
         [HttpPost("getbyid")]
-        public IActionResult GetById(int id) 
+        public IActionResult GetById(int id)
         {
             var result = _carService.GetById(id);
 
@@ -147,11 +148,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-    
-        
+
+
         [HttpGet("getall")]
-        public IActionResult GetAll()         
-        
+        public IActionResult GetAll()
+
         {
             var result = _carService.GetAll();
 
@@ -163,7 +164,7 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
 
-        }    
+        }
 
     }
 }

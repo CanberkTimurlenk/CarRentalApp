@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete.DTOs.Customer;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        
+
         private readonly ICustomerService _customerService;
-        
+
         public CustomersController(ICustomerService customerService)
         {
             _customerService = customerService;
@@ -29,10 +30,10 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Add(Customer customer)
+        public IActionResult Add(CustomerDtoForManipulation customerDtoForManipulation)
         {
 
-            var result = _customerService.Add(customer);
+            var result = _customerService.Add(customerDtoForManipulation);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -50,9 +51,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Customer customer)
+        public IActionResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation)
         {
-            var result = _customerService.Update(customer);
+            var result = _customerService.Update(id, customerDtoForManipulation);
 
             if (result.Success)
             {
@@ -65,9 +66,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Customer customer)
+        public IActionResult Delete(int id)
         {
-            var result = _customerService.Delete(customer);
+            var result = _customerService.Delete(id);
 
             if (result.Success)
             {

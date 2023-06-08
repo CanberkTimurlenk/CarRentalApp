@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
+using Entities.Concrete.DTOs.Rental;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace WebAPI.Controllers
         private readonly IRentalService _rentalService;
         public RentalsController(IRentalService rentalService)
         {
-            _rentalService = rentalService; 
+            _rentalService = rentalService;
         }
 
         /*
@@ -30,10 +31,10 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Add(Rental rental)
+        public IActionResult Add(RentalDtoForManipulation rentalDtoForManipulation)
         {
 
-            var result = _rentalService.Add(rental);
+            var result = _rentalService.Add(rentalDtoForManipulation);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -51,9 +52,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Rental rental)
+        public IActionResult Update(int id, RentalDtoForManipulation rentalDtoForManipulation)
         {
-            var result = _rentalService.Update(rental);
+            var result = _rentalService.Update(id, rentalDtoForManipulation);
 
             if (result.Success)
             {
@@ -66,9 +67,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Rental rental)
+        public IActionResult Delete(int id)
         {
-            var result = _rentalService.Delete(rental);
+            var result = _rentalService.Delete(id);
 
             if (result.Success)
             {

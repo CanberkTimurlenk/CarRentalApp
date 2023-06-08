@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete.DTOs.CartItem;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +30,10 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Add(CartItem cartItem)
+        public IActionResult Add(CartItemDtoForManipulation cartItemDtoForManipulation)
         {
 
-            var result = _cartItemService.Add(cartItem);
+            var result = _cartItemService.Add(cartItemDtoForManipulation);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -50,9 +51,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(CartItem cartItem)
+        public IActionResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation)
         {
-            var result = _cartItemService.Update(cartItem);
+            var result = _cartItemService.Update(id, cartItemDtoForManipulation);
 
             if (result.Success)
             {
@@ -65,9 +66,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(CartItem cartItem)
+        public IActionResult Delete(int id)
         {
-            var result = _cartItemService.Delete(cartItem);
+            var result = _cartItemService.Delete(id);
 
             if (result.Success)
             {

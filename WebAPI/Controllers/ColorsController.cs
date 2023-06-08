@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete.DTOs.Color;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +30,10 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult Add(Color color)
+        public IActionResult Add(ColorDtoForManipulation colorDtoForManipulation)
         {
 
-            var result = _colorService.Add(color);
+            var result = _colorService.Add(colorDtoForManipulation);
 
             // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
             // business Data access katmanındaki add methodunu çalıştırır 
@@ -50,9 +51,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Color color)
+        public IActionResult Update(int id, ColorDtoForManipulation colorDtoForManipulation)
         {
-            var result = _colorService.Update(color);
+            var result = _colorService.Update(id, colorDtoForManipulation);
 
             if (result.Success)
             {
@@ -65,9 +66,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Color color)
+        public IActionResult Delete(int id)
         {
-            var result = _colorService.Delete(color);
+            var result = _colorService.Delete(id);
 
             if (result.Success)
             {
