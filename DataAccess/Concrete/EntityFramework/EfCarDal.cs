@@ -15,23 +15,20 @@ using Entities.Concrete.Models;
 namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCarDal : EfEntityRepositoryBase<Car, CarAppContext>, ICarDal
-    //  EfCarDal : Entity Framework Data Access Layer
-    //  EfEntityRepositoryBase EntityFramework için yaratılan base class..
-    //  EntityFramework methodlarını tutar (Repository)
-    //  EfCarDal inherits EfEntityRepositoryBase with "Car" and "CarpAppContext" and implements "ICarDal"
-
     {
+        private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
         public EfCarDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)
         {
-
+            _contextFactory = contextFactory;
         }
 
         public IEnumerable<CarDetailDto> GetAllCarDetails()
         {
-            using (CarAppContext context = new CarAppContext())
+            using (var context = _contextFactory.CreateDbContext(new string[0]))
             {
-                var result = from car in context.Cars join color in context.Colors
+                var result = from car in context.Cars
+                             join color in context.Colors
                              on car.ColorId equals color.Id
                              join brand in context.Brands
                              on car.BrandId equals brand.Id
@@ -43,10 +40,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  DailyPrice = car.DailyPrice,
 
                              };
-                // şuan elimizde bir sürü CarDetailDto var 
                 return result.ToList();
-                //şuan result bir IQuayrable olduğu için onu listeye çevirmemiz gerekli 
-            }            
+            }
         }
     }
 }

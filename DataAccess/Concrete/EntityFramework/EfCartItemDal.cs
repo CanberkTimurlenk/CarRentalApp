@@ -15,17 +15,19 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCartItemDal : EfEntityRepositoryBase<CartItem, CarAppContext>, ICartItemDal
     {
+        private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
+
         public EfCartItemDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)
         {
-
+            _contextFactory = contextFactory;
         }
-        
+
         public IEnumerable<CartItemDetailDto> GetAllCartItemDetails(Expression<Func<CartItemDetailDto,bool>>filter = null)
         {
             
             
-            using (CarAppContext context = new CarAppContext())
+            using (var context = _contextFactory.CreateDbContext(new string[0]))
             {
                 var result = from cartItem in context.CartItems
 

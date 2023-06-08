@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCustomerDal : EfEntityRepositoryBase<Customer, CarAppContext>, ICustomerDal
-    {
+    {        
         public EfCustomerDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)
         {

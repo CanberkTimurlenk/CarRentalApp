@@ -14,14 +14,17 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfUserDal : EfEntityRepositoryBase<User, CarAppContext>, IUserDal
     {
+        private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
+
         public EfUserDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)
         {
-
+            _contextFactory = contextFactory;
         }
+
         public IEnumerable<OperationClaim> GetOperationClaims(User user)
         {
-            using (var context = new CarAppContext())
+            using (var context = _contextFactory.CreateDbContext(new string[0]))
             {
                 var result = from operationClaim in context.OperationClaims
                              join userOperationClaim in context.UserOperationClaims

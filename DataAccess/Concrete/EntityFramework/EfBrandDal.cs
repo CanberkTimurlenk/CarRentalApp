@@ -13,21 +13,13 @@ using Entities.Concrete.Models;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfBrandDal : EfEntityRepositoryBase <Brand,CarAppContext> , IBrandDal
-        
-    //  EfCarDal : Entity Framework Data Access Layer
-    //  EfEntityRepositoryBase EntityFramework için yaratılan base class..
-    //  EntityFramework methodlarını tutar (Repository)
-    //  EfCarDal inherits EfEntityRepositoryBase with "Brand" and "CarpAppContext" and implements "IBrandDal"
-    {
-
+    public class EfBrandDal : EfEntityRepositoryBase <Brand,CarAppContext> , IBrandDal       
+    {        
         public EfBrandDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)
         {
 
         }
-
-
 
     }
 }

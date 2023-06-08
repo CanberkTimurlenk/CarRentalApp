@@ -13,20 +13,13 @@ using Entities.Concrete.Models;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfColorDal : EfEntityRepositoryBase<Color,CarAppContext> , IColorDal
-    //  EfColorDal : Entity Framework Data Access Layer
-    //  EfEntityRepositoryBase EntityFramework için yaratılan base class..
-    //  EntityFramework methodlarını tutar (Repository)
-    //  EfColorDal inherits EfEntityRepositoryBase with "Color" and "CarpAppContext" and implements "IColorDal"
+    public class EfColorDal : EfEntityRepositoryBase<Color,CarAppContext> , IColorDal    
     {
         public EfColorDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)
         {
 
+
         }
-
-
-
-
     }
 }
