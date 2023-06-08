@@ -1,60 +1,74 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Business;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework;
+using Entities.Concrete.DTOs.Customer;
 using Entities.Concrete.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
     public class CustomerManager : ICustomerService
     {
         private readonly ICustomerDal _customerDal;
+        private readonly IMapper _mapper;
 
-        public CustomerManager(ICustomerDal customerDal)
+        public CustomerManager(ICustomerDal customerDal, IMapper mapper)
         {
             _customerDal = customerDal;
+            _mapper = mapper;
         }
-
 
         [ValidationAspect(typeof(CustomerValidator))]
-        public IResult Add(Customer addedItem)
+        public IDataResult<int> Add(CustomerDtoForManipulation customerDtoForManipulation)
         {
-            _customerDal.Add(addedItem);
+            var entity = _mapper.Map<Customer>(customerDtoForManipulation);
 
-            return new SuccessResult(Messages.CustomerAdded);
+            _customerDal.Add(entity);
+
+            return new SuccessDataResult<int>(entity.Id,Messages.CustomerAdded);
         }
 
-        public IResult Delete(Customer deletedItem)
+        public IResult Delete(int id)
         {
-            _customerDal.Delete(deletedItem);
+            var entity = _customerDal.Get(c => c.Id == id);
+
+            _customerDal.Delete(entity);
 
             return new SuccessResult(Messages.CustomerDeleted);
         }
 
-        public IDataResult<IEnumerable<Customer>> GetAll()
+        public IDataResult<IEnumerable<CustomerDto>> GetAll()
         {
-            return new SuccessDataResult<IEnumerable<Customer>>(_customerDal.GetAll(), Messages.CustomersListed);
-          
+
+            var result = _mapper.Map<IEnumerable<CustomerDto>>(_customerDal.GetAll());
+
+            return new SuccessDataResult<IEnumerable<CustomerDto>>(result, Messages.CustomersListed);
+
         }
 
-        public IDataResult<Customer> GetById(int id)
+        public IDataResult<CustomerDto> GetById(int id)
         {
-            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.Id == id),Messages.SuccessListedById);
+            var entity = _customerDal.Get(c => c.Id == id);
+
+            var result = _mapper.Map<CustomerDto>(entity);
+
+            return new SuccessDataResult<CustomerDto>(result, Messages.SuccessListedById);
         }
 
-        public IResult Update(Customer updatedItem)
+        public IResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation)
         {
-            _customerDal.Update(updatedItem);
+            var entity = _customerDal.Get(c => c.Id == id);
+
+            var mappedEntity = _mapper.Map(customerDtoForManipulation, entity);
+
+            _customerDal.Update(mappedEntity);
             return new SuccessResult(Messages.CustomerUpdated);
         }
+
     }
 }

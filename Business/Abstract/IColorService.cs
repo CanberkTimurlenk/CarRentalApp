@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Business;
+using Entities.Concrete.DTOs.Color;
 using Entities.Concrete.Models;
 
 namespace Business.Abstract
 {
-    public interface IColorService : IBusinessRepository<Color>
+    public interface IColorService : IBusinessRepository<ColorDto,ColorDtoForManipulation>
     {
 
     }

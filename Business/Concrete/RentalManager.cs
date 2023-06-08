@@ -1,25 +1,24 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Cache;
 using Core.Aspects.Autofac.Validation;
+using Core.Business;
 using Core.Entities.Concrete;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs;
+using Entities.Concrete.DTOs.Rental;
 using Entities.Concrete.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
         private readonly IRentalDal _rentDal;
+        private readonly IMapper _mapper;
 
         public RentalManager(IRentalDal rentalDal)
         {
@@ -28,71 +27,71 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(RentalValidator))]
-        public IResult Add(Rental addedItem)
+        public IDataResult<int> Add(RentalDtoForManipulation rentalDtoForManipulation)
         {
-            //_rentDal.Add(addedItem);
-            //return new SuccessResult(Messages.RentalAdded);
 
+            //  CheckIfAlreadyRented
+            var result = _rentDal.Get(r => r.CarId == rentalDtoForManipulation.CarId && r.ReturnDate == null);
 
-            var result = _rentDal.Get(r => r.CarId == addedItem.CarId && r.ReturnDate == null);
+            if (result is null)
+            {
+                var mappedEntity = _mapper.Map<Rental>(rentalDtoForManipulation);
+                _rentDal.Add(mappedEntity);
+                return new SuccessDataResult<int>(mappedEntity.Id,Messages.RentalAdded);
+            }
 
-            // result class olarak döner, (araç halihazırda kiralanmışsa returnDate= null)
-            // result null olarak döner, (henüz kiralanmamış ve eşleşen iD ye sahip araba varsa)
             
-            if (result == null) //ekleme yaparız, returndate nulldan farklı olduğu için result null oldu
-            {
-                _rentDal.Add(addedItem);
-                return new SuccessResult(Messages.RentalAdded);
-            }
-
-            //else if (result !=null)   araç şuan zaten kirada, ekleme yapmayız... bu if i gizledim
-            // result == null çalışmazsa result null a zaten eşit değil demektir o yüzden else if yazmadım
-            {
-                return new ErrorResult(Messages.InvalidRentalAdd);
-
-            }
-           
+            return new ErrorDataResult<int>(Messages.InvalidRentalAdd);
 
         }
 
-        public IResult Delete(Rental deletedItem)
+        public IResult Delete(int id)
         {
-            _rentDal.Delete(deletedItem);
+            var entity = _rentDal.Get(r => r.Id == id);
+
+            _rentDal.Delete(entity);
+
             return new SuccessResult(Messages.RentalDeleted);
 
         }
 
         [CacheAspect]
-        public IDataResult<IEnumerable<Rental>> GetAll()
+        public IDataResult<IEnumerable<RentalDto>> GetAll()
         {
-            return new SuccessDataResult<IEnumerable<Rental>>(_rentDal.GetAll(), Messages.RentalsListed);
+            var result = _mapper.Map<IEnumerable<RentalDto>>(_rentDal.GetAll());
+
+            return new SuccessDataResult<IEnumerable<RentalDto>>(result, Messages.RentalsListed);
+
         }
 
-        public IDataResult<Rental> GetById(int id)
+        public IDataResult<RentalDto> GetById(int id)
         {
+            var entity = _rentDal.Get(r => r.Id == id);
 
-            return new SuccessDataResult<Rental>(_rentDal.Get(r => r.Id == id), Messages.SuccessListedById);
+            var result = _mapper.Map<RentalDto>(entity);
+
+            return new SuccessDataResult<RentalDto>(result, Messages.SuccessListedById);
         }
 
-        public IResult Update(Rental updatedItem)
+        public IResult Update(int id, RentalDtoForManipulation rentalDtoForManipulation)
         {
-            _rentDal.Update(updatedItem);
+
+            var entity = _rentDal.Get(r => r.Id == id);
+
+            var mappedEntity = _mapper.Map(rentalDtoForManipulation, entity);
+
+            _rentDal.Update(mappedEntity);
+
             return new SuccessResult(Messages.RentalUpdated);
         }
 
         [CacheAspect]
         public IDataResult<IEnumerable<RentalDetailDto>> GetAllRentalDetails()
         {
+            return new SuccessDataResult<IEnumerable<RentalDetailDto>>(_rentDal.GetAllRentalDetails(), Messages.SuccessListedRentals);
 
-            return new SuccessDataResult<IEnumerable<RentalDetailDto>>(_rentDal.GetAllRentalDetails(),Messages.SuccessListedRentals);
-
-
-            
-
-            
         }
 
-
-
+    
     }
 }

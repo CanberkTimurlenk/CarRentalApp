@@ -1,71 +1,64 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.Constants.StoragePaths;
-using Core.Entities;
 using Core.Utilities.Helpers.FileHelper;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.Utilities.Business;
+using Entities.Concrete.DTOs.CarImage;
+using AutoMapper;
 using Entities.Concrete.Models;
+using Core.Business;
 
 namespace Business.Concrete
 {
     public class CarImageManager : ICarImageService
 
+
     {
         private readonly ICarImageDal _carImageDal;
         private readonly IFileHelper _fileHelper;
+        private readonly IMapper _mapper;
 
-        public CarImageManager(ICarImageDal carImageDal, IFileHelper fileHelper)
+        public CarImageManager(ICarImageDal carImageDal, IFileHelper fileHelper, IMapper mapper)
         {
             _carImageDal = carImageDal;
             _fileHelper = fileHelper;
+            _mapper = mapper;
         }
 
-        public IResult Add(IFormFile file, CarImage addedFileEntity)
+        public IResult Add(IFormFile file, CarImageDtoForManipulation carImageForManipulation)
         {
-
-
             var ruleCheck = BusinessRules.Run(
-                CheckIfCarImageLimitExceed(addedFileEntity.CarId)
-
+                CheckIfCarImageLimitExceed(carImageForManipulation.CarId)
                 );
 
             if (ruleCheck == null)
             {
+                var entity = _mapper.Map<CarImage>(carImageForManipulation);
 
-                addedFileEntity.Date = DateTime.Now;
-                addedFileEntity.ImagePath = _fileHelper.UploadFile(file, Paths.CarImageFolder).Data;
-                _carImageDal.Add(addedFileEntity);
+                entity.Date = DateTime.Now;
+                entity.ImagePath = _fileHelper.UploadFile(file, Paths.CarImageFolder).Data;
+                _carImageDal.Add(entity);
 
                 return new SuccessResult();
             }
-
-
             return new ErrorResult();
 
         }
-        
 
-        public IResult Update(IFormFile file, CarImage updatedFileEntity)   // updatedFileEntity indicates the old image
+
+        public IResult Update(IFormFile file, int id, CarImageDtoForManipulation carImageForManipulation)   // updatedFileEntity indicates the old image
         {
+            var entity = _carImageDal.Get(c => c.Id == id);
 
+            var carImage = _mapper.Map(carImageForManipulation, entity);
 
-
-            var carImage = _carImageDal.Get(c => c.Id == updatedFileEntity.Id);
-
-            if (carImage != null )
+            if (entity != null)
             {
                 var oldImageRelativePath = carImage.ImagePath;
-
-                
 
                 var result = _fileHelper.UpdateFile(file, Path.Combine(Paths.CarImageFolder, oldImageRelativePath));
 
@@ -77,62 +70,66 @@ namespace Business.Concrete
 
                 // veritabanındaki ef car image daki değişime bak, resmi değiştiriyorum ama veritabanındaki bilgiler değişiyor mu ?
                 if (result.Success) return new SuccessResult();
-            }   
-            
+            }
+
             return new ErrorResult();
         }
-        
 
-        public IResult Delete(CarImage carImage)
+        public IResult Delete(int id)
         {
-            var deletedImage = _carImageDal.Get(c => c.Id == carImage.Id);
-            var deletedImagePath = deletedImage.ImagePath;
+            var entity = _carImageDal.Get(c => c.Id == id);
+
+            var deletedImagePath = entity.ImagePath;
 
             var result = _fileHelper.DeleteFile(Path.Combine(Paths.CarImageFolder, deletedImagePath));
 
-            _carImageDal.Delete(deletedImage);
+            _carImageDal.Delete(entity);
 
             if (result.Success) return new SuccessResult(Messages.CarImageDeleted);
             return new ErrorResult();
 
-
         }
-        
-        public IDataResult<IEnumerable<CarImage>> GetByCarId(int carId)    //  If there is not such an image, it returns ErrorResult
+
+        public IDataResult<IEnumerable<CarImageDto>> GetByCarId(int carId)    //  If there is not such an image, it returns ErrorResult
         {
             var ruleCheck = BusinessRules.Run(
                 CheckIfMentionedCarHaveAnyImage(carId)
                 );
 
-            IEnumerable<CarImage> result = new List<CarImage>();
+            IEnumerable<CarImageDto> result = new List<CarImageDto>();
 
-            if (ruleCheck != null)
+            if (ruleCheck is not null)
             {
-                result = new List<CarImage> { GetDefaultImage(carId).Data };
-                return new ErrorDataResult<IEnumerable<CarImage>>(result, Messages.EmptyImage);
+                result = new List<CarImageDto> { GetDefaultImage(carId).Data };
+                return new ErrorDataResult<IEnumerable<CarImageDto>>(result, Messages.EmptyImage);
 
             }
 
-            result = _carImageDal.GetAll(c => c.CarId == carId);
-            return new SuccessDataResult<IEnumerable<CarImage>>(result, Messages.SuccessListedById);
+            var entitiesByCarId = _carImageDal.GetAll(c => c.CarId == carId);
+
+            result = _mapper.Map<IEnumerable<CarImageDto>>(entitiesByCarId);
+
+            return new SuccessDataResult<IEnumerable<CarImageDto>>(result, Messages.SuccessListedById);
 
         }
-        
-        public IDataResult<CarImage> GetById(int carImageId)
+
+        public IDataResult<CarImageDto> GetById(int carImageId)
         {
-            var result = _carImageDal.Get(c => c.Id == carImageId);
+            var entity = _carImageDal.Get(c => c.Id == carImageId);
 
-            return new SuccessDataResult<CarImage>(result, Messages.SuccessListedById);
+            var result = _mapper.Map<CarImageDto>(entity);
+
+            return new SuccessDataResult<CarImageDto>(result, Messages.SuccessListedById);
 
         }
-        
-        public IDataResult<IEnumerable<CarImage>> GetAll()
+
+        public IDataResult<IEnumerable<CarImageDto>> GetAll()
         {
-            var result = _carImageDal.GetAll();
+            var result = _mapper.Map<IEnumerable<CarImageDto>>(_carImageDal.GetAll());
 
-            return new SuccessDataResult<IEnumerable<CarImage>>(result, Messages.CarImagesListed);
+            return new SuccessDataResult<IEnumerable<CarImageDto>>(result, Messages.CarImagesListed);
         }
-        
+
 
         /*
          *      More logics..
@@ -161,11 +158,11 @@ namespace Business.Concrete
 
             return new SuccessResult();
 
-        }        
-        private IDataResult<CarImage> GetDefaultImage(int carId)
+        }
+        private IDataResult<CarImageDto> GetDefaultImage(int carId)
         {
 
-            return new SuccessDataResult<CarImage>(new CarImage
+            return new SuccessDataResult<CarImageDto>(new CarImageDto
             {
 
                 CarId = carId,
@@ -174,6 +171,7 @@ namespace Business.Concrete
 
             });
         }
-        
+
+   
     }
 }

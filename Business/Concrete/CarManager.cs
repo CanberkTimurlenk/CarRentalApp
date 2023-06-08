@@ -1,98 +1,112 @@
 ﻿using Business.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs;
 using Business.Constants;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
-using Core.CrossCuttingConcerns.Validation;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
-using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Cache;
 using Entities.Concrete.Models;
+using AutoMapper;
+using Entities.Concrete.DTOs.Car;
+using Core.Business;
 
 namespace Business.Concrete
 {
-
-
     public class CarManager : ICarService
     {
         private readonly ICarDal _carDal;
+        private readonly IMapper _mapper;
+        
 
-        //newlemek yerine dependency injection yapıyoruz
-
-
-        public CarManager(ICarDal carDal)  //constructor oluşturduk
+        public CarManager(ICarDal carDal, IMapper mapper)  
         {
-            _carDal = carDal;   //newlemek yerine dependency injection yapıyoruz
-
+            _carDal = carDal;   
+            _mapper = mapper;
         }
 
 
-        [CacheAspect]
-        public IDataResult<IEnumerable<Car>> GetAll()
-        {
+        //[CacheAspect]
+        public IDataResult<IEnumerable<CarDto>> GetAll()
+        {            
+            var result = _mapper.Map<IEnumerable<CarDto>>(_carDal.GetAll()); 
 
-            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(), Messages.CarsListed);
+
+
+            return new SuccessDataResult<IEnumerable<CarDto>>(result, Messages.CarsListed);
             //return _carDal.GetAll();
 
         }
 
-        public IDataResult<Car> GetById(int Id)
+        public IDataResult<CarDto> GetById(int id)
         {
-            return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == Id), Messages.SuccessListedById);
+            var entity = _carDal.Get(c => c.Id == id);
+
+            return new SuccessDataResult<CarDto>(_mapper.Map<CarDto>(entity), Messages.SuccessListedById);
         }
         
         //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
-        public IResult Add(Car car)
-        {                       
-            _carDal.Add(car);
-            return new SuccessResult(Messages.CarAdded);
+        public IDataResult<int> Add(CarDtoForManipulation carDtoForManipulation)
+        {
+            var entity = _mapper.Map<Car>(carDtoForManipulation);
+
+            _carDal.Add(entity);
+
+            return new SuccessDataResult<int>(entity.Id,Messages.CarAdded);
         }
 
-        public IResult Update(Car car)
+        public IResult Update(int id,CarDtoForManipulation carDtoForManipulation)
         {
-            _carDal.Update(car);
+            var entity = _carDal.Get(c => c.Id == id);
+
+            var mappedEntity = _mapper.Map(carDtoForManipulation, entity);
+
+            _carDal.Update(mappedEntity);
+
             return new SuccessResult(Messages.CarUpdated);
 
         }
 
-
-        public IResult Delete(Car car)
+        public IResult Delete(int id)
         {
-            _carDal.Delete(car);
+            
+            var entity = _carDal.Get(c => c.Id == id);
+
+            _carDal.Delete(entity);
+
             return new SuccessResult(Messages.CarDeleted);
 
+            
         }
 
-
-        public IDataResult<IEnumerable<Car>> GetCarsByColorId(int colorId)
+        public IDataResult<IEnumerable<CarDto>> GetCarsByColorId(int colorId)
         {
-
-            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.ColorId == colorId).ToList());
+            var entity = _carDal.GetAll(c => c.ColorId == colorId).ToList();
+            
+            return new SuccessDataResult<IEnumerable<CarDto>>(_mapper.Map<IEnumerable<CarDto>>(entity));
 
         }
 
-        public IDataResult<IEnumerable<Car>> GetCarsByBrandId(int brandId)
+        public IDataResult<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
         {
-            return new SuccessDataResult<IEnumerable<Car>>(_carDal.GetAll(c => c.BrandId == brandId).ToList());
+            var entity = _carDal.GetAll(c => c.BrandId == brandId).ToList();
+            
+            return new SuccessDataResult<IEnumerable<CarDto>>(_mapper.Map<IEnumerable<CarDto>>(entity));
 
         }
 
-        [CacheAspect]
+        //[CacheAspect]
         public IDataResult<IEnumerable<CarDetailDto>> GetAllCarDetails()
         {
+            var entity = _carDal.GetAllCarDetails();
 
-            return new SuccessDataResult<IEnumerable<CarDetailDto>>(_carDal.GetAllCarDetails());
+            return new SuccessDataResult<IEnumerable<CarDetailDto>>(_mapper.Map<IEnumerable<CarDetailDto>>(entity));
 
         }
 
+        
 
     }
 }

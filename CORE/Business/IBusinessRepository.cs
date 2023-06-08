@@ -1,16 +1,18 @@
-﻿using Core.Utilities.Results.Abstract;
+﻿using Core.Entities;
+using Core.Utilities.Results.Abstract;
 using Entities.Abstract;
 
 namespace Core.Business
 {
-    public interface IBusinessRepository<TEntity>
-        where TEntity : class,IEntity,new()
+    public interface IBusinessRepository<TDto,TDtoForManipulation>
+        where TDto : class,IDto,new()
+        where TDtoForManipulation : class, IDto, new()
     {
-        IResult Add(TEntity addedItem);
-        IResult Update(TEntity updatedItem);
-        IResult Delete(TEntity deletedItem);
-        IDataResult<TEntity> GetById(int id);
-        IDataResult<IEnumerable<TEntity>> GetAll();
+        IDataResult<int> Add(TDtoForManipulation addedItem);
+        IResult Update(int id, TDtoForManipulation updatedItem);
+        IResult Delete(int id);
+        IDataResult<TDto> GetById(int id);
+        IDataResult<IEnumerable<TDto>> GetAll();
 
 
     }

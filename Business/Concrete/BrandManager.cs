@@ -13,54 +13,73 @@ using Business.ValidationRules.FluentValidation;
 using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Performance;
 using Entities.Concrete.Models;
+using AutoMapper;
+using Entities.Concrete.DTOs.Brand;
 
 namespace Business.Concrete
 {
     public class BrandManager : IBrandService
     {
         private readonly IBrandDal _brandDal;
+        private readonly IMapper _mapper;
 
-        public BrandManager(IBrandDal brandDal)
+        public BrandManager(IBrandDal brandDal, IMapper mapper)
         {
             _brandDal = brandDal;
+            _mapper = mapper;
 
         }
-        [SecuredOperation("brand.add,admin")]
+
+        //[SecuredOperation("brand.add,admin")]
         [ValidationAspect(typeof(BrandValidator))]
-        [PerformanceAspect(5)]        
-        public IResult Add(Brand brand)
+        [PerformanceAspect(5)]
+        public IDataResult<int> Add(BrandDtoForManipulation brandDtoForManipulation)
         {
             //Thread.Sleep(2000); to test PerformanceAspect
-            _brandDal.Add(brand);
-            return new SuccessResult(Messages.BrandAdded);
+
+            var entity = _mapper.Map<Brand>(brandDtoForManipulation);
+
+            _brandDal.Add(entity);
+
+            return new SuccessDataResult<int>(entity.Id, Messages.BrandAdded);
+
         }
 
-        public IResult Delete(Brand brand)
+        public IResult Delete(int id)
         {
-            _brandDal.Delete(brand);
+            var entity = _brandDal.Get(b => b.Id == id);
+
+            _brandDal.Delete(entity);
+
             return new SuccessResult(Messages.BrandDeleted);
         }
 
-        public IDataResult<Brand> GetById(int brandId)
+        public IDataResult<BrandDto> GetById(int brandId)
         {
+            var entity = _mapper.Map<BrandDto>(_brandDal.Get(b => b.Id == brandId));
 
-            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == brandId),Messages.SuccessListedById);
-            
-        }
-
-        public IDataResult<IEnumerable<Brand>> GetAll()
-        {
-
-            return new SuccessDataResult<IEnumerable<Brand>>(_brandDal.GetAll(),Messages.BrandsListed);
-            
+            return new SuccessDataResult<BrandDto>(entity, Messages.SuccessListedById);
 
         }
 
-        public IResult Update(Brand brand)
+        public IDataResult<IEnumerable<BrandDto>> GetAll()
         {
+            var entity = _mapper.Map<IEnumerable<BrandDto>>(_brandDal.GetAll());
 
-            _brandDal.Update(brand);
+            return new SuccessDataResult<IEnumerable<BrandDto>>(entity, Messages.BrandsListed);
+
+
+        }
+
+        public IResult Update(int id,BrandDtoForManipulation brandDtoForManipulation)
+        {
+            var entity = _brandDal.Get(b => b.Id == id);
+            var mappedEntity = _mapper.Map(brandDtoForManipulation, entity);
+
+            _brandDal.Update(mappedEntity);
+
             return new SuccessResult(Messages.BrandUpdated);
         }
+
     }
 }

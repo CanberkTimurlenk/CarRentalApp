@@ -12,6 +12,7 @@ using Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Core.Entities.Concrete;
 using Entities.Concrete.Models;
+using Entities.Concrete.DTOs.User;
 
 namespace Core.Utilities.Security.Jwt
 {
@@ -29,12 +30,12 @@ namespace Core.Utilities.Security.Jwt
            
         }
 
-        public AccessToken CreateToken(User user, IEnumerable<OperationClaim> operationClaims)
+        public AccessToken CreateToken(UserDto userDto, IEnumerable<OperationClaim> operationClaims)
         {
             _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
-            var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, operationClaims);
+            var jwt = CreateJwtSecurityToken(_tokenOptions, userDto, signingCredentials, operationClaims);
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var token = jwtSecurityTokenHandler.WriteToken(jwt);
 
@@ -46,14 +47,14 @@ namespace Core.Utilities.Security.Jwt
 
         }
 
-        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user, SigningCredentials signingCredentials, IEnumerable<OperationClaim> operationClaims)
+        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, UserDto userDto, SigningCredentials signingCredentials, IEnumerable<OperationClaim> operationClaims)
         {
 
 
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
                 audience: tokenOptions.Audience,
-                claims: SetClaims(user,operationClaims),
+                claims: SetClaims(userDto, operationClaims),
                 notBefore: DateTime.Now,
                 signingCredentials: signingCredentials,
                 expires: _accessTokenExpiration
@@ -66,12 +67,12 @@ namespace Core.Utilities.Security.Jwt
 
 
 
-        private IEnumerable<Claim> SetClaims(User user, IEnumerable<OperationClaim> operationClaims)
+        private IEnumerable<Claim> SetClaims(UserDto userDto, IEnumerable<OperationClaim> operationClaims)
         {
             var claims = new List<Claim>();
-            claims.AddNameIdentifier(user.Id.ToString());
-            claims.AddEmail(user.Email);
-            claims.AddName($"{user.FirstName} {user.LastName}");
+            claims.AddNameIdentifier(userDto.Id.ToString());
+            claims.AddEmail(userDto.Email);
+            claims.AddName($"{userDto.FirstName} {userDto.LastName}");
             var x = operationClaims.Select(c => c.OperationClaimName).ToArray();
             claims.AddRoles(operationClaims.Select(c => c.OperationClaimName).ToArray());
             

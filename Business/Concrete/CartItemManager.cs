@@ -1,53 +1,62 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
+using Core.Business;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs;
+using Entities.Concrete.DTOs.CartItem;
 using Entities.Concrete.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Concrete
 {
     public class CartItemManager : ICartItemService
     {
-        ICartItemDal _cartItemDal;
+        private readonly ICartItemDal _cartItemDal;
+        private readonly IMapper _mapper;
 
-        public CartItemManager(ICartItemDal cartItemDal)
+        public CartItemManager(ICartItemDal cartItemDal, IMapper mapper)
         {
             _cartItemDal = cartItemDal;
+            _mapper = mapper;
         }
-        public IResult Add(CartItem addedItem)
+        public IDataResult<int> Add(CartItemDtoForManipulation carItemDtoForManipulation)
         {
-            _cartItemDal.Add(addedItem);
-            return new SuccessResult();
+            var entity = _mapper.Map<CartItem>(carItemDtoForManipulation);
+
+            _cartItemDal.Add(entity);
+
+            return new SuccessDataResult<int>(entity.Id,Messages.CartItemAdded);
         }
 
-        public IResult Delete(CartItem deletedItem)
+        public IResult Delete(int id)
         {
-            var result = _cartItemDal.Get(c => c.Id == deletedItem.Id);
+            var entity = _cartItemDal.Get(c => c.Id == id);
 
-            if(result != null) { 
-            _cartItemDal.Delete(deletedItem);
+            if (entity is not null)
+            {
+                _cartItemDal.Delete(entity);
                 return new SuccessResult();
             }
 
             return new ErrorResult(Messages.CartItemNotExist);
         }
 
-        public IDataResult<IEnumerable<CartItem>> GetAll()
+        public IDataResult<IEnumerable<CartItemDto>> GetAll()
         {
-
-            return new SuccessDataResult<IEnumerable<CartItem>>(data: _cartItemDal.GetAll().ToList());
+            var result = _mapper.Map<IEnumerable<CartItemDto>>(_cartItemDal.GetAll());
+            return new SuccessDataResult<IEnumerable<CartItemDto>>(result,Messages.CartItemsListed);
         }
 
-        public IDataResult<CartItem> GetById(int id)
+        public IDataResult<CartItemDto> GetById(int id)
         {
-            return new SuccessDataResult<CartItem>(data: _cartItemDal.Get(c => c.Id == id));
+            var entity = _cartItemDal.Get(c => c.Id == id);
+
+            var result = _mapper.Map<CartItemDto>(entity);
+
+            return new SuccessDataResult<CartItemDto>(result);
 
         }
 
@@ -58,19 +67,21 @@ namespace Business.Concrete
 
         }
 
-        public IResult Update(CartItem updatedItem)
+        public IResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation)
         {
-            var result = _cartItemDal.Get(c => c.Id == updatedItem.Id);
+            var entity = _cartItemDal.Get(c => c.Id == id);
 
-            if (result != null)
+            if (entity is not null)
             {
-                _cartItemDal.Delete(updatedItem);
-                _cartItemDal.Add(updatedItem);
+                var mappedEntity = _mapper.Map(cartItemDtoForManipulation, entity);
+                _cartItemDal.Update(mappedEntity);
                 return new SuccessResult();
             }
 
             return new ErrorResult(Messages.CartItemNotExist);
 
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Core.Entities.Concrete;
 using Core.Entities.Concrete.DTOs;
@@ -7,6 +8,7 @@ using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.Jwt;
+using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -20,78 +22,79 @@ namespace Business.Concrete
     {
         private readonly IUserService _userService;
         private readonly ITokenHelper _tokenHelper;
+        private readonly IMapper _mapper;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IMapper mapper)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _mapper = mapper;
         }
 
-        public IDataResult<AccessToken> CreateAccessToken(User user)
+        public IDataResult<AccessToken> CreateAccessToken(UserDto userDto)
         {
-            var claims = _userService.GetOperationClaims(user).Data;
-            var accessToken = _tokenHelper.CreateToken(user,claims);
+            var claims = _userService.GetOperationClaims(userDto).Data;
+            var accessToken = _tokenHelper.CreateToken(userDto, claims);
 
-            return new SuccessDataResult<AccessToken>(data:accessToken, Messages.AccessTokenCreated);
+            return new SuccessDataResult<AccessToken>(data: accessToken, Messages.AccessTokenCreated);
         }
 
-        public IDataResult<User> Login(UserForLoginDto userForLoginDto)
+        public IDataResult<UserDto> Login(UserForLoginDto userForLoginDto)
         {
-            
+
             var userToCheck = CheckIfUserExistsWithEmail(userForLoginDto.Email);
-            if (userToCheck.Success == false) return new ErrorDataResult<User>();
+
+            if (userToCheck.Success == false)
+                return new ErrorDataResult<UserDto>();
 
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.Data.PasswordHash, userToCheck.Data.PasswordSalt))
-            {
-                return new ErrorDataResult<User>(Messages.WrongPassword);
+                return new ErrorDataResult<UserDto>(Messages.WrongPassword);
 
-            }
-            return new SuccessDataResult<User>(userToCheck.Data,Messages.SuccessfullLogin);
-            
-
- 
+            return new SuccessDataResult<UserDto>(userToCheck.Data, Messages.SuccessfullLogin);
 
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto)
+        public IDataResult<UserDto> Register(UserForRegisterDto userForRegisterDto)
         {
-            
+
             var userExist = CheckIfUserExistsWithEmail(userForRegisterDto.Email).Success;
 
-
-
-            if (userExist == true) return new ErrorDataResult<User>(Messages.UserExists);
+            if (userExist == true)
+                return new ErrorDataResult<UserDto>(Messages.UserExists);
 
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(userForRegisterDto.Password, out passwordHash, out passwordSalt);
 
-             var user = new User()
-             {
-                 Email = userForRegisterDto.Email,
-                 FirstName = userForRegisterDto.FirstName,
-                 LastName = userForRegisterDto.LastName,
-                 PasswordHash = passwordHash,
-                 PasswordSalt = passwordSalt,
-                 Status = true  //  keep true as default, it depends the system configuration
-             };
-            
-            _userService.Add(user);
+            var user = new User()
+            {
+                Email = userForRegisterDto.Email,
+                FirstName = userForRegisterDto.FirstName,
+                LastName = userForRegisterDto.LastName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Status = true  //  keep true as default, it depends the system configuration
+            };
 
-            return new SuccessDataResult<User>(user,Messages.UserRegistered);
-          
+            var userDtoForManipulation = _mapper.Map<UserDtoForManipulation>(user);
+            var userDto = _mapper.Map<UserDto>(userDtoForManipulation);
+
+            userDto.Id = _userService.Add(userDtoForManipulation).Data;
+
+
+            return new SuccessDataResult<UserDto>(userDto, Messages.UserRegistered);
+
+
         }
 
-        private IDataResult<User> CheckIfUserExistsWithEmail(string email)
+        private IDataResult<UserDto> CheckIfUserExistsWithEmail(string email)
         {
             var result = _userService.GetByEmail(email);
-            
-             if (result.Data != null) return new SuccessDataResult<User>(result.Data, Messages.UserExists);
-             return new ErrorDataResult<User>(Messages.UserNotExist);
-                        
+
+            if (result.Data != null)
+                return new SuccessDataResult<UserDto>(result.Data, Messages.UserExists);
+
+            return new ErrorDataResult<UserDto>(Messages.UserNotExist);
 
         }
-
-   
     }
-     
 }

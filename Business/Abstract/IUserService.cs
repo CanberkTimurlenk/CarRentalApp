@@ -1,6 +1,7 @@
 ﻿using Core.Business;
 using Core.Entities.Concrete;
 using Core.Utilities.Results.Abstract;
+using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,12 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface IUserService : IBusinessRepository<User>
+    public interface IUserService : IBusinessRepository<UserDto,UserDtoForManipulation>
     {
 
-        IDataResult<IEnumerable<OperationClaim>> GetOperationClaims (User user);
-        IDataResult<User> GetByEmail(string email);
+        IDataResult<IEnumerable<OperationClaim>> GetOperationClaims (UserDto userDto);
+        IDataResult<UserDto> GetByEmail(string email);
+        
 
 
     }

@@ -1,4 +1,5 @@
 ﻿using Core.Business;
+using Entities.Concrete.DTOs.Customer;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface ICustomerService : IBusinessRepository<Customer>
+    public interface ICustomerService : IBusinessRepository<CustomerDto, CustomerDtoForManipulation>
     {
 
 

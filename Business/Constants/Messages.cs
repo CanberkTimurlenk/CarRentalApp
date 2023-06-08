@@ -17,6 +17,7 @@ namespace Business.Constants
         public static readonly string UserAdded = "User Added.";
         public static readonly string CustomerAdded = "Customer Added.";
         public static readonly string CarImageAdded = "CarImage Added.";
+        public static readonly string CartItemAdded = "CartItem Added.";
 
         public static readonly string DescriptionLengthException = "Description must contain at least 2 characters";
         public static readonly string DailyPriceException = "Daily price must be greater than zero";
@@ -48,7 +49,8 @@ namespace Business.Constants
         public static readonly string UsersListed = "Users listed.";
         public static readonly string CustomersListed = "Customers listed.";
         public static readonly string CarImagesListed = "CarImages listed.";
-        
+        public static readonly string CartItemsListed = "CartItems listed.";
+
         public static readonly string EmptyImage = "Since there is not such an image, default image will be displayed.";
 
 

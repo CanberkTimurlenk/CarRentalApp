@@ -1,5 +1,6 @@
 ﻿using Core.Business;
 using Core.Utilities.Results.Abstract;
+using Entities.Concrete.DTOs.CarImage;
 using Entities.Concrete.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface ICarImageService : IBusinessFileRepository<IFormFile, CarImage>
+    public interface ICarImageService : IBusinessFileRepository<IFormFile,CarImageDto,CarImageDtoForManipulation>
     {
 
 
-        IDataResult<IEnumerable<CarImage>> GetByCarId(int carId);
+        IDataResult<IEnumerable<CarImageDto>> GetByCarId(int carId);
 
 
 

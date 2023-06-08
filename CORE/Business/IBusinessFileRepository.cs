@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 
 namespace Core.Business
 {
-    public interface IBusinessFileRepository<TFormFile, TFileEntity>
+    public interface IBusinessFileRepository<TFormFile, TFileDto, TFileDtoForManipulation>
             where TFormFile : class, IFormFile
-            where TFileEntity : class, IFileEntity, new()
+            where TFileDto : class, IDto, new()
+            where TFileDtoForManipulation : class, IDto, new()
     {
 
-        IResult Add(TFormFile file, TFileEntity addedFileEntity);
-        IResult Update(TFormFile file, TFileEntity updatedFileEntity);
-        IResult Delete(TFileEntity deletedFileEntity);
-        IDataResult<IEnumerable<TFileEntity>> GetAll();
-        IDataResult<TFileEntity> GetById(int id);
+        IResult Add(TFormFile file, TFileDtoForManipulation addedFileEntity);
+        IResult Update(TFormFile file, int id, TFileDtoForManipulation updatedFileEntity);
+        IResult Delete(int id);
+        IDataResult<IEnumerable<TFileDto>> GetAll();
+        IDataResult<TFileDto> GetById(int id);
 
 
 

@@ -2,6 +2,7 @@
 using Core.Entities.Concrete.DTOs;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Security.Jwt;
+using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace Business.Abstract
 {
     public interface IAuthService
     {
-        IDataResult<User> Register(UserForRegisterDto userForRegisterDto);
-        IDataResult<User> Login(UserForLoginDto userForLoginDto);
-        IDataResult<AccessToken> CreateAccessToken(User user);
+        IDataResult<UserDto> Register(UserForRegisterDto userForRegisterDto);
+        IDataResult<UserDto> Login(UserForLoginDto userForLoginDto);
+        IDataResult<AccessToken> CreateAccessToken(UserDto userDto);
 
 
 

@@ -7,13 +7,14 @@ using Core.Business;
 using Entities.Concrete.DTOs;
 using Core.Utilities.Results.Abstract;
 using Entities.Concrete.Models;
+using Entities.Concrete.DTOs.Car;
 
 namespace Business.Abstract
 {
-    public interface ICarService : IBusinessRepository<Car>
+    public interface ICarService : IBusinessRepository<CarDto,CarDtoForManipulation>
     {
-        IDataResult<IEnumerable<Car>> GetCarsByColorId(int id);
-        IDataResult<IEnumerable<Car>> GetCarsByBrandId(int id);
+        IDataResult<IEnumerable<CarDto>> GetCarsByColorId(int id);
+        IDataResult<IEnumerable<CarDto>> GetCarsByBrandId(int id);
         IDataResult<IEnumerable<CarDetailDto>> GetAllCarDetails();
 
     }

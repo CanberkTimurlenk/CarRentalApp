@@ -1,11 +1,14 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Business;
 using Core.Entities.Concrete;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
+using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -22,67 +25,85 @@ namespace Business.Concrete
     {
         //get operation claims and get by email added
         private readonly IUserDal _userDal;
-        public UserManager(IUserDal userDal)
+        private readonly IMapper _mapper;
+        public UserManager(IUserDal userDal, IMapper mapper)
         {
             _userDal = userDal;
+            _mapper = mapper;
 
         }
 
         [ValidationAspect(typeof(UserValidator))]
-        public IResult Add(User addedItem)
+        public IDataResult<int> Add(UserDtoForManipulation userDtoForManipulation)
         {
-            _userDal.Add(addedItem);
-            return new SuccessResult(Messages.UserAdded);
+            var entity = _mapper.Map<User>(userDtoForManipulation);
+
+            _userDal.Add(entity);
+
+            int id = entity.Id;
+
+            return new SuccessDataResult<int>(id, Messages.UserAdded);
         }
-        public IResult Delete(User deletedItem)
+
+        public IResult Delete(int id)
         {
-            _userDal.Delete(deletedItem);
+            var entity = _userDal.Get(u => u.Id == id);
+
+            _userDal.Delete(entity);
+
             return new SuccessResult(Messages.UserDeleted);
         }
-        public IDataResult<IEnumerable<User>> GetAll()
+        public IDataResult<IEnumerable<UserDto>> GetAll()
         {
+            var result = _mapper.Map<IEnumerable<UserDto>>(_userDal.GetAll());
 
-            return new SuccessDataResult<IEnumerable<User>>(_userDal.GetAll(),Messages.UsersListed);
+            return new SuccessDataResult<IEnumerable<UserDto>>(result, Messages.UsersListed);
+
         }
-        public IDataResult<User> GetByEmail(string email)
+        public IDataResult<UserDto> GetByEmail(string email)
         {
-            
             var result = _userDal.Get(u => u.Email == email);
 
-            if(result == null) return new ErrorDataResult<User>(Messages.DoesNotMatchAnUserAccount);
+            if (result == null)
+                return new ErrorDataResult<UserDto>(Messages.DoesNotMatchAnUserAccount);
 
-            return new SuccessDataResult<User>(result);
-            
-            //return _userDal.Get(u => u.Email == email);
-        }   
-        public IDataResult<User> GetById(int id)
-        {
-            return new SuccessDataResult<User>(_userDal.Get(u => u.Id == id), Messages.SuccessListedById);
+            return new SuccessDataResult<UserDto>(_mapper.Map<UserDto>(result));
 
-
-            
         }
-        public IDataResult<IEnumerable<OperationClaim>> GetOperationClaims(User user)
+        public IDataResult<UserDto> GetById(int id)
         {
-            var result = _userDal.GetOperationClaims(user);
+            var entity = _userDal.Get(u => u.Id == id);
+            var result = _mapper.Map<UserDto>(entity);
+
+            return new SuccessDataResult<UserDto>(result, Messages.SuccessListedById);
+
+        }
+        public IDataResult<IEnumerable<OperationClaim>> GetOperationClaims(UserDto userDto)
+        {
+            var entity = _userDal.Get(u => u.Id == userDto.Id);
+
+            var result = _userDal.GetOperationClaims(entity);
 
             if (!result.Any())
-            { 
-                return new ErrorDataResult<IEnumerable<OperationClaim>>(result,Messages.UserOperationClaimNotFound); 
+            {
+                return new ErrorDataResult<IEnumerable<OperationClaim>>(result, Messages.UserOperationClaimNotFound);
             }
 
             return new SuccessDataResult<IEnumerable<OperationClaim>>(result);
 
-            
+
 
         }
-        public IResult Update(User updatedItem)
+        public IResult Update(int id, UserDtoForManipulation userDtoForManipulation)
         {
-            _userDal.Update(updatedItem);
+            var entity = _userDal.Get(u => u.Id == id);
+
+            var mappedEntity = _mapper.Map(userDtoForManipulation, entity);
+
+            _userDal.Update(mappedEntity);
             return new SuccessResult(Messages.UserUpdated);
 
         }
-
 
     }
 }

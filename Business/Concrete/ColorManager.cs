@@ -11,50 +11,70 @@ using Core.Utilities.Results.Concrete;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Entities.Concrete.Models;
+using Entities.Concrete.DTOs.Color;
+using Core.Business;
+using AutoMapper;
 
 namespace Business.Concrete
 {
     public class ColorManager : IColorService
     {
         private readonly IColorDal _colorDal;
-        public ColorManager(IColorDal colorDal)
+        private readonly IMapper _mapper;
+        public ColorManager(IColorDal colorDal, IMapper mapper)
         {
             _colorDal = colorDal;
+            _mapper = mapper;
         }
 
         [ValidationAspect(typeof(ColorValidator))]
-        public IResult Add(Color color)
+        public IDataResult<int> Add(ColorDtoForManipulation colorDtoForManipulation)
         {
-            _colorDal.Add(color);
+            var entity = _mapper.Map<Color>(colorDtoForManipulation);
 
-            return new SuccessResult(Messages.ColorAdded);
+            _colorDal.Add(entity);
+
+            return new SuccessDataResult<int>(entity.Id, Messages.ColorAdded);
+
         }
 
-        public IResult Delete(Color color)
+        public IResult Delete(int id)
         {
-            _colorDal.Delete(color);
+            var entity = _colorDal.Get(c => c.Id == id);
+
+            _colorDal.Delete(entity);
 
             return new SuccessResult(Messages.ColorDeleted);
         }
 
-        public IDataResult<Color> GetById(int id)
+        public IDataResult<ColorDto> GetById(int id)
         {
+            var result = _mapper.Map<ColorDto>(_colorDal.Get(c => c.Id == id));
 
-            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id),Messages.SuccessListedById);
-            //  _colorDal.Get(c => c.ColorId == id);
+            return new SuccessDataResult<ColorDto>(result, Messages.SuccessListedById);
+
 
         }
 
-        public IDataResult<IEnumerable<Color>> GetAll()
+        public IDataResult<IEnumerable<ColorDto>> GetAll()
         {
-            return new SuccessDataResult<IEnumerable<Color>>(_colorDal.GetAll(),Messages.ColorsListed);
-            //return _colorDal.GetAll();
+            var result = _mapper.Map<IEnumerable<ColorDto>>(_colorDal.GetAll());
+
+            return new SuccessDataResult<IEnumerable<ColorDto>>(result, Messages.ColorsListed);
+
         }
 
-        public IResult Update(Color color)
+        public IResult Update(int id, ColorDtoForManipulation colorDtoForManipulation)
         {
-            _colorDal.Update(color);
+            var entity = _colorDal.Get(c => c.Id == id);
+
+            var mappedEntity = _mapper.Map(colorDtoForManipulation, entity);
+
+            _colorDal.Update(mappedEntity);
+
             return new SuccessResult(Messages.ColorUpdated);
         }
+
+
     }
 }

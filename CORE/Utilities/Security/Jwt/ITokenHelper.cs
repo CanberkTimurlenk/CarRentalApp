@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Core.Utilities.Security.Jwt
     public interface ITokenHelper
     {
 
-        AccessToken CreateToken(User user, IEnumerable<OperationClaim> operationClaims);
+        AccessToken CreateToken(UserDto userDto, IEnumerable<OperationClaim> operationClaims);
       
 
     }
