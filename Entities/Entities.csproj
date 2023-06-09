@@ -7,4 +7,12 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstract\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CORE\Core.csproj" />
+  </ItemGroup>
+
 </Project>

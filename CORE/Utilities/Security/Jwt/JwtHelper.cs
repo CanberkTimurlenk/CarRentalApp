@@ -11,8 +11,8 @@ using System.Security.Claims;
 using Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Core.Entities.Concrete;
-using Entities.Concrete.Models;
 using Entities.Concrete.DTOs.User;
+using Entities.Concrete.DTOs.OperationClaim;
 
 namespace Core.Utilities.Security.Jwt
 {
@@ -30,7 +30,7 @@ namespace Core.Utilities.Security.Jwt
            
         }
 
-        public AccessToken CreateToken(UserDto userDto, IEnumerable<OperationClaim> operationClaims)
+        public AccessToken CreateToken(UserDto userDto, IEnumerable<OperationClaimDto> operationClaims)
         {
             _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
@@ -47,7 +47,7 @@ namespace Core.Utilities.Security.Jwt
 
         }
 
-        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, UserDto userDto, SigningCredentials signingCredentials, IEnumerable<OperationClaim> operationClaims)
+        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, UserDto userDto, SigningCredentials signingCredentials, IEnumerable<OperationClaimDto> operationClaims)
         {
 
 
@@ -67,7 +67,7 @@ namespace Core.Utilities.Security.Jwt
 
 
 
-        private IEnumerable<Claim> SetClaims(UserDto userDto, IEnumerable<OperationClaim> operationClaims)
+        private IEnumerable<Claim> SetClaims(UserDto userDto, IEnumerable<OperationClaimDto> operationClaims)
         {
             var claims = new List<Claim>();
             claims.AddNameIdentifier(userDto.Id.ToString());

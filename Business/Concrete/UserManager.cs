@@ -8,6 +8,7 @@ using Core.Entities.Concrete;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
+using Entities.Concrete.DTOs.OperationClaim;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
@@ -78,20 +79,16 @@ namespace Business.Concrete
             return new SuccessDataResult<UserDto>(result, Messages.SuccessListedById);
 
         }
-        public IDataResult<IEnumerable<OperationClaim>> GetOperationClaims(UserDto userDto)
+        public IDataResult<IEnumerable<OperationClaimDto>> GetOperationClaims(UserDto userDto)
         {
             var entity = _userDal.Get(u => u.Id == userDto.Id);
 
-            var result = _userDal.GetOperationClaims(entity);
+            var result = _mapper.Map<IEnumerable<OperationClaimDto>>(_userDal.GetOperationClaims(entity));
 
             if (!result.Any())
-            {
-                return new ErrorDataResult<IEnumerable<OperationClaim>>(result, Messages.UserOperationClaimNotFound);
-            }
+                return new ErrorDataResult<IEnumerable<OperationClaimDto>>(result, Messages.UserOperationClaimNotFound);
 
-            return new SuccessDataResult<IEnumerable<OperationClaim>>(result);
-
-
+            return new SuccessDataResult<IEnumerable<OperationClaimDto>>(result);
 
         }
         public IResult Update(int id, UserDtoForManipulation userDtoForManipulation)

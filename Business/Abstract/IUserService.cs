@@ -1,6 +1,7 @@
 ﻿using Core.Business;
 using Core.Entities.Concrete;
 using Core.Utilities.Results.Abstract;
+using Entities.Concrete.DTOs.OperationClaim;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using System;
@@ -14,7 +15,7 @@ namespace Business.Abstract
     public interface IUserService : IBusinessRepository<UserDto,UserDtoForManipulation>
     {
 
-        IDataResult<IEnumerable<OperationClaim>> GetOperationClaims (UserDto userDto);
+        IDataResult<IEnumerable<OperationClaimDto>> GetOperationClaims (UserDto userDto);
         IDataResult<UserDto> GetByEmail(string email);
         
 
