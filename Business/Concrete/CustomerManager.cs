@@ -4,11 +4,13 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Business;
+using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs.Customer;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -42,12 +44,12 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CustomerDeleted);
         }
 
-        public IDataResult<IEnumerable<CustomerDto>> GetAll()
+        public (IDataResult<IEnumerable<CustomerDto>> result, MetaData metaData) GetAll(CustomerParamaters customerParameters)
         {
+            var customersWithMetaData = _customerDal.GetAll(customerParameters);
+            var customers = _mapper.Map<IEnumerable<CustomerDto>>(customersWithMetaData);
 
-            var result = _mapper.Map<IEnumerable<CustomerDto>>(_customerDal.GetAll());
-
-            return new SuccessDataResult<IEnumerable<CustomerDto>>(result, Messages.CustomersListed);
+            return (new SuccessDataResult<IEnumerable<CustomerDto>>(customers, Messages.CarsListed), customersWithMetaData.MetaData);
 
         }
 

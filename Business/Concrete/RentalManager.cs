@@ -6,12 +6,14 @@ using Core.Aspects.Autofac.Cache;
 using Core.Aspects.Autofac.Validation;
 using Core.Business;
 using Core.Entities.Concrete;
+using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.DTOs.Rental;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -55,12 +57,14 @@ namespace Business.Concrete
 
         }
 
-        [CacheAspect]
-        public IDataResult<IEnumerable<RentalDto>> GetAll()
-        {
-            var result = _mapper.Map<IEnumerable<RentalDto>>(_rentDal.GetAll());
 
-            return new SuccessDataResult<IEnumerable<RentalDto>>(result, Messages.RentalsListed);
+        [CacheAspect]
+        public (IDataResult<IEnumerable<RentalDto>> result, MetaData metaData) GetAll(RentalParameters rentalParameters)
+        {
+            var rentalsWithMetaData = _rentDal.GetAll(rentalParameters);
+            var rentals = _mapper.Map<IEnumerable<RentalDto>>(rentalsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<RentalDto>>(rentals, Messages.CarsListed), rentalsWithMetaData.MetaData);
 
         }
 
@@ -84,14 +88,18 @@ namespace Business.Concrete
 
             return new SuccessResult(Messages.RentalUpdated);
         }
-
+        
         [CacheAspect]
-        public IDataResult<IEnumerable<RentalDetailDto>> GetAllRentalDetails()
+        public (IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData) GetAllRentalDetails(RentalParameters rentalParameters) 
         {
-            return new SuccessDataResult<IEnumerable<RentalDetailDto>>(_rentDal.GetAllRentalDetails(), Messages.SuccessListedRentals);
+            var rentalDetailsWithMetaData = _rentDal.GetAllRentalDetails(rentalParameters);
+
+            var rentalDetails = _mapper.Map<IEnumerable<RentalDetailDto>>(rentalDetailsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<RentalDetailDto>>(rentalDetails), rentalDetailsWithMetaData.MetaData);
 
         }
 
-    
+
     }
 }

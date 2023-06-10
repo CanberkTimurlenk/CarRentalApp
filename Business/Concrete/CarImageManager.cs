@@ -11,6 +11,8 @@ using Entities.Concrete.DTOs.CarImage;
 using AutoMapper;
 using Entities.Concrete.Models;
 using Core.Business;
+using Entities.Concrete.RequestFeatures;
+using Core.Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -90,7 +92,7 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<IEnumerable<CarImageDto>> GetByCarId(int carId)    //  If there is not such an image, it returns ErrorResult
+        public (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetByCarId(CarImageParameters carImageParameters, int carId)    //  If there is not such an image, it returns ErrorResult
         {
             var ruleCheck = BusinessRules.Run(
                 CheckIfMentionedCarHaveAnyImage(carId)
@@ -101,15 +103,15 @@ namespace Business.Concrete
             if (ruleCheck is not null)
             {
                 result = new List<CarImageDto> { GetDefaultImage(carId).Data };
-                return new ErrorDataResult<IEnumerable<CarImageDto>>(result, Messages.EmptyImage);
+                return (new ErrorDataResult<IEnumerable<CarImageDto>>(result, Messages.EmptyImage),null);
 
             }
 
-            var entitiesByCarId = _carImageDal.GetAll(c => c.CarId == carId);
+            var entitiesByCarId = _carImageDal.GetAll(carImageParameters,c => c.CarId == carId);
 
             result = _mapper.Map<IEnumerable<CarImageDto>>(entitiesByCarId);
 
-            return new SuccessDataResult<IEnumerable<CarImageDto>>(result, Messages.SuccessListedById);
+            return (new SuccessDataResult<IEnumerable<CarImageDto>>(result, Messages.SuccessListedById), entitiesByCarId.MetaData);
 
         }
 
@@ -123,11 +125,13 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<IEnumerable<CarImageDto>> GetAll()
+        public (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetAll(CarImageParameters carImageParameters)
         {
-            var result = _mapper.Map<IEnumerable<CarImageDto>>(_carImageDal.GetAll());
+            var carImagesWithMetaData = _carImageDal.GetAll(carImageParameters);
 
-            return new SuccessDataResult<IEnumerable<CarImageDto>>(result, Messages.CarImagesListed);
+            var carImages = _mapper.Map<IEnumerable<CarImageDto>>(carImagesWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<CarImageDto>>(carImages), carImagesWithMetaData.MetaData);
         }
 
 

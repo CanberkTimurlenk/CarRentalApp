@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Abstract;
+﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Business.Constants;
 using Core.Utilities.Results.Concrete;
 using Core.Utilities.Results.Abstract;
 using Core.Aspects.Autofac.Validation;
 using Business.ValidationRules.FluentValidation;
-using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Performance;
 using Entities.Concrete.Models;
 using AutoMapper;
 using Entities.Concrete.DTOs.Brand;
+using Core.Entities.Concrete.RequestFeatures;
+using Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -62,12 +58,12 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<IEnumerable<BrandDto>> GetAll()
+        public (IDataResult<IEnumerable<BrandDto>> result, MetaData metaData) GetAll(BrandParameters brandParameters)
         {
-            var entity = _mapper.Map<IEnumerable<BrandDto>>(_brandDal.GetAll());
+            var brandsWithMetaData = _brandDal.GetAll(brandParameters);
+            var brands = _mapper.Map<IEnumerable<BrandDto>>(brandsWithMetaData);
 
-            return new SuccessDataResult<IEnumerable<BrandDto>>(entity, Messages.BrandsListed);
-
+            return (new SuccessDataResult<IEnumerable<BrandDto>>(brands, Messages.BrandsListed), brandsWithMetaData.MetaData);
 
         }
 
@@ -81,5 +77,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.BrandUpdated);
         }
 
+        
     }
 }

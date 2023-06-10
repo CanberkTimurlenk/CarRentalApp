@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Business;
+﻿using Core.Business;
 using Entities.Concrete.DTOs;
 using Core.Utilities.Results.Abstract;
-using Entities.Concrete.Models;
 using Entities.Concrete.DTOs.Car;
+using Entities.Concrete.RequestFeatures;
+using Core.Entities.Concrete.RequestFeatures;
 
 namespace Business.Abstract
 {
-    public interface ICarService : IBusinessRepository<CarDto,CarDtoForManipulation>
-    {
-        IDataResult<IEnumerable<CarDto>> GetCarsByColorId(int id);
-        IDataResult<IEnumerable<CarDto>> GetCarsByBrandId(int id);
-        IDataResult<IEnumerable<CarDetailDto>> GetAllCarDetails();
-
+    public interface ICarService : IBusinessRepository<CarDto,CarDtoForManipulation,CarParameters>
+    {        
+        (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByColorId(CarParameters carParameters, int colorId);
+        (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByBrandId(CarParameters carParameters, int brandId);
+        (IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData) GetAllCarDetails(CarParameters carParameters);        
     }
 
 }

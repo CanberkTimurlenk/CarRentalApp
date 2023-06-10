@@ -4,6 +4,7 @@ using Core.Utilities.Results.Abstract;
 using Core.Utilities.Security.Jwt;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,6 @@ namespace Business.Abstract
         IDataResult<UserDto> Register(UserForRegisterDto userForRegisterDto);
         IDataResult<UserDto> Login(UserForLoginDto userForLoginDto);
         IDataResult<AccessToken> CreateAccessToken(UserDto userDto);
-
-
-
-
-
-
+        
     }
 }

@@ -11,6 +11,9 @@ using Entities.Concrete.Models;
 using AutoMapper;
 using Entities.Concrete.DTOs.Car;
 using Core.Business;
+using Entities.Concrete.RequestFeatures;
+using Entities.Concrete;
+using Core.Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -18,24 +21,22 @@ namespace Business.Concrete
     {
         private readonly ICarDal _carDal;
         private readonly IMapper _mapper;
-        
 
-        public CarManager(ICarDal carDal, IMapper mapper)  
+
+        public CarManager(ICarDal carDal, IMapper mapper)
         {
-            _carDal = carDal;   
+            _carDal = carDal;
             _mapper = mapper;
         }
 
 
-        //[CacheAspect]
-        public IDataResult<IEnumerable<CarDto>> GetAll()
-        {            
-            var result = _mapper.Map<IEnumerable<CarDto>>(_carDal.GetAll()); 
+        [CacheAspect]
+        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetAll(CarParameters carParameters)
+        {
+            var carsWithMetaData = _carDal.GetAll(requestParameters: carParameters);
+            var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
-
-
-            return new SuccessDataResult<IEnumerable<CarDto>>(result, Messages.CarsListed);
-            //return _carDal.GetAll();
+            return (new SuccessDataResult<IEnumerable<CarDto>>(cars, Messages.CarsListed), carsWithMetaData.MetaData);
 
         }
 
@@ -45,7 +46,7 @@ namespace Business.Concrete
 
             return new SuccessDataResult<CarDto>(_mapper.Map<CarDto>(entity), Messages.SuccessListedById);
         }
-        
+
         //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         public IDataResult<int> Add(CarDtoForManipulation carDtoForManipulation)
@@ -54,10 +55,10 @@ namespace Business.Concrete
 
             _carDal.Add(entity);
 
-            return new SuccessDataResult<int>(entity.Id,Messages.CarAdded);
+            return new SuccessDataResult<int>(entity.Id, Messages.CarAdded);
         }
 
-        public IResult Update(int id,CarDtoForManipulation carDtoForManipulation)
+        public IResult Update(int id, CarDtoForManipulation carDtoForManipulation)
         {
             var entity = _carDal.Get(c => c.Id == id);
 
@@ -71,42 +72,45 @@ namespace Business.Concrete
 
         public IResult Delete(int id)
         {
-            
+
             var entity = _carDal.Get(c => c.Id == id);
 
             _carDal.Delete(entity);
 
             return new SuccessResult(Messages.CarDeleted);
 
-            
-        }
-
-        public IDataResult<IEnumerable<CarDto>> GetCarsByColorId(int colorId)
-        {
-            var entity = _carDal.GetAll(c => c.ColorId == colorId).ToList();
-            
-            return new SuccessDataResult<IEnumerable<CarDto>>(_mapper.Map<IEnumerable<CarDto>>(entity));
 
         }
 
-        public IDataResult<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
+        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByColorId(CarParameters carParameters, int colorId)
         {
-            var entity = _carDal.GetAll(c => c.BrandId == brandId).ToList();
-            
-            return new SuccessDataResult<IEnumerable<CarDto>>(_mapper.Map<IEnumerable<CarDto>>(entity));
+            var carsWithMetaData = _carDal.GetAll(carParameters, c => c.ColorId == colorId);
+
+            var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<CarDto>>(cars), carsWithMetaData.MetaData);
+
+        }
+
+        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByBrandId(CarParameters carParameters, int brandId)
+        {
+            var carsWithMetaData = _carDal.GetAll(carParameters, c => c.BrandId == brandId);
+
+            var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<CarDto>>(cars), carsWithMetaData.MetaData);
 
         }
 
         //[CacheAspect]
-        public IDataResult<IEnumerable<CarDetailDto>> GetAllCarDetails()
+        public (IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData) GetAllCarDetails(CarParameters carParameters)
         {
-            var entity = _carDal.GetAllCarDetails();
+            var carDetailsWithMetaData = _carDal.GetAll(carParameters);
 
-            return new SuccessDataResult<IEnumerable<CarDetailDto>>(_mapper.Map<IEnumerable<CarDetailDto>>(entity));
+            var carDetails = _mapper.Map<IEnumerable<CarDetailDto>>(carDetailsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<CarDetailDto>>(carDetails), carDetailsWithMetaData.MetaData);
 
         }
-
-        
-
     }
 }

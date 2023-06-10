@@ -14,6 +14,8 @@ using Entities.Concrete.Models;
 using Entities.Concrete.DTOs.Color;
 using Core.Business;
 using AutoMapper;
+using Core.Entities.Concrete.RequestFeatures;
+using Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -56,11 +58,12 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<IEnumerable<ColorDto>> GetAll()
+        public (IDataResult<IEnumerable<ColorDto>> result, MetaData metaData) GetAll(ColorParameters colorParameters)
         {
-            var result = _mapper.Map<IEnumerable<ColorDto>>(_colorDal.GetAll());
+            var colorsWithMetaData = _colorDal.GetAll(colorParameters);
+            var colors = _mapper.Map<IEnumerable<ColorDto>>(colorsWithMetaData);
 
-            return new SuccessDataResult<IEnumerable<ColorDto>>(result, Messages.ColorsListed);
+            return (new SuccessDataResult<IEnumerable<ColorDto>>(colors, Messages.CarsListed), colorsWithMetaData.MetaData);
 
         }
 

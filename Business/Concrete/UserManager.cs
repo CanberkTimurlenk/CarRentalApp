@@ -5,12 +5,14 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Business;
 using Core.Entities.Concrete;
+using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs.OperationClaim;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,11 +56,12 @@ namespace Business.Concrete
 
             return new SuccessResult(Messages.UserDeleted);
         }
-        public IDataResult<IEnumerable<UserDto>> GetAll()
+        public (IDataResult<IEnumerable<UserDto>> result, MetaData metaData) GetAll(UserParameters userParameters)
         {
-            var result = _mapper.Map<IEnumerable<UserDto>>(_userDal.GetAll());
+            var usersWithMetaData = _userDal.GetAll(userParameters);
+            var users = _mapper.Map<IEnumerable<UserDto>>(usersWithMetaData);
 
-            return new SuccessDataResult<IEnumerable<UserDto>>(result, Messages.UsersListed);
+            return (new SuccessDataResult<IEnumerable<UserDto>>(users, Messages.CarsListed), usersWithMetaData.MetaData);
 
         }
         public IDataResult<UserDto> GetByEmail(string email)
@@ -71,6 +74,7 @@ namespace Business.Concrete
             return new SuccessDataResult<UserDto>(_mapper.Map<UserDto>(result));
 
         }
+    
         public IDataResult<UserDto> GetById(int id)
         {
             var entity = _userDal.Get(u => u.Id == id);

@@ -2,13 +2,14 @@
 using Business.Abstract;
 using Business.Constants;
 using Core.Business;
+using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.DTOs.CartItem;
 using Entities.Concrete.Models;
-
+using Entities.Concrete.RequestFeatures;
 
 namespace Business.Concrete
 {
@@ -44,10 +45,13 @@ namespace Business.Concrete
             return new ErrorResult(Messages.CartItemNotExist);
         }
 
-        public IDataResult<IEnumerable<CartItemDto>> GetAll()
+        public (IDataResult<IEnumerable<CartItemDto>> result, MetaData metaData) GetAll(CartItemParameters cartItemParameters)
         {
-            var result = _mapper.Map<IEnumerable<CartItemDto>>(_cartItemDal.GetAll());
-            return new SuccessDataResult<IEnumerable<CartItemDto>>(result,Messages.CartItemsListed);
+            var cartItemsWithMetaData = _cartItemDal.GetAll(cartItemParameters);
+            var cartItems = _mapper.Map<IEnumerable<CartItemDto>>(cartItemsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<CartItemDto>>(cartItems, Messages.CarsListed), cartItemsWithMetaData.MetaData);
+
         }
 
         public IDataResult<CartItemDto> GetById(int id)
@@ -61,9 +65,13 @@ namespace Business.Concrete
         }
 
 
-        public IDataResult<IEnumerable<CartItemDetailDto>> GetCartItemDetailsByCustomerId(int id)
+        public (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id,CartItemParameters cartItemParameters)
         {
-            return new SuccessDataResult<IEnumerable<CartItemDetailDto>>(data: _cartItemDal.GetAllCartItemDetails(c => c.CustomerId == id));
+            var cartItemsWithMetaData = _cartItemDal.GetAll(cartItemParameters, c => c.CustomerId == id);
+
+            var cartItems = _mapper.Map<IEnumerable<CartItemDetailDto>>(cartItemsWithMetaData);
+
+            return (new SuccessDataResult<IEnumerable<CartItemDetailDto>>(cartItems), cartItemsWithMetaData.MetaData);
 
         }
 

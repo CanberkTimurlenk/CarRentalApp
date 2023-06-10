@@ -10,14 +10,14 @@ namespace Business.Constants
     public static class Messages
     {
         
-        public static readonly string CarAdded = "Car Added.";
-        public static readonly string BrandAdded = "Brand Added.";
-        public static readonly string ColorAdded = "Color Added.";
-        public static readonly string RentalAdded = "Rental Added.";
-        public static readonly string UserAdded = "User Added.";
-        public static readonly string CustomerAdded = "Customer Added.";
-        public static readonly string CarImageAdded = "CarImage Added.";
-        public static readonly string CartItemAdded = "CartItem Added.";
+        public static readonly string CarAdded = "Car Added with returned Id";
+        public static readonly string BrandAdded = "Brand Added with returned Id";
+        public static readonly string ColorAdded = "Color Added with returned Id";
+        public static readonly string RentalAdded = "Rental Added with returned Id";
+        public static readonly string UserAdded = "User Added with returned Id";
+        public static readonly string CustomerAdded = "Customer Added with returned Id";
+        public static readonly string CarImageAdded = "CarImage Added with returned Id";
+        public static readonly string CartItemAdded = "CartItem Added with returned Id";
 
         public static readonly string DescriptionLengthException = "Description must contain at least 2 characters";
         public static readonly string DailyPriceException = "Daily price must be greater than zero";
@@ -56,7 +56,7 @@ namespace Business.Constants
 
 
 
-        public static readonly string SuccessListedById = "Object matched with the related Id was fetched.";
+        public static readonly string SuccessListedById = "Object matched with returnedthe related Id was fetched.";
 
         public static readonly string InvalidRentalAdd = "The car have already been rented.";
 
@@ -64,7 +64,7 @@ namespace Business.Constants
         
         public static readonly string SuccessListedByCarId = "Images listed by carId";
         public static readonly string UserOperationClaimNotFound = "User does not have an operation Claim";
-        public static readonly string DoesNotMatchAnUserAccount = "Does not match with an user account.";
+        public static readonly string DoesNotMatchAnUserAccount = "Does not match with returnedan user account.";
         public static readonly string UserNotExist ="User does not exist";
         public static readonly string CartItemNotExist = "Cart item does not exist.";
 
