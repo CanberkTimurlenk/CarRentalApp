@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Customer;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -98,18 +100,17 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("getall")]
-        public IActionResult GetAll()
-
+        public IActionResult GetAll(CustomerParamaters customerParameters)
         {
-            var result = _customerService.GetAll();
+            var pagedResult = _customerService.GetAll(customerParameters);
+            
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            if (result.Success)
-            {
-                return Ok(result);
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            }
-
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
     }

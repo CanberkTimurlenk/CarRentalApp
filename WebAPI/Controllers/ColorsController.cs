@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Color;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -98,18 +100,18 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("getall")]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] ColorParameters colorParameters)
 
         {
-            var result = _colorService.GetAll();
+            var pagedResult = _colorService.GetAll(colorParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
 

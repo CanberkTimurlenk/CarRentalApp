@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Brand;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -32,19 +34,10 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add(BrandDtoForManipulation brandDtoForManipulation)
         {
-
             var result = _brandService.Add(brandDtoForManipulation);
 
-            // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
@@ -53,13 +46,10 @@ namespace WebAPI.Controllers
         [HttpPost("update")]
         public IActionResult Update(int id, BrandDtoForManipulation brandDtoForManipulation)
         {
-            var result = _brandService.Update(id,brandDtoForManipulation);
+            var result = _brandService.Update(id, brandDtoForManipulation);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
@@ -71,13 +61,9 @@ namespace WebAPI.Controllers
             var result = _brandService.Delete(id);
 
             if (result.Success)
-            {
                 return Ok(result);
 
-            }
-
             return BadRequest(result);
-
         }
 
 
@@ -87,10 +73,7 @@ namespace WebAPI.Controllers
             var result = _brandService.GetById(brandId);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
@@ -98,19 +81,18 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("getall")]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] BrandParameters brandParameters)
 
         {
-            var result = _brandService.GetAll();
+            var pagedResult = _brandService.GetAll(brandParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
-
+            return BadRequest(pagedResult.result);
         }
 
 

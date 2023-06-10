@@ -1,15 +1,17 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Car;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
 
-    //      api/Cars ile erişim sağlayacağım 
+
 
     public class CarsController : ControllerBase
     {
@@ -18,7 +20,7 @@ namespace WebAPI.Controllers
         private readonly ICarService _carService;
         public CarsController(ICarService carService)
         {
-            _carService = carService;   //  Dependency Injection
+            _carService = carService;
         }
 
         /*
@@ -41,16 +43,9 @@ namespace WebAPI.Controllers
 
             var result = _carService.Add(carDtoForManipulation);
 
-            // gönderdiğimiz car objesi business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
 
-            }
 
             return BadRequest(result);
 
@@ -62,10 +57,7 @@ namespace WebAPI.Controllers
             var result = _carService.Update(id, carDtoForManipulation);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
@@ -77,10 +69,7 @@ namespace WebAPI.Controllers
             var result = _carService.Delete(id);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
@@ -88,49 +77,49 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("getallcardetails")]
-        public IActionResult GetAllCarDetails()
+        public IActionResult GetAllCarDetails(CarParameters carParameters)
         {
-            var result = _carService.GetAllCarDetails();
+            var pagedResult = _carService.GetAllCarDetails(carParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
-
+            return BadRequest(pagedResult.result);
 
         }
 
 
         [HttpPost("getcarsbycolorid")]
-        public IActionResult GetCarsByColorId(int id)
+        public IActionResult GetCarsByColorId([FromQuery] CarParameters carParameters, int colorId)
         {
-            var result = _carService.GetCarsByColorId(id);
+            var pagedResult = _carService.GetCarsByColorId(carParameters, colorId);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
 
 
         [HttpPost("getcarsbybrandid")]
-        public IActionResult GetCarsByBrandId(int id)
+        public IActionResult GetCarsByBrandId([FromQuery] CarParameters carParameters, int brandId)
         {
-            var result = _carService.GetCarsByBrandId(id);
+            var pagedResult = _carService.GetCarsByBrandId(carParameters,brandId);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
-            return BadRequest(result);
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
+
+            return BadRequest(pagedResult.result);
         }
 
 
@@ -140,10 +129,7 @@ namespace WebAPI.Controllers
             var result = _carService.GetById(id);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
@@ -151,20 +137,18 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("getall")]
-        public IActionResult GetAll()
-
+        public IActionResult GetAll([FromQuery] CarParameters carParameters)
         {
-            var result = _carService.GetAll();
+            var pagedResult = _carService.GetAll(carParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
-
     }
 }

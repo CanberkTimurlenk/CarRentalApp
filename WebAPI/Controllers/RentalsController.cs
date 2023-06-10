@@ -1,9 +1,8 @@
 ﻿using Business.Abstract;
-using Core.Entities.Concrete;
 using Entities.Concrete.DTOs.Rental;
-using Entities.Concrete.Models;
-using Microsoft.AspNetCore.Http;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -18,118 +17,77 @@ namespace WebAPI.Controllers
             _rentalService = rentalService;
         }
 
-        /*
-         * List of Operations
-         * Add
-         * Update
-         * Delete
-         * GetById
-         * GetAll
-         * GetAllRentalDetails
-         * 
-         */
-
-
         [HttpPost("add")]
         public IActionResult Add(RentalDtoForManipulation rentalDtoForManipulation)
         {
-
             var result = _rentalService.Add(rentalDtoForManipulation);
 
-            // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
         [HttpPost("update")]
         public IActionResult Update(int id, RentalDtoForManipulation rentalDtoForManipulation)
         {
             var result = _rentalService.Update(id, rentalDtoForManipulation);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
         [HttpPost("delete")]
         public IActionResult Delete(int id)
         {
             var result = _rentalService.Delete(id);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
-
         [HttpPost("getbyid")]
         public IActionResult GetById(int id)
         {
             var result = _rentalService.GetById(id);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
-
         [HttpGet("getall")]
-        public IActionResult GetAll()
-
+        public IActionResult GetAll([FromQuery] RentalParameters rentalParameters)
         {
-            var result = _rentalService.GetAll();
+            var pagedResult = _rentalService.GetAll(rentalParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
-
-
         [HttpGet("getallrentaldetails")]
-        public IActionResult GetAllRentalDetails()
+        public IActionResult GetAllRentalDetails([FromQuery] RentalParameters rentalParameters)
         {
-            var result = _rentalService.GetAllRentalDetails();
+            var pagedResult = _rentalService.GetAllRentalDetails(rentalParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
-
-
     }
 }

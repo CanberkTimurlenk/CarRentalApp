@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.CarImage;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -68,19 +70,18 @@ namespace WebAPI.Controllers
 
         }
         [HttpGet("getbycarid")]
-        public IActionResult GetByCarId([FromForm] int carImageId)
+        public IActionResult GetByCarId([FromQuery] CarImageParameters carImageParameters,[FromForm] int carImageId)
         {
 
-            var result = _carImageService.GetByCarId(carImageId);
+            var pagedResult = _carImageService.GetByCarId(carImageParameters,carImageId);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            }
-
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
         [HttpGet("getbyid")]
@@ -100,19 +101,17 @@ namespace WebAPI.Controllers
 
         }
         [HttpGet("getall")]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] CarImageParameters carImageParameters)
         {
+            var pagedResult = _carImageService.GetAll(carImageParameters);
 
-            var result = _carImageService.GetAll();
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            if (result.Success)
-            {
-                return Ok(result);
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-
-            }
-
-            return BadRequest(result);
+            return BadRequest(pagedResult.result);
 
         }
 

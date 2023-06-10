@@ -2,9 +2,10 @@
 using Core.Entities.Concrete;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -18,99 +19,63 @@ namespace WebAPI.Controllers
             _userService = userService;
         }
 
-
-        /*
-         * List of Operations
-         * Add
-         * Update
-         * Delete
-         * GetById
-         * GetAll
-         * 
-         */
-
-
         [HttpPost("add")]
         public IActionResult Add(UserDtoForManipulation userDtoForManipulation)
         {
-
             var result = _userService.Add(userDtoForManipulation);
 
-            // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
         [HttpPost("update")]
         public IActionResult Update(int id,UserDtoForManipulation userDtoForManipulation)
         {
             var result = _userService.Update(id,userDtoForManipulation);
 
             if (result.Success)
-            {
                 return Ok(result);
 
-            }
             return BadRequest(result);
 
         }
-
         [HttpPost("delete")]
         public IActionResult Delete(int id)
         {
             var result = _userService.Delete(id);
 
             if (result.Success)
-            {
-                return Ok(result);
-
-            }
+                 return Ok(result);
 
             return BadRequest(result);
 
         }
-
-
         [HttpPost("getbyid")]
         public IActionResult GetById(int id)
         {
             var result = _userService.GetById(id);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
-
         [HttpGet("getall")]
-        public IActionResult GetAll()
-
+        public IActionResult GetAll([FromQuery] UserParameters userParameters)
         {
-            var result = _userService.GetAll();
+            var pagedResult = _userService.GetAll(userParameters);
 
-            if (result.Success)
-            {
-                return Ok(result);
+            Response.Headers
+                    .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-            }
+            if (pagedResult.result.Success)
+                return Ok(pagedResult.result);
 
-            return BadRequest(result);
-
+            return BadRequest(pagedResult.result);
         }
+    
     }
 }
