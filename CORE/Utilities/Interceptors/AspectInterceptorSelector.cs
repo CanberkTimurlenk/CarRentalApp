@@ -18,7 +18,7 @@ namespace Core.Utilities.Interceptors
         public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
         {
             var classAttributes = type.GetCustomAttributes<MethodInterceptionBaseAttribute>
-                (true).ToList();
+                 (true).ToList();
 
             var methodAttributes = type.GetMethod(method.Name)
                 .GetCustomAttributes<MethodInterceptionBaseAttribute>(true);
@@ -26,7 +26,7 @@ namespace Core.Utilities.Interceptors
 
 
             return classAttributes.OrderBy(x => x.Priority).ToArray();
-            
+
 
 
         }
