@@ -1,16 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Business.Abstract;
-using Business.Concrete;
 using Business.DependencyResolvers.Autofac;
-using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework;
-using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Core.Utilities.IoC;
 using Core.Extensions;
 using WebAPI.ContextFactory;
 using Microsoft.EntityFrameworkCore.Design;
@@ -41,6 +32,8 @@ builder.Services.AddSingleton<IDesignTimeDbContextFactory<CarAppContext>> (new C
 //  Extension Methods
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ApplyAuthentication(tokenOptions);
+builder.Services.ConfigureCors();
+
 
 var app = builder.Build();
 
@@ -51,10 +44,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
-
 app.UseStaticFiles();
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
