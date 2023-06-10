@@ -1,18 +1,13 @@
 ﻿using Core.DataAccess.EntityFramework;
 using DataAccess.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Entities.Concrete;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.EntityFrameworkCore.Design;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfUserDal : EfEntityRepositoryBase<User, CarAppContext>, IUserDal
+    public class EfUserDal : EfEntityRepositoryBase<User, CarAppContext,UserParameters>, IUserDal
     {
         private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
 

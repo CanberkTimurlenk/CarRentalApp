@@ -1,18 +1,14 @@
 ﻿using Core.DataAccess;
-using Core.Entities.Concrete;
+using Entities.Concrete;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Abstract
 {
-    public interface IRentalDal : IRepositoryBase<Rental>
+    public interface IRentalDal : IRepositoryBase<Rental, RentalParameters>
     {
-        IEnumerable<RentalDetailDto> GetAllRentalDetails();
+        PagedList<RentalDetailDto> GetAllRentalDetails(RentalParameters rentalParameters);
 
     }
 }

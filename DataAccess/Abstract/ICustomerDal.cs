@@ -1,14 +1,10 @@
 ﻿using Core.DataAccess;
 using Entities.Concrete.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Abstract
 {
-    public interface ICustomerDal : IRepositoryBase<Customer>
+    public interface ICustomerDal : IRepositoryBase<Customer,CustomerParamaters>
     {
 
     }

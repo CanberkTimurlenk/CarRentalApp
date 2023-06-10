@@ -3,6 +3,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCartItemDal : EfEntityRepositoryBase<CartItem, CarAppContext>, ICartItemDal
+    public class EfCartItemDal : EfEntityRepositoryBase<CartItem, CarAppContext, CartItemParameters>, ICartItemDal
     {
         private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
 
@@ -23,10 +24,10 @@ namespace DataAccess.Concrete.EntityFramework
             _contextFactory = contextFactory;
         }
 
-        public IEnumerable<CartItemDetailDto> GetAllCartItemDetails(Expression<Func<CartItemDetailDto,bool>>filter = null)
+        public IEnumerable<CartItemDetailDto> GetAllCartItemDetails(Expression<Func<CartItemDetailDto, bool>> filter = null)
         {
-            
-            
+
+
             using (var context = _contextFactory.CreateDbContext(new string[0]))
             {
                 var result = from cartItem in context.CartItems
@@ -47,10 +48,10 @@ namespace DataAccess.Concrete.EntityFramework
 
 
                 return result.ToList();
-            } 
-         
+            }
 
-    }
-          
+
+        }
+
     }
 }

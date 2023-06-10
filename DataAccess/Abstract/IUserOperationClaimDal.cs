@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess;
+using Core.Entities.Concrete.RequestFeatures.Concrete;
 using Entities.Concrete.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface IUserOperationClaimDal : IRepositoryBase<UserOperationClaim>
+    public interface IUserOperationClaimDal : IRepositoryBase<UserOperationClaim, UserOperationClaimParameters>
     {
 
     }

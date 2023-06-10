@@ -10,10 +10,11 @@ using System.Linq.Expressions;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.EntityFrameworkCore.Design;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfBrandDal : EfEntityRepositoryBase <Brand,CarAppContext> , IBrandDal       
+    public class EfBrandDal : EfEntityRepositoryBase <Brand,CarAppContext,BrandParameters> , IBrandDal       
     {        
         public EfBrandDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)

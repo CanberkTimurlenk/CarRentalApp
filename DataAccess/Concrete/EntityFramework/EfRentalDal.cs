@@ -2,8 +2,10 @@
 using Core.Entities.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using Entities.Concrete;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfRentalDal : EfEntityRepositoryBase<Rental,CarAppContext> , IRentalDal
+    public class EfRentalDal : EfEntityRepositoryBase<Rental,CarAppContext,RentalParameters> , IRentalDal
     {
         private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
         public EfRentalDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
@@ -21,7 +23,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             _contextFactory = contextFactory;
         }
-        public IEnumerable<RentalDetailDto> GetAllRentalDetails()
+        public PagedList<RentalDetailDto> GetAllRentalDetails(RentalParameters rentalParameters)
         {
             using (var context = _contextFactory.CreateDbContext(new string[0]))
             {
@@ -42,10 +44,7 @@ namespace DataAccess.Concrete.EntityFramework
 
                              };
 
-
-
-                return result.ToList();
-
+                return PagedList<RentalDetailDto>.ToPagedList(result, rentalParameters.PageNumber, rentalParameters.PageSize);
 
             }
             

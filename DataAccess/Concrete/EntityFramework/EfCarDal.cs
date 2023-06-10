@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccess.Abstract;
+﻿using DataAccess.Abstract;
 using Core.DataAccess.EntityFramework;
-using Microsoft.EntityFrameworkCore;
 using Entities.Concrete.DTOs;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.EntityFrameworkCore.Design;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
+using Entities.Concrete;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : EfEntityRepositoryBase<Car, CarAppContext>, ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarAppContext,CarParameters>, ICarDal
     {
         private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
         public EfCarDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
@@ -23,7 +18,7 @@ namespace DataAccess.Concrete.EntityFramework
             _contextFactory = contextFactory;
         }
 
-        public IEnumerable<CarDetailDto> GetAllCarDetails()
+        public PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters)
         {
             using (var context = _contextFactory.CreateDbContext(new string[0]))
             {
@@ -40,8 +35,13 @@ namespace DataAccess.Concrete.EntityFramework
                                  DailyPrice = car.DailyPrice,
 
                              };
-                return result.ToList();
+
+                return PagedList<CarDetailDto>.ToPagedList(
+                    result, carParameters.PageNumber, carParameters.PageSize
+                    );
             }
+
         }
+       
     }
 }

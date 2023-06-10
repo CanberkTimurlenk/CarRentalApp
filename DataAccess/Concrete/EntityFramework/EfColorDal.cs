@@ -10,10 +10,11 @@ using System.Linq.Expressions;
 using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.EntityFrameworkCore.Design;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfColorDal : EfEntityRepositoryBase<Color,CarAppContext> , IColorDal    
+    public class EfColorDal : EfEntityRepositoryBase<Color,CarAppContext,ColorParameters> , IColorDal    
     {
         public EfColorDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
             : base(contextFactory)

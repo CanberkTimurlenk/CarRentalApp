@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.DataAccess;
+﻿using Core.DataAccess;
+using Core.Entities.Concrete.RequestFeatures;
+using Entities.Concrete;
 using Entities.Concrete.DTOs;
+using Entities.Concrete.DTOs.Car;
 using Entities.Concrete.Models;
+using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Abstract
 {
-    public interface ICarDal : IRepositoryBase<Car>
+    public interface ICarDal : IRepositoryBase<Car,CarParameters>
     {
-        IEnumerable<CarDetailDto> GetAllCarDetails();
-        // yeni oluşturduğumuz CarDetailDto isimli entity class ı istediğimiz verileri prop olarak tutuyor
-        // return type ı bu class ait objectler olan bir list 
-        // parametre almıyor tüm araçların detayını dökecek.
-        // ICarDal , car ile alakalı tüm işlemlerin signature (imzalarının) yazıldığı interface
-        // Entity framework ya da çalışılan platform her neyse bu methodun içeriğini ona göre dolduracak
-        // bu method özünde sadece car ile alakalı olduğu için sadece buraya yazdık :) !!
+        PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters);
 
     }
 }
