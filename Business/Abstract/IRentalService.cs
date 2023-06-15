@@ -16,7 +16,7 @@ namespace Business.Abstract
 {
     public interface IRentalService : IBusinessRepository<RentalDto,RentalDtoForManipulation,RentalParameters>
     {        
-        (IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData) GetAllRentalDetails(RentalParameters rentalParameters);
+        (IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData) GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges);
 
     }
 }

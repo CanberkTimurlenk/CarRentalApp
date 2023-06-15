@@ -1,5 +1,4 @@
 ﻿using Business.Abstract;
-using DataAccess.Abstract;
 using Entities.Concrete.DTOs;
 using Business.Constants;
 using Core.Utilities.Results.Abstract;
@@ -10,39 +9,37 @@ using Core.Aspects.Autofac.Cache;
 using Entities.Concrete.Models;
 using AutoMapper;
 using Entities.Concrete.DTOs.Car;
-using Core.Business;
 using Entities.Concrete.RequestFeatures;
-using Entities.Concrete;
 using Core.Entities.Concrete.RequestFeatures;
+using DataAccess.Abstract.RepositoryManager;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
-        private readonly ICarDal _carDal;
+        private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
 
-
-        public CarManager(ICarDal carDal, IMapper mapper)
+        public CarManager(IRepositoryManager manager, IMapper mapper)
         {
-            _carDal = carDal;
+            _manager = manager;
             _mapper = mapper;
         }
 
 
-        [CacheAspect]
-        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetAll(CarParameters carParameters)
+        //[CacheAspect]
+        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetAll(CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _carDal.GetAll(requestParameters: carParameters);
+            var carsWithMetaData = _manager.Car.GetAll(carParameters, trackChanges);
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CarDto>>(cars, Messages.CarsListed), carsWithMetaData.MetaData);
 
         }
 
-        public IDataResult<CarDto> GetById(int id)
+        public IDataResult<CarDto> GetById(int id, bool trackChanges)
         {
-            var entity = _carDal.Get(c => c.Id == id);
+            var entity = _manager.Car.Get(c => c.Id == id, trackChanges);
 
             return new SuccessDataResult<CarDto>(_mapper.Map<CarDto>(entity), Messages.SuccessListedById);
         }
@@ -53,38 +50,38 @@ namespace Business.Concrete
         {
             var entity = _mapper.Map<Car>(carDtoForManipulation);
 
-            _carDal.Add(entity);
+            _manager.Car.Add(entity);
+            _manager.Save();
 
             return new SuccessDataResult<int>(entity.Id, Messages.CarAdded);
         }
 
-        public IResult Update(int id, CarDtoForManipulation carDtoForManipulation)
+        public IResult Update(int id, CarDtoForManipulation carDtoForManipulation, bool trackChanges)
         {
-            var entity = _carDal.Get(c => c.Id == id);
-
+            var entity = _manager.Car.Get((c => c.Id == id), trackChanges);
             var mappedEntity = _mapper.Map(carDtoForManipulation, entity);
 
-            _carDal.Update(mappedEntity);
+            _manager.Car.Update(mappedEntity);
+            _manager.Save();
 
             return new SuccessResult(Messages.CarUpdated);
 
         }
 
-        public IResult Delete(int id)
+        public IResult Delete(int id, bool trackChanges)
         {
+            var entity = _manager.Car.Get(c => c.Id == id, trackChanges);
 
-            var entity = _carDal.Get(c => c.Id == id);
-
-            _carDal.Delete(entity);
+            _manager.Car.Delete(entity);
+            _manager.Save();
 
             return new SuccessResult(Messages.CarDeleted);
 
-
         }
 
-        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByColorId(CarParameters carParameters, int colorId)
+        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByColorId(int colorId, CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _carDal.GetAll(carParameters, c => c.ColorId == colorId);
+            var carsWithMetaData = _manager.Car.GetAllByCondition(c => c.ColorId == colorId, carParameters, trackChanges);
 
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
@@ -92,9 +89,9 @@ namespace Business.Concrete
 
         }
 
-        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByBrandId(CarParameters carParameters, int brandId)
+        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByBrandId(int brandId, CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _carDal.GetAll(carParameters, c => c.BrandId == brandId);
+            var carsWithMetaData = _manager.Car.GetAllByCondition(c => c.BrandId == brandId, carParameters, trackChanges);
 
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
@@ -103,9 +100,9 @@ namespace Business.Concrete
         }
 
         //[CacheAspect]
-        public (IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData) GetAllCarDetails(CarParameters carParameters)
+        public (IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData) GetAllCarDetails(CarParameters carParameters, bool trackChanges)
         {
-            var carDetailsWithMetaData = _carDal.GetAll(carParameters);
+            var carDetailsWithMetaData = _manager.Car.GetAllCarDetails(carParameters, trackChanges);
 
             var carDetails = _mapper.Map<IEnumerable<CarDetailDto>>(carDetailsWithMetaData);
 

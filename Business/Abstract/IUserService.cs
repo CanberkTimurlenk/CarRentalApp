@@ -8,8 +8,8 @@ namespace Business.Abstract
 {
     public interface IUserService : IBusinessRepository<UserDto,UserDtoForManipulation,UserParameters>
     {
-        IDataResult<IEnumerable<OperationClaimDto>> GetOperationClaims (UserDto userDto);
-        IDataResult<UserDto> GetByEmail(string email);        
+        IDataResult<IEnumerable<OperationClaimDto>> GetOperationClaims (UserDto userDto, bool trackChanges);
+        IDataResult<UserDto> GetByEmail(string email, bool trackChanges);        
 
     }
 }

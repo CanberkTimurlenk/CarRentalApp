@@ -8,6 +8,7 @@ using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
+using DataAccess.Abstract.RepositoryManager;
 using Entities.Concrete.DTOs.Customer;
 using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
@@ -16,12 +17,12 @@ namespace Business.Concrete
 {
     public class CustomerManager : ICustomerService
     {
-        private readonly ICustomerDal _customerDal;
+        private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
 
-        public CustomerManager(ICustomerDal customerDal, IMapper mapper)
+        public CustomerManager(IRepositoryManager manager, IMapper mapper)
         {
-            _customerDal = customerDal;
+            _manager = manager;
             _mapper = mapper;
         }
 
@@ -30,45 +31,46 @@ namespace Business.Concrete
         {
             var entity = _mapper.Map<Customer>(customerDtoForManipulation);
 
-            _customerDal.Add(entity);
+            _manager.Customer.Add(entity);
+            _manager.Save();
 
-            return new SuccessDataResult<int>(entity.Id,Messages.CustomerAdded);
+            return new SuccessDataResult<int>(entity.Id, Messages.CustomerAdded);
         }
-
-        public IResult Delete(int id)
+        public IResult Delete(int id, bool trackChanges)
         {
-            var entity = _customerDal.Get(c => c.Id == id);
+            var entity = _manager.Customer.Get(c => c.Id == id, trackChanges);
 
-            _customerDal.Delete(entity);
+            _manager.Customer.Delete(entity);
+            _manager.Save();
 
             return new SuccessResult(Messages.CustomerDeleted);
         }
-
-        public (IDataResult<IEnumerable<CustomerDto>> result, MetaData metaData) GetAll(CustomerParamaters customerParameters)
+        public (IDataResult<IEnumerable<CustomerDto>> result, MetaData metaData) GetAll(CustomerParamaters customerParameters, bool trackChanges)
         {
-            var customersWithMetaData = _customerDal.GetAll(customerParameters);
+            var customersWithMetaData = _manager.Customer.GetAll(customerParameters, trackChanges);
+
             var customers = _mapper.Map<IEnumerable<CustomerDto>>(customersWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CustomerDto>>(customers, Messages.CarsListed), customersWithMetaData.MetaData);
 
         }
-
-        public IDataResult<CustomerDto> GetById(int id)
+        public IDataResult<CustomerDto> GetById(int id, bool trackChanges)
         {
-            var entity = _customerDal.Get(c => c.Id == id);
+            var entity = _manager.Customer.Get(c => c.Id == id, trackChanges);
 
             var result = _mapper.Map<CustomerDto>(entity);
 
             return new SuccessDataResult<CustomerDto>(result, Messages.SuccessListedById);
         }
-
-        public IResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation)
+        public IResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation, bool trackChanges)
         {
-            var entity = _customerDal.Get(c => c.Id == id);
+            var entity = _manager.Customer.Get(c => c.Id == id, trackChanges);
 
             var mappedEntity = _mapper.Map(customerDtoForManipulation, entity);
 
-            _customerDal.Update(mappedEntity);
+            _manager.Customer.Update(mappedEntity);
+            _manager.Save();
+
             return new SuccessResult(Messages.CustomerUpdated);
         }
 

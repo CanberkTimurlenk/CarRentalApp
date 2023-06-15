@@ -18,10 +18,10 @@ namespace Core.Business
             where TRequestParameters : RequestParameters, new()
     {
         IResult Add(TFormFile file, TFileDtoForManipulation addedFileEntity);
-        IResult Update(TFormFile file, int id, TFileDtoForManipulation updatedFileEntity);
-        IResult Delete(int id);        
-        IDataResult<TFileDto> GetById(int id);        
-        (IDataResult<IEnumerable<TFileDto>> result, MetaData metaData) GetAll(TRequestParameters requestParameters);
+        IResult Update(TFormFile file, int id, TFileDtoForManipulation updatedFileEntity, bool trackChanges);
+        IResult Delete(int id, bool trackChanges);
+        IDataResult<TFileDto> GetById(int id, bool trackChanges);
+        (IDataResult<IEnumerable<TFileDto>> result, MetaData metaData) GetAll(TRequestParameters requestParameters, bool trackChanges);
 
     }
 }

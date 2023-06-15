@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Abstract;
-using DataAccess.Abstract;
+﻿using Business.Abstract;
 using Business.Constants;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -12,20 +6,21 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Entities.Concrete.Models;
 using Entities.Concrete.DTOs.Color;
-using Core.Business;
 using AutoMapper;
 using Core.Entities.Concrete.RequestFeatures;
 using Entities.Concrete.RequestFeatures;
+using DataAccess.Abstract.RepositoryManager;
 
 namespace Business.Concrete
 {
     public class ColorManager : IColorService
     {
-        private readonly IColorDal _colorDal;
+        private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
-        public ColorManager(IColorDal colorDal, IMapper mapper)
+
+        public ColorManager(IRepositoryManager manager, IMapper mapper)
         {
-            _colorDal = colorDal;
+            _manager = manager;
             _mapper = mapper;
         }
 
@@ -34,50 +29,50 @@ namespace Business.Concrete
         {
             var entity = _mapper.Map<Color>(colorDtoForManipulation);
 
-            _colorDal.Add(entity);
+            _manager.Color.Add(entity);
+            _manager.Save();
 
             return new SuccessDataResult<int>(entity.Id, Messages.ColorAdded);
 
         }
-
-        public IResult Delete(int id)
+        public IResult Delete(int id, bool trackChanges)
         {
-            var entity = _colorDal.Get(c => c.Id == id);
+            var entity = _manager.Color.Get(c => c.Id == id, trackChanges);
 
-            _colorDal.Delete(entity);
+            _manager.Color.Delete(entity);
+            _manager.Save();
 
             return new SuccessResult(Messages.ColorDeleted);
         }
-
-        public IDataResult<ColorDto> GetById(int id)
+        public IDataResult<ColorDto> GetById(int id, bool trackChanges)
         {
-            var result = _mapper.Map<ColorDto>(_colorDal.Get(c => c.Id == id));
+            var entity = _mapper.Map<ColorDto>
+                (_manager.Color.Get(c => c.Id == id, trackChanges));
 
-            return new SuccessDataResult<ColorDto>(result, Messages.SuccessListedById);
-
+            return new SuccessDataResult<ColorDto>(entity, Messages.SuccessListedById);
 
         }
-
-        public (IDataResult<IEnumerable<ColorDto>> result, MetaData metaData) GetAll(ColorParameters colorParameters)
+        public (IDataResult<IEnumerable<ColorDto>> result, MetaData metaData) GetAll(ColorParameters colorParameters, bool trackChanges)
         {
-            var colorsWithMetaData = _colorDal.GetAll(colorParameters);
+            var colorsWithMetaData = _manager.Color.GetAll(colorParameters, trackChanges);
+
             var colors = _mapper.Map<IEnumerable<ColorDto>>(colorsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<ColorDto>>(colors, Messages.CarsListed), colorsWithMetaData.MetaData);
 
         }
-
-        public IResult Update(int id, ColorDtoForManipulation colorDtoForManipulation)
+        public IResult Update(int id, ColorDtoForManipulation colorDtoForManipulation, bool trackChanges)
         {
-            var entity = _colorDal.Get(c => c.Id == id);
+            var entity = _manager.Color.Get(c => c.Id == id, trackChanges);
 
             var mappedEntity = _mapper.Map(colorDtoForManipulation, entity);
 
-            _colorDal.Update(mappedEntity);
+            _manager.Color.Update(mappedEntity);
+            _manager.Save();
 
             return new SuccessResult(Messages.ColorUpdated);
-        }
 
+        }
 
     }
 }

@@ -9,7 +9,7 @@ namespace Business.Abstract
 {
     public interface ICarImageService : IBusinessFileRepository<IFormFile, CarImageDto, CarImageDtoForManipulation, CarImageParameters>
     {
-        (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetByCarId(CarImageParameters carImageParameters, int carId);
+        (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetByCarId(CarImageParameters carImageParameters, int carId, bool trackChanges);
 
     }
 }

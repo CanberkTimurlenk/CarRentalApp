@@ -10,7 +10,7 @@ namespace Business.Abstract
 {
     public interface ICartItemService: IBusinessRepository<CartItemDto, CartItemDtoForManipulation,CartItemParameters>
     {
-        (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id, CartItemParameters cartItemParameters);
+        (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id, CartItemParameters cartItemParameters, bool trackChanges);
        
     }
 }

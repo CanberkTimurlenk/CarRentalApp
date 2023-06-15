@@ -1,5 +1,4 @@
 ﻿using Business.Abstract;
-using DataAccess.Abstract;
 using Business.Constants;
 using Core.Utilities.Results.Concrete;
 using Core.Utilities.Results.Abstract;
@@ -11,17 +10,18 @@ using AutoMapper;
 using Entities.Concrete.DTOs.Brand;
 using Core.Entities.Concrete.RequestFeatures;
 using Entities.Concrete.RequestFeatures;
+using DataAccess.Abstract.RepositoryManager;
 
 namespace Business.Concrete
 {
     public class BrandManager : IBrandService
     {
-        private readonly IBrandDal _brandDal;
+        private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
 
-        public BrandManager(IBrandDal brandDal, IMapper mapper)
+        public BrandManager(IRepositoryManager manager, IMapper mapper)
         {
-            _brandDal = brandDal;
+            _manager = manager;
             _mapper = mapper;
 
         }
@@ -35,48 +35,48 @@ namespace Business.Concrete
 
             var entity = _mapper.Map<Brand>(brandDtoForManipulation);
 
-            _brandDal.Add(entity);
+            _manager.Brand.Add(entity);
+            _manager.Save();
 
             return new SuccessDataResult<int>(entity.Id, Messages.BrandAdded);
 
         }
-
-        public IResult Delete(int id)
+        public IResult Delete(int id, bool trackChanges)
         {
-            var entity = _brandDal.Get(b => b.Id == id);
+            var entity = _manager.Brand.Get(b => b.Id == id, trackChanges);
 
-            _brandDal.Delete(entity);
+            _manager.Brand.Delete(entity);
+            _manager.Save();
 
             return new SuccessResult(Messages.BrandDeleted);
-        }
-
-        public IDataResult<BrandDto> GetById(int brandId)
-        {
-            var entity = _mapper.Map<BrandDto>(_brandDal.Get(b => b.Id == brandId));
-
-            return new SuccessDataResult<BrandDto>(entity, Messages.SuccessListedById);
 
         }
-
-        public (IDataResult<IEnumerable<BrandDto>> result, MetaData metaData) GetAll(BrandParameters brandParameters)
+        public IDataResult<BrandDto> GetById(int brandId, bool trackChanges)
         {
-            var brandsWithMetaData = _brandDal.GetAll(brandParameters);
+            var entity = _manager.Brand.Get(b => b.Id == brandId, trackChanges);
+            var result = _mapper.Map<BrandDto>(entity);
+
+            return new SuccessDataResult<BrandDto>(result, Messages.SuccessListedById);
+
+        }
+        public (IDataResult<IEnumerable<BrandDto>> result, MetaData metaData) GetAll(BrandParameters brandParameters, bool trackChanges)
+        {
+            var brandsWithMetaData = _manager.Brand.GetAll(brandParameters, trackChanges);
             var brands = _mapper.Map<IEnumerable<BrandDto>>(brandsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<BrandDto>>(brands, Messages.BrandsListed), brandsWithMetaData.MetaData);
 
         }
-
-        public IResult Update(int id,BrandDtoForManipulation brandDtoForManipulation)
+        public IResult Update(int id, BrandDtoForManipulation brandDtoForManipulation, bool trackChanges)
         {
-            var entity = _brandDal.Get(b => b.Id == id);
+            var entity = _manager.Brand.Get(b => b.Id == id, trackChanges);
             var mappedEntity = _mapper.Map(brandDtoForManipulation, entity);
 
-            _brandDal.Update(mappedEntity);
+            _manager.Brand.Update(mappedEntity);
+            _manager.Save();
 
             return new SuccessResult(Messages.BrandUpdated);
         }
 
-        
     }
 }

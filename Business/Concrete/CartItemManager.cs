@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.Constants;
-using Core.Business;
 using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
-using DataAccess.Abstract;
+using DataAccess.Abstract.RepositoryManager;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.DTOs.CartItem;
 using Entities.Concrete.Models;
@@ -15,81 +14,81 @@ namespace Business.Concrete
 {
     public class CartItemManager : ICartItemService
     {
-        private readonly ICartItemDal _cartItemDal;
+        private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
 
-        public CartItemManager(ICartItemDal cartItemDal, IMapper mapper)
+        public CartItemManager(IRepositoryManager manager, IMapper mapper)
         {
-            _cartItemDal = cartItemDal;
+            _manager = manager;
             _mapper = mapper;
         }
+
         public IDataResult<int> Add(CartItemDtoForManipulation carItemDtoForManipulation)
         {
             var entity = _mapper.Map<CartItem>(carItemDtoForManipulation);
 
-            _cartItemDal.Add(entity);
+            _manager.CartItem.Add(entity);
+            _manager.Save();
 
-            return new SuccessDataResult<int>(entity.Id,Messages.CartItemAdded);
+            return new SuccessDataResult<int>(entity.Id, Messages.CartItemAdded);
         }
-
-        public IResult Delete(int id)
+        public IResult Delete(int id, bool trackChanges)
         {
-            var entity = _cartItemDal.Get(c => c.Id == id);
+            var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
 
             if (entity is not null)
             {
-                _cartItemDal.Delete(entity);
+                _manager.CartItem.Delete(entity);
+                _manager.Save();
+
                 return new SuccessResult();
             }
 
             return new ErrorResult(Messages.CartItemNotExist);
         }
-
-        public (IDataResult<IEnumerable<CartItemDto>> result, MetaData metaData) GetAll(CartItemParameters cartItemParameters)
+        public (IDataResult<IEnumerable<CartItemDto>> result, MetaData metaData) GetAll(CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemsWithMetaData = _cartItemDal.GetAll(cartItemParameters);
+            var cartItemsWithMetaData = _manager.CartItem.GetAll(cartItemParameters, trackChanges);
             var cartItems = _mapper.Map<IEnumerable<CartItemDto>>(cartItemsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CartItemDto>>(cartItems, Messages.CarsListed), cartItemsWithMetaData.MetaData);
 
         }
-
-        public IDataResult<CartItemDto> GetById(int id)
+        public IDataResult<CartItemDto> GetById(int id, bool trackChanges)
         {
-            var entity = _cartItemDal.Get(c => c.Id == id);
+            var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
 
             var result = _mapper.Map<CartItemDto>(entity);
 
             return new SuccessDataResult<CartItemDto>(result);
 
         }
-
-
-        public (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id,CartItemParameters cartItemParameters)
+        public (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id, CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemsWithMetaData = _cartItemDal.GetAll(cartItemParameters, c => c.CustomerId == id);
+            var cartItemsWithMetaData = _manager.CartItem.GetAllByCondition(c => c.CustomerId == id, cartItemParameters, trackChanges);
 
             var cartItems = _mapper.Map<IEnumerable<CartItemDetailDto>>(cartItemsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CartItemDetailDto>>(cartItems), cartItemsWithMetaData.MetaData);
 
         }
-
-        public IResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation)
+        public IResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation, bool trackChanges)
         {
-            var entity = _cartItemDal.Get(c => c.Id == id);
+            var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
 
             if (entity is not null)
             {
                 var mappedEntity = _mapper.Map(cartItemDtoForManipulation, entity);
-                _cartItemDal.Update(mappedEntity);
+
+                _manager.CartItem.Update(mappedEntity);
+                _manager.Save();
+
                 return new SuccessResult();
             }
 
             return new ErrorResult(Messages.CartItemNotExist);
 
         }
-
 
     }
 }
