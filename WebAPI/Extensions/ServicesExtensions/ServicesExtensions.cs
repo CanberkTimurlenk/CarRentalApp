@@ -1,7 +1,9 @@
 ﻿using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
+using DataAccess.Concrete.EntityFramework.Contexts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Extensions.ServicesExtensions
@@ -43,6 +45,15 @@ namespace WebAPI.Extensions.ServicesExtensions
                            .WithExposedHeaders("X-Pagination");
                 });
             });
+        }
+
+        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<CarAppContext>
+                (options => options
+                                    .UseSqlServer
+                                    (configuration.GetConnectionString("sqlConnection")));
+                
         }
     }
 }

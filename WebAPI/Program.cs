@@ -33,6 +33,7 @@ builder.Services.AddSingleton<IDesignTimeDbContextFactory<CarAppContext>> (new C
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ApplyAuthentication(tokenOptions);
 builder.Services.ConfigureCors();
+builder.Services.ConfigureSqlContext(builder.Configuration);
 
 
 var app = builder.Build();
