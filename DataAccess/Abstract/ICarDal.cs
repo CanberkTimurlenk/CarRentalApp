@@ -10,7 +10,7 @@ namespace DataAccess.Abstract
 {
     public interface ICarDal : IRepositoryBase<Car,CarParameters>
     {
-        PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters);
+        PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters, bool trackChanges);
 
     }
 }
