@@ -1,57 +1,62 @@
 ﻿using Core.DataAccess.EntityFramework;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using Entities.Concrete;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
-using Microsoft.EntityFrameworkCore.Design;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCartItemDal : EfEntityRepositoryBase<CartItem, CarAppContext, CartItemParameters>, ICartItemDal
+    public class EfCartItemDal : EfEntityRepositoryBase<CartItem, CartItemParameters>, ICartItemDal
     {
-        private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
 
-        public EfCartItemDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
-            : base(contextFactory)
+        public EfCartItemDal(CarAppContext context) : base(context)
         {
-            _contextFactory = contextFactory;
-        }
-
-        public IEnumerable<CartItemDetailDto> GetAllCartItemDetails(Expression<Func<CartItemDetailDto, bool>> filter = null)
-        {
-
-
-            using (var context = _contextFactory.CreateDbContext(new string[0]))
-            {
-                var result = from cartItem in context.CartItems
-
-                             join customer in context.Customers
-                             on cartItem.CustomerId equals customer.Id
-
-                             join car in context.Cars
-                             on cartItem.CarId equals car.Id
-
-                             select new CartItemDetailDto
-                             {
-                                 CarId = car.Id,
-                                 CustomerId = customer.Id,
-                                 TotalAmount = cartItem.TotalAmount
-                             };
-
-
-
-                return result.ToList();
-            }
-
 
         }
 
+        public PagedList<CartItemDetailDto> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges)
+        {
+            var cartItemDetails = GetAllCartItemDetailsAsQueryable(cartItemParameters, trackChanges);
+
+            return PagedList<CartItemDetailDto>
+                    .ToPagedList(cartItemDetails, cartItemParameters.PageNumber, cartItemParameters.PageSize);
+
+        }
+        public PagedList<CartItemDetailDto> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges)
+        {
+            var cartItemDetails = GetAllCartItemDetailsAsQueryable(cartItemParameters, trackChanges).Where(filter);
+
+            return PagedList<CartItemDetailDto>
+                    .ToPagedList(cartItemDetails, cartItemParameters.PageNumber, cartItemParameters.PageSize);
+        }
+        private IQueryable<CartItemDetailDto> GetAllCartItemDetailsAsQueryable(CartItemParameters cartItemParameters, bool trackChanges)
+        {
+            var cartItems = _context.Set<CartItem>();
+            var customers = _context.Set<Customer>();
+            var cars = _context.Set<Car>();
+
+            var query = from cartItem in cartItems
+
+                        join customer in customers
+                        on cartItem.CustomerId equals customer.Id
+
+                        join car in cars
+                        on cartItem.CarId equals car.Id
+
+                        select new CartItemDetailDto
+                        {
+                            CarId = car.Id,
+                            CustomerId = customer.Id,
+                            TotalAmount = cartItem.TotalAmount
+                        };
+
+            return !trackChanges ? query.AsNoTracking() : query;
+
+        }
     }
 }
+

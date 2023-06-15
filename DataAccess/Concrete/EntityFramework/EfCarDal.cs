@@ -2,46 +2,62 @@
 using Core.DataAccess.EntityFramework;
 using Entities.Concrete.DTOs;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Microsoft.EntityFrameworkCore.Design;
 using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
 using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : EfEntityRepositoryBase<Car, CarAppContext,CarParameters>, ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarParameters>, ICarDal
     {
-        private readonly IDesignTimeDbContextFactory<CarAppContext> _contextFactory;
-        public EfCarDal(IDesignTimeDbContextFactory<CarAppContext> contextFactory)
-            : base(contextFactory)
+
+        public EfCarDal(CarAppContext context) : base(context)
         {
-            _contextFactory = contextFactory;
+
         }
 
-        public PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters)
+        public PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParamaters, bool trackChanges)
         {
-            using (var context = _contextFactory.CreateDbContext(new string[0]))
-            {
-                var result = from car in context.Cars
-                             join color in context.Colors
-                             on car.ColorId equals color.Id
-                             join brand in context.Brands
-                             on car.BrandId equals brand.Id
-                             select new CarDetailDto
-                             {
-                                 CarName = car.CarName,
-                                 BrandName = brand.BrandName,
-                                 ColorName = color.ColorName,
-                                 DailyPrice = car.DailyPrice,
+            var carDetails = GetAllCarDetailsAsQueryable(carParamaters, trackChanges);
 
-                             };
-
-                return PagedList<CarDetailDto>.ToPagedList(
-                    result, carParameters.PageNumber, carParameters.PageSize
-                    );
-            }
+            return PagedList<CarDetailDto>
+                    .ToPagedList(carDetails, carParamaters.PageNumber, carParamaters.PageSize);
 
         }
-       
+        public PagedList<CarDetailDto> GetAllCarDetailsByCondition(Expression<Func<CarDetailDto, bool>> filter, CarParameters carParamaters, bool trackChanges)
+        {
+            var carDetails = GetAllCarDetailsAsQueryable(carParamaters, trackChanges).Where(filter);
+
+            return PagedList<CarDetailDto>
+                    .ToPagedList(carDetails, carParamaters.PageNumber, carParamaters.PageSize);
+
+        }
+        private IQueryable<CarDetailDto> GetAllCarDetailsAsQueryable(CarParameters carParameters, bool trackChanges)
+        {
+            var cars = _context.Set<Car>();
+            var colors = _context.Set<Color>();
+            var brands = _context.Set<Brand>();
+
+            var query = from car in cars
+                         join color in colors
+                         on car.ColorId equals color.Id
+                         join brand in brands
+                         on car.BrandId equals brand.Id
+                         select new CarDetailDto
+                         {
+                             CarName = car.CarName,
+                             BrandName = brand.BrandName,
+                             ColorName = color.ColorName,
+                             DailyPrice = car.DailyPrice,
+
+                         };
+
+            return query = !trackChanges ? query.AsNoTracking() : query;
+                      
+        }
+
     }
 }
+

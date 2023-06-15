@@ -18,11 +18,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         {
 
         }
-
-        public CarAppContext()
-        {
-
-        }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

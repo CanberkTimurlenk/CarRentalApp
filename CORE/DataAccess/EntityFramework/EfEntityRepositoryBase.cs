@@ -4,83 +4,50 @@ using Entities.Abstract;
 using Microsoft.EntityFrameworkCore.Design;
 using Entities.Concrete;
 using Core.Entities.Concrete.RequestFeatures;
+using Core.Entities;
 
 namespace Core.DataAccess.EntityFramework
-{   
-    public class EfEntityRepositoryBase<TEntity, TContext, TRequestParameters> : IRepositoryBase<TEntity, TRequestParameters>
+{
+    public class EfEntityRepositoryBase<TEntity, TRequestParameters> : IRepositoryBase<TEntity, TRequestParameters>
         where TEntity : class, IEntity, new()
-        where TContext : DbContext, new()
         where TRequestParameters : RequestParameters, new()
     {
-        private readonly IDesignTimeDbContextFactory<TContext> _contextFactory;
-        public EfEntityRepositoryBase(IDesignTimeDbContextFactory<TContext> contextFactory)
+        protected DbContext _context;
+        public EfEntityRepositoryBase(DbContext context)
         {
-            _contextFactory = contextFactory;
+            _context = context;
         }
-        public void Add(TEntity entity)
+        public void Add(TEntity entity) => _context.Set<TEntity>().Add(entity);
+        public void Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);
+        public void Update(TEntity entity) => _context.Set<TEntity>().Update(entity);
+        
+        public TEntity Get(Expression<Func<TEntity, bool>> filter, bool trackChanges)
+            => GetAllAsQueryable(trackChanges).SingleOrDefault(filter);
+       
+        public PagedList<TEntity> GetAll(TRequestParameters requestParameters, bool trackChanges)
         {
-            using (var context = _contextFactory.CreateDbContext(new String[0]))
-            {
-                var addedEntity = context.Entry(entity);
-                addedEntity.State = EntityState.Added; 
-                context.SaveChanges();
+            var query = GetAllAsQueryable(trackChanges);
 
-            }
+            return PagedList<TEntity>.ToPagedList(query, requestParameters.PageNumber, requestParameters.PageSize);
         }
-        public void Delete(TEntity entity)
+        public PagedList<TEntity> GetAllByCondition(Expression<Func<TEntity, bool>> filter, TRequestParameters requestParameters, bool trackChanges)
         {
-            using (var context = _contextFactory.CreateDbContext(new String[0]))
-            {
-                var deletedEntity = context.Entry(entity);
-                deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
-            }
-        }
-        public void Update(TEntity entity)
-        {
-            using (var context = _contextFactory.CreateDbContext(new String[0]))
-            {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Modified;
-                context.SaveChanges();
-            }
-        }
-        public TEntity Get(Expression<Func<TEntity, bool>> filter)
-        {
-            using (var context = _contextFactory.CreateDbContext(new String[0]))
-                return context.Set<TEntity>().SingleOrDefault(filter);
+            var query = GetAllByConditionAsQueryable(filter, trackChanges);
 
+            return PagedList<TEntity>.ToPagedList(query, requestParameters.PageNumber, requestParameters.PageSize);
         }
-        public PagedList<TEntity> GetAll(TRequestParameters requestParameters,Expression < Func<TEntity, bool>> filter = null)
-        {
-            using (var context = _contextFactory.CreateDbContext(new String[0]))
-            {               
-                List<TEntity> result;
-
-                if (filter is null) 
-                { 
-                    result = context.Set<TEntity>().ToList();
-                }
-                else 
-                { 
-                    result = context.Set<TEntity>().Where(filter).ToList(); 
-                }
-                return PagedList<TEntity>.ToPagedList(result, requestParameters.PageNumber, requestParameters.PageSize);
-                
-            }
-        }
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
-        {
-            using (var context = _contextFactory.CreateDbContext(new String[0]))
-            {                
-                if (filter is null)                
-                    return context.Set<TEntity>().ToList();
-                
-                else                
-                    return context.Set<TEntity>().Where(filter).ToList();
-                
-            }
-        }
+        
+        public IEnumerable<TEntity> GetAllAsEnumerable(bool trackChanges)
+            => GetAllAsQueryable(trackChanges);                
+        public IEnumerable<TEntity> GetAllByConditionAsEnumerable(Expression<Func<TEntity, bool>> filter, bool trackChanges)
+            => GetAllByConditionAsQueryable(filter,trackChanges);
+        
+        protected IQueryable<TEntity> GetAllAsQueryable(bool trackChanges)
+            =>  !trackChanges
+                ? _context.Set<TEntity>().AsNoTracking()
+                : _context.Set<TEntity>();
+        protected IQueryable<TEntity> GetAllByConditionAsQueryable(Expression<Func<TEntity, bool>> filter, bool trackChanges)
+            => GetAllAsQueryable(trackChanges).Where(filter);       
 
     }
 }
