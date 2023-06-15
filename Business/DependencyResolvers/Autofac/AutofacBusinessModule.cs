@@ -7,8 +7,10 @@ using Core.Utilities.Helpers.FileHelper;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstract;
+using DataAccess.Abstract.RepositoryManager;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using DataAccess.RepositoryManager;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
@@ -47,7 +49,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfCarImageDal>().As<ICarImageDal>().SingleInstance();
 
             builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
-            
+
+            builder.RegisterType<RepositoryManager>().As<IRepositoryManager>().InstancePerLifetimeScope();
+
 
 
             builder.RegisterType<FileHelper>().As<IFileHelper>().SingleInstance();
