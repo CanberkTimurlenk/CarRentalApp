@@ -1,8 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Color;
-using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -13,10 +11,10 @@ namespace WebAPI.Controllers
     public class ColorsController : ControllerBase
     {
         private readonly IColorService _colorService;
+
         public ColorsController(IColorService colorService)
         {
             _colorService = colorService;
-
         }
 
         /*
@@ -34,76 +32,55 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add(ColorDtoForManipulation colorDtoForManipulation)
         {
-
             var result = _colorService.Add(colorDtoForManipulation);
 
-            // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(int id, ColorDtoForManipulation colorDtoForManipulation)
         {
-            var result = _colorService.Update(id, colorDtoForManipulation);
+            var result = _colorService.Update(id, colorDtoForManipulation, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _colorService.Delete(id);
+            var result = _colorService.Delete(id, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-
-        [HttpPost("getbyid")]
+        [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _colorService.GetById(id);
+            var result = _colorService.GetById(id, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
 
         [HttpGet("getall")]
         public IActionResult GetAll([FromQuery] ColorParameters colorParameters)
-
         {
-            var pagedResult = _colorService.GetAll(colorParameters);
+            var pagedResult = _colorService.GetAll(colorParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -114,7 +91,6 @@ namespace WebAPI.Controllers
             return BadRequest(pagedResult.result);
 
         }
-
 
     }
 }

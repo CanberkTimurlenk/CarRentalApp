@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Brand;
-using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +10,13 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class BrandsController : ControllerBase
-
     {
+
         private readonly IBrandService _brandService;
 
         public BrandsController(IBrandService brandService)
         {
             _brandService = brandService;
-
         }
 
         /*
@@ -43,10 +41,10 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(int id, BrandDtoForManipulation brandDtoForManipulation)
         {
-            var result = _brandService.Update(id, brandDtoForManipulation);
+            var result = _brandService.Update(id, brandDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -55,10 +53,10 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _brandService.Delete(id);
+            var result = _brandService.Delete(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -66,11 +64,10 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-
-        [HttpPost("getbyid")]
+        [HttpGet("getbyid")]
         public IActionResult GetById(int brandId)
         {
-            var result = _brandService.GetById(brandId);
+            var result = _brandService.GetById(brandId, false);
 
             if (result.Success)
                 return Ok(result);
@@ -78,13 +75,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-
 
         [HttpGet("getall")]
         public IActionResult GetAll([FromQuery] BrandParameters brandParameters)
-
         {
-            var pagedResult = _brandService.GetAll(brandParameters);
+            var pagedResult = _brandService.GetAll(brandParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -93,8 +88,8 @@ namespace WebAPI.Controllers
                 return Ok(pagedResult.result);
 
             return BadRequest(pagedResult.result);
-        }
 
+        }
 
     }
 }

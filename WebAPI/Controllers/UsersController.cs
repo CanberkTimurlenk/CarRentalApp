@@ -1,9 +1,6 @@
 ﻿using Business.Abstract;
-using Core.Entities.Concrete;
 using Entities.Concrete.DTOs.User;
-using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -30,10 +27,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-        [HttpPost("update")]
-        public IActionResult Update(int id,UserDtoForManipulation userDtoForManipulation)
+
+        [HttpPut("update")]
+        public IActionResult Update(int id, UserDtoForManipulation userDtoForManipulation)
         {
-            var result = _userService.Update(id,userDtoForManipulation);
+            var result = _userService.Update(id, userDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -41,21 +39,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-        [HttpPost("delete")]
+
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _userService.Delete(id);
-
-            if (result.Success)
-                 return Ok(result);
-
-            return BadRequest(result);
-
-        }
-        [HttpPost("getbyid")]
-        public IActionResult GetById(int id)
-        {
-            var result = _userService.GetById(id);
+            var result = _userService.Delete(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -63,10 +51,23 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
+
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _userService.GetById(id, false);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
+
+        }
+
         [HttpGet("getall")]
         public IActionResult GetAll([FromQuery] UserParameters userParameters)
         {
-            var pagedResult = _userService.GetAll(userParameters);
+            var pagedResult = _userService.GetAll(userParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -75,7 +76,8 @@ namespace WebAPI.Controllers
                 return Ok(pagedResult.result);
 
             return BadRequest(pagedResult.result);
+
         }
-    
+
     }
 }

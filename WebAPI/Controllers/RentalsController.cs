@@ -12,6 +12,7 @@ namespace WebAPI.Controllers
     {
 
         private readonly IRentalService _rentalService;
+
         public RentalsController(IRentalService rentalService)
         {
             _rentalService = rentalService;
@@ -28,10 +29,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-        [HttpPost("update")]
+
+        [HttpPut("update")]
         public IActionResult Update(int id, RentalDtoForManipulation rentalDtoForManipulation)
         {
-            var result = _rentalService.Update(id, rentalDtoForManipulation);
+            var result = _rentalService.Update(id, rentalDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -39,10 +41,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-        [HttpPost("delete")]
+
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _rentalService.Delete(id);
+            var result = _rentalService.Delete(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -50,10 +53,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-        [HttpPost("getbyid")]
+
+        [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _rentalService.GetById(id);
+            var result = _rentalService.GetById(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -61,10 +65,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
+
         [HttpGet("getall")]
         public IActionResult GetAll([FromQuery] RentalParameters rentalParameters)
         {
-            var pagedResult = _rentalService.GetAll(rentalParameters);
+            var pagedResult = _rentalService.GetAll(rentalParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -75,10 +80,11 @@ namespace WebAPI.Controllers
             return BadRequest(pagedResult.result);
 
         }
+
         [HttpGet("getallrentaldetails")]
         public IActionResult GetAllRentalDetails([FromQuery] RentalParameters rentalParameters)
         {
-            var pagedResult = _rentalService.GetAllRentalDetails(rentalParameters);
+            var pagedResult = _rentalService.GetAllRentalDetails(rentalParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -89,5 +95,6 @@ namespace WebAPI.Controllers
             return BadRequest(pagedResult.result);
 
         }
+
     }
 }

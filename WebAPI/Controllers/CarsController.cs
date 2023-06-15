@@ -1,8 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Car;
-using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -10,14 +8,10 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-
-
     public class CarsController : ControllerBase
     {
-
-        //loosely coupled class
         private readonly ICarService _carService;
+
         public CarsController(ICarService carService)
         {
             _carService = carService;
@@ -51,10 +45,10 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(int id, CarDtoForManipulation carDtoForManipulation)
         {
-            var result = _carService.Update(id, carDtoForManipulation);
+            var result = _carService.Update(id, carDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -63,10 +57,10 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _carService.Delete(id);
+            var result = _carService.Delete(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -74,12 +68,11 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-
 
         [HttpGet("getallcardetails")]
         public IActionResult GetAllCarDetails(CarParameters carParameters)
         {
-            var pagedResult = _carService.GetAllCarDetails(carParameters);
+            var pagedResult = _carService.GetAllCarDetails(carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -91,11 +84,10 @@ namespace WebAPI.Controllers
 
         }
 
-
-        [HttpPost("getcarsbycolorid")]
-        public IActionResult GetCarsByColorId([FromQuery] CarParameters carParameters, int colorId)
+        [HttpGet("getcarsbycolorid")]
+        public IActionResult GetCarsByColorId(int colorId, [FromQuery] CarParameters carParameters)
         {
-            var pagedResult = _carService.GetCarsByColorId(carParameters, colorId);
+            var pagedResult = _carService.GetCarsByColorId(colorId, carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -107,11 +99,10 @@ namespace WebAPI.Controllers
 
         }
 
-
-        [HttpPost("getcarsbybrandid")]
-        public IActionResult GetCarsByBrandId([FromQuery] CarParameters carParameters, int brandId)
+        [HttpGet("getcarsbybrandid")]
+        public IActionResult GetCarsByBrandId(int brandId, [FromQuery] CarParameters carParameters)
         {
-            var pagedResult = _carService.GetCarsByBrandId(carParameters,brandId);
+            var pagedResult = _carService.GetCarsByBrandId(brandId, carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -122,11 +113,10 @@ namespace WebAPI.Controllers
             return BadRequest(pagedResult.result);
         }
 
-
-        [HttpPost("getbyid")]
+        [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _carService.GetById(id);
+            var result = _carService.GetById(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -135,11 +125,10 @@ namespace WebAPI.Controllers
 
         }
 
-
         [HttpGet("getall")]
         public IActionResult GetAll([FromQuery] CarParameters carParameters)
         {
-            var pagedResult = _carService.GetAll(carParameters);
+            var pagedResult = _carService.GetAll(carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

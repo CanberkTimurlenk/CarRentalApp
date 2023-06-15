@@ -13,10 +13,10 @@ namespace WebAPI.Controllers
     public class CartItemsController : ControllerBase
     {
         private readonly ICartItemService _cartItemService;
+
         public CartItemsController(ICartItemService cartItemService)
         {
             _cartItemService = cartItemService;
-
         }
 
         /*
@@ -34,76 +34,55 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add(CartItemDtoForManipulation cartItemDtoForManipulation)
         {
-
             var result = _cartItemService.Add(cartItemDtoForManipulation);
 
-            // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation)
         {
-            var result = _cartItemService.Update(id, cartItemDtoForManipulation);
+            var result = _cartItemService.Update(id, cartItemDtoForManipulation, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _cartItemService.Delete(id);
+            var result = _cartItemService.Delete(id, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-
-        [HttpPost("getbyid")]
+        [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _cartItemService.GetById(id);
+            var result = _cartItemService.GetById(id, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
 
         [HttpGet("getall")]
         public IActionResult GetAll([FromQuery] CartItemParameters cartItemParameters)
-
         {
-            var pagedResult = _cartItemService.GetAll(cartItemParameters);
+            var pagedResult = _cartItemService.GetAll(cartItemParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -114,7 +93,6 @@ namespace WebAPI.Controllers
             return BadRequest(pagedResult.result);
 
         }
-
 
     }
 }

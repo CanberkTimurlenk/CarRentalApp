@@ -1,8 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.DTOs.Customer;
-using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -34,76 +32,56 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add(CustomerDtoForManipulation customerDtoForManipulation)
         {
-
             var result = _customerService.Add(customerDtoForManipulation);
 
-            // gönderdiğimiz  obje business a gider eğer business da yazdığımız koşullara uyarsa
-            // business Data access katmanındaki add methodunu çalıştırır 
-            // SuccessResult, success durumu ve message içeren bir class döndürür
-            // koşullar sağlanmazsa ErrorResult, success durumu (false) ve message içeren bir class döner
-
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation)
         {
-            var result = _customerService.Update(id, customerDtoForManipulation);
+            var result = _customerService.Update(id, customerDtoForManipulation, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
-            var result = _customerService.Delete(id);
+            var result = _customerService.Delete(id, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
 
-
-        [HttpPost("getbyid")]
+        [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _customerService.GetById(id);
+            var result = _customerService.GetById(id, false);
 
             if (result.Success)
-            {
                 return Ok(result);
-
-            }
 
             return BadRequest(result);
 
         }
-
 
         [HttpGet("getall")]
         public IActionResult GetAll(CustomerParamaters customerParameters)
         {
-            var pagedResult = _customerService.GetAll(customerParameters);
-            
+            var pagedResult = _customerService.GetAll(customerParameters, false);
+
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
