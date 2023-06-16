@@ -4,8 +4,8 @@ namespace Entities.Concrete.DTOs.OperationClaim
 {
     public record OperationClaimDto :IDto
     {
-        public int Id { get; set; }
-        public string OperationClaimName { get; set; }
+        public int Id { get; init; }
+        public string OperationClaimName { get; init; }
 
     }
 }

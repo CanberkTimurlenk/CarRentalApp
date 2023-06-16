@@ -4,8 +4,8 @@ namespace Entities.Concrete.DTOs.Customer
 {
     public record CustomerDtoForManipulation : IDto
     {        
-        public int UserId { get; set; }
-        public string? CompanyName { get; set; }        
+        public int UserId { get; init; }
+        public string? CompanyName { get; init; }        
 
     }
 }

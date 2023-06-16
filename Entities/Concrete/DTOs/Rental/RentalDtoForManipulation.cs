@@ -4,10 +4,10 @@ namespace Entities.Concrete.DTOs.Rental
 {
     public record RentalDtoForManipulation : IDto
     {        
-        public int CarId { get; set; }
-        public int CustomerId { get; set; }
-        public DateTime RentDate { get; set; }
-        public DateTime? ReturnDate { get; set; }
+        public int CarId { get; init; }
+        public int CustomerId { get; init; }
+        public DateTime RentDate { get; init; }
+        public DateTime? ReturnDate { get; init; }
 
     }
 }

@@ -4,8 +4,8 @@ namespace Entities.Concrete.DTOs.Brand
 {
     public record BrandDto : IDto
     {
-        public int Id { get; set; }
-        public string BrandName { get; set; }
+        public int Id { get; init; }
+        public string BrandName { get; init; }
 
     }
 }

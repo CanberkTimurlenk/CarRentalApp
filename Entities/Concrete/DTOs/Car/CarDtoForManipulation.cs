@@ -4,11 +4,11 @@ namespace Entities.Concrete.DTOs.Car
 {
     public record CarDtoForManipulation : IDto
     {        
-        public int BrandId { get; set; }
-        public int ColorId { get; set; }
-        public string CarName { get; set; }
-        public int ModelYear { get; set; }
-        public decimal DailyPrice { get; set; }
-        public string? Description { get; set; }
+        public int BrandId { get; init; }
+        public int ColorId { get; init; }
+        public string CarName { get; init; }
+        public int ModelYear { get; init; }
+        public decimal DailyPrice { get; init; }
+        public string? Description { get; init; }
     }
 }

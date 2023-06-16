@@ -4,7 +4,7 @@ namespace Entities.Concrete.DTOs.Brand
 {
     public record BrandDtoForManipulation:IDto
     {
-        public string BrandName { get; set; }
+        public string BrandName { get; init; }
 
     }
 }

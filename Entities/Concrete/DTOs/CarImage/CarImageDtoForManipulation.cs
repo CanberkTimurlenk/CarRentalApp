@@ -4,8 +4,8 @@ namespace Entities.Concrete.DTOs.CarImage
 {
     public record CarImageDtoForManipulation : IDto
     {
-        public int CarId { get; set; }
-        public string ImagePath { get; set; }
-        public DateTime Date { get; set; }
+        public int CarId { get; init; }
+        public string ImagePath { get; init; }
+        public DateTime Date { get; init; }
     }
 }

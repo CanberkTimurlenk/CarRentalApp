@@ -4,9 +4,9 @@ namespace Entities.Concrete.DTOs.Customer
 {
     public record CustomerDto :IDto
     {
-        public int Id { get; set; }        
-        public int UserId { get; set; }
-        public string? CompanyName { get; set; }
+        public int Id { get; init; }        
+        public int UserId { get; init; }
+        public string? CompanyName { get; init; }
 
     }
 }
