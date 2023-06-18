@@ -1,13 +1,8 @@
-﻿using Entities.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.Entities.Abstract;
 
 namespace Entities.Concrete.Models
 {
-    public class Rental : IEntity
+    public class Rental : IEntity, IQuerySortable
     {
         public int Id { get; set; }
         public DateTime RentDate { get; set; }

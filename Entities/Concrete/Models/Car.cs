@@ -1,8 +1,8 @@
-﻿using Entities.Abstract;
+﻿using Core.Entities.Abstract;
 
 namespace Entities.Concrete.Models
 {
-    public class Car : IEntity
+    public class Car : IEntity,IQuerySortable
     {
         public int Id { get; set; }
         public string CarName { get; set; }

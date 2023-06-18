@@ -1,7 +1,7 @@
 ﻿using Core.Entities;
+using Core.Entities.Abstract;
 using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
-using Entities.Abstract;
 
 namespace Core.Business
 {

@@ -70,13 +70,11 @@ namespace Business.Concrete
             };
 
             var userDtoForManipulation = _mapper.Map<UserDtoForManipulation>(user);
+
             var userDto = _mapper.Map<UserDto>(userDtoForManipulation);
+            int userId = _userService.Add(userDtoForManipulation).Data;
 
-            userDto.Id = _userService.Add(userDtoForManipulation).Data;
-
-
-            return new SuccessDataResult<UserDto>(userDto, Messages.UserRegistered);
-
+            return new SuccessDataResult<UserDto>(userDto with { Id = userId }, Messages.UserRegistered);
 
         }
 
