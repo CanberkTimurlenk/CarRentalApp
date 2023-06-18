@@ -9,5 +9,11 @@ namespace Entities.Concrete.RequestFeatures
 {
     public class CarParameters : RequestParameters
     {
+        public string? OrderBy { get; set; }
+
+        public CarParameters()
+        {
+            OrderBy = "id asc";
+        }
     }
 }

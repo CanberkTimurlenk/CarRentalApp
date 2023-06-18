@@ -9,5 +9,11 @@ namespace Entities.Concrete.RequestFeatures
 {
     public class RentalParameters : RequestParameters
     {
+        public string? OrderBy { get; set; }
+
+        public RentalParameters()
+        {
+            OrderBy = "id asc";
+        }
     }
 }
