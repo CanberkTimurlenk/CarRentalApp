@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Abstract\" />
+    <ProjectReference Include="..\CORE\Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CORE\Core.csproj" />
+    <Folder Include="Abstract\" />
   </ItemGroup>
 
 </Project>
