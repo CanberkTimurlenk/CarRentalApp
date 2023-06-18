@@ -20,7 +20,7 @@ namespace DataAccess.Concrete.EntityFramework
 
         public PagedList<CartItemDetailDto> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemDetails = GetAllCartItemDetailsAsQueryable(cartItemParameters, trackChanges);
+            var cartItemDetails = GetAllCartItemDetailsAsQueryable(trackChanges);
 
             return PagedList<CartItemDetailDto>
                     .ToPagedList(cartItemDetails, cartItemParameters.PageNumber, cartItemParameters.PageSize);
@@ -28,12 +28,12 @@ namespace DataAccess.Concrete.EntityFramework
         }
         public PagedList<CartItemDetailDto> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemDetails = GetAllCartItemDetailsAsQueryable(cartItemParameters, trackChanges).Where(filter);
+            var cartItemDetails = GetAllCartItemDetailsAsQueryable(trackChanges).Where(filter);
 
             return PagedList<CartItemDetailDto>
                     .ToPagedList(cartItemDetails, cartItemParameters.PageNumber, cartItemParameters.PageSize);
         }
-        private IQueryable<CartItemDetailDto> GetAllCartItemDetailsAsQueryable(CartItemParameters cartItemParameters, bool trackChanges)
+        private IQueryable<CartItemDetailDto> GetAllCartItemDetailsAsQueryable(bool trackChanges)
         {
             var cartItems = _context.Set<CartItem>();
             var customers = _context.Set<Customer>();

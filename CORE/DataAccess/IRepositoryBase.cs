@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
+using Core.Entities.Abstract;
 using Core.Entities.Concrete.RequestFeatures;
-using Entities.Abstract;
 using Entities.Concrete;
 
 namespace Core.DataAccess

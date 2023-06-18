@@ -12,5 +12,7 @@ namespace DataAccess.Abstract
     {
         PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters, bool trackChanges);
 
+        PagedList<Car> GetAllWithSorting(CarParameters carParamaters, bool trackChanges);
+
     }
 }

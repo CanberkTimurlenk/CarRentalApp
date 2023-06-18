@@ -1,6 +1,7 @@
 ﻿using Core.DataAccess.EntityFramework;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using DataAccess.Concrete.EntityFramework.Extensions;
 using Entities.Concrete;
 using Entities.Concrete.DTOs;
 using Entities.Concrete.Models;
@@ -17,6 +18,12 @@ namespace DataAccess.Concrete.EntityFramework
 
         }
 
+        public PagedList<Rental> GetAllWithSorting(RentalParameters rentalParameters, bool trackChanges)
+        {
+            var query = GetAllAsQueryable(trackChanges).Sort(rentalParameters.OrderBy);
+
+            return PagedList<Rental>.ToPagedList(query, rentalParameters.PageNumber, rentalParameters.PageSize);
+        }
         public PagedList<RentalDetailDto> GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges)
         {
             var rentalDetails = GetAllRentalDetailsAsQueryable(rentalParameters, trackChanges);
@@ -32,8 +39,6 @@ namespace DataAccess.Concrete.EntityFramework
             return PagedList<RentalDetailDto>
                     .ToPagedList(rentalDetails, rentalParameters.PageNumber, rentalParameters.PageSize);
         }
-
-
         private IQueryable<RentalDetailDto> GetAllRentalDetailsAsQueryable(RentalParameters rentalParameters, bool trackChanges)
         {
             var rentals = _context.Set<Rental>();
@@ -44,21 +49,21 @@ namespace DataAccess.Concrete.EntityFramework
 
 
             var query = from rental in rentals
-                         join car in cars on rental.Id equals car.Id
-                         join brand in brands on car.BrandId equals brand.Id
-                         join customer in customers on rental.CustomerId equals customer.Id
-                         join user in users on customer.Id equals user.Id
-                         select new RentalDetailDto()
-                         {
+                        join car in cars on rental.Id equals car.Id
+                        join brand in brands on car.BrandId equals brand.Id
+                        join customer in customers on rental.CustomerId equals customer.Id
+                        join user in users on customer.Id equals user.Id
+                        select new RentalDetailDto()
+                        {
 
-                             Id = rental.Id,
-                             BrandName = brand.BrandName,
-                             CustomerFirstName = user.FirstName,
-                             CustomerLastName = user.LastName,
-                             RentDate = rental.RentDate,
-                             ReturnDate = rental.ReturnDate
+                            Id = rental.Id,
+                            BrandName = brand.BrandName,
+                            CustomerFirstName = user.FirstName,
+                            CustomerLastName = user.LastName,
+                            RentDate = rental.RentDate,
+                            ReturnDate = rental.ReturnDate
 
-                         };
+                        };
 
             return !trackChanges ? query.AsNoTracking() : query;
 

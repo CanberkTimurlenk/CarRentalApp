@@ -7,6 +7,7 @@ using Entities.Concrete.RequestFeatures;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using DataAccess.Concrete.EntityFramework.Extensions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -17,13 +18,24 @@ namespace DataAccess.Concrete.EntityFramework
         {
 
         }
+        
+        public PagedList<Car> GetAllWithSorting(CarParameters carParamaters, bool trackChanges)
+        {
+            var query = GetAllAsQueryable(trackChanges).Sort(carParamaters.OrderBy);
 
+            return PagedList<Car>.ToPagedList(query, carParamaters.PageNumber, carParamaters.PageSize);
+        }         
         public PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParamaters, bool trackChanges)
         {
             var carDetails = GetAllCarDetailsAsQueryable(carParamaters, trackChanges);
 
+            
+            
+
             return PagedList<CarDetailDto>
                     .ToPagedList(carDetails, carParamaters.PageNumber, carParamaters.PageSize);
+
+            
 
         }
         public PagedList<CarDetailDto> GetAllCarDetailsByCondition(Expression<Func<CarDetailDto, bool>> filter, CarParameters carParamaters, bool trackChanges)
