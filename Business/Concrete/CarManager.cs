@@ -26,17 +26,15 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-
         //[CacheAspect]
         public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetAll(CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _manager.Car.GetAll(carParameters, trackChanges);
+            var carsWithMetaData = _manager.Car.GetAllWithSorting(carParameters, trackChanges);
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CarDto>>(cars, Messages.CarsListed), carsWithMetaData.MetaData);
 
         }
-
         public IDataResult<CarDto> GetById(int id, bool trackChanges)
         {
             var entity = _manager.Car.Get(c => c.Id == id, trackChanges);

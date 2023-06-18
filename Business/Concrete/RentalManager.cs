@@ -61,7 +61,7 @@ namespace Business.Concrete
         [CacheAspect]
         public (IDataResult<IEnumerable<RentalDto>> result, MetaData metaData) GetAll(RentalParameters rentalParameters, bool trackChanges)
         {
-            var rentalsWithMetaData = _manager.Rental.GetAll(rentalParameters, trackChanges);
+            var rentalsWithMetaData = _manager.Rental.GetAllWithSorting(rentalParameters, trackChanges);
 
             var rentals = _mapper.Map<IEnumerable<RentalDto>>(rentalsWithMetaData);
 
