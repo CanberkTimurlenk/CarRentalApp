@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Core.Entities.Concrete;
-using DataAccess.Concrete.EntityFramework.Contexts.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
 using Entities.Concrete.Models;
+using System.Reflection;
 
 namespace DataAccess.Concrete.EntityFramework.Contexts
 {
@@ -22,7 +16,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyAllEntityConfigurations();
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         public DbSet<Car>? Cars { get; set; }
