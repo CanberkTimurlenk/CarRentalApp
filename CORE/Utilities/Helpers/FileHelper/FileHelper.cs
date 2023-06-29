@@ -21,7 +21,7 @@ namespace Core.Utilities.Helpers.FileHelper
             //     Gets a file, save it to demanded location. Return relative filepath with success information
             //     Otherwise returns null.
 
-            if (uploadedFile != null) // careful about here !!
+            if (uploadedFile != null) 
             {
 
                 if (!Directory.Exists(root))

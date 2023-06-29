@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Helpers.GuidHelperr
 {
-    //  a class (helper) to produce global unique identifier
+    //  a helper to produce global unique identifier
 
     public static class GuidHelper
     {

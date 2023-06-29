@@ -11,7 +11,7 @@ namespace Core.CrossCuttingConcerns.Validation
     {
 
         
-        public static void Validate(IValidator validator,object entity)   // In C#, a static class must have static methods.
+        public static void Validate(IValidator validator,object entity)  
 
         {
 
