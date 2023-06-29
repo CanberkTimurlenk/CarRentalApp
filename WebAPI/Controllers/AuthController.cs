@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
-using Core.Entities.Concrete.DTOs;
+using Core.Entities.Concrete.DTOs.Token;
+using Core.Entities.Concrete.DTOs.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -23,7 +24,7 @@ namespace WebAPI.Controllers
             if (!userToLogin.Success)
                 return BadRequest(userToLogin.Message);
 
-            var result = _authService.CreateAccessToken(userToLogin.Data);
+            var result = _authService.CreateToken(userToLogin.Data,true);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -40,13 +41,22 @@ namespace WebAPI.Controllers
             if (!registerResult.Success)
                 return BadRequest(registerResult.Message);
 
-            var result = _authService.CreateAccessToken(registerResult.Data);
+            var result = _authService.CreateToken(registerResult.Data,true);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
             return Ok(result.Data);
 
+        }
+
+        [HttpPost("refresh")]
+        public  IActionResult Refresh([FromBody] TokenForRefreshDto refreshTokenDto)
+        {
+            var tokenDtoToReturn = _authService
+                .RefreshToken(refreshTokenDto);
+
+            return Ok(tokenDtoToReturn);
         }
 
     }
