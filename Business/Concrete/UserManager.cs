@@ -3,21 +3,26 @@ using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Entities.Concrete.DTOs.Token;
 using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract.RepositoryManager;
+using DataAccess.Concrete.EntityFramework.Contexts;
 using Entities.Concrete.DTOs.OperationClaim;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
 using Entities.Concrete.RequestFeatures;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrete
 {
-    public class UserManager : IUserService
+    public class UserManager : IUserService, ITokenService
     {
         private readonly IRepositoryManager _manager;
         private readonly IMapper _mapper;
+
+
 
         public UserManager(IRepositoryManager manager, IMapper mapper)
         {
@@ -26,11 +31,14 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(UserValidator))]
-        public IDataResult<int> Add(UserDtoForManipulation userDtoForManipulation)
+        public IDataResult<int> Add(UserForManipulationDto userDtoForManipulation)
         {
             var entity = _mapper.Map<User>(userDtoForManipulation);
 
             _manager.User.Add(entity);
+
+
+
             _manager.Save();
 
             int id = entity.Id;
@@ -89,7 +97,7 @@ namespace Business.Concrete
                 (result);
 
         }
-        public IResult Update(int id, UserDtoForManipulation userDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, UserForManipulationDto userDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.User.Get(u => u.Id == id, trackChanges);
 
@@ -102,5 +110,34 @@ namespace Business.Concrete
 
         }
 
+        public IDataResult<RefreshToken> GetRefreshTokenByEmail(string email, out UserDto userDto)
+        {
+
+            var user = _manager.User.Get(u => u.Email == email, false);
+
+            userDto = _mapper.Map<UserDto>(user);
+
+            return new SuccessDataResult<RefreshToken>(
+                new RefreshToken
+                {
+                    Expiration = user.RefreshTokenExpiration,
+                    Token = user.RefreshToken
+                });
+
+        }
+
+        public IResult SetRefreshTokenByEmail(string email, RefreshToken refreshToken)
+        {
+            var user = _manager.User.Get(u => u.Email == email, false);
+
+            user.RefreshToken = refreshToken.Token;
+            user.RefreshTokenExpiration = refreshToken.Expiration;
+
+            _manager.User.Update(user);
+            _manager.Save();
+
+            return new SuccessResult();
+
+        }
     }
 }

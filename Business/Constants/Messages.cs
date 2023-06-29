@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entities.Concrete.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -73,8 +74,11 @@ namespace Business.Constants
         public static readonly string WrongPassword = "Wrong Password";
         public static readonly string SuccessfullLogin = "Correct Password, login successfully";
         public static readonly string UserRegistered = "User registered successfully";
-        public static readonly string AccessTokenCreated = "Access Token Created.";
+        public static readonly string TokenCreated = "Token Created.";
         public static readonly string AuthorizationDenied ="Authorization denied.";
         public static readonly string SuccessListedRentals = "Rentals listed.";
+
+
+        public static readonly string RefreshTokenIsNotValid = "Refresh Token is not valid";
     }
 }

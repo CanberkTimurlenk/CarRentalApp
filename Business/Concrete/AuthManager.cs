@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.Constants;
-using Core.Entities.Concrete.DTOs;
+using Core.Entities.Concrete.DTOs.Token;
+using Core.Entities.Concrete.DTOs.User;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.Jwt;
 using Entities.Concrete.DTOs.User;
 using Entities.Concrete.Models;
+using System.Security.Claims;
 
 namespace Business.Concrete
 {
@@ -16,21 +18,44 @@ namespace Business.Concrete
         private readonly IUserService _userService;
         private readonly ITokenHelper _tokenHelper;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IMapper mapper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IMapper mapper, ITokenService tokenService)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
-        public IDataResult<AccessToken> CreateAccessToken(UserDto userDto)
+        public IDataResult<TokenDto> CreateToken(UserDto user, bool populateExp)
         {
-            var claims = _userService.GetOperationClaims(userDto, false).Data;
+            var claims = _userService.GetOperationClaims(user, false).Data;
 
-            var accessToken = _tokenHelper.CreateToken(userDto, claims);
+            var refreshTokenExp = _tokenService.GetRefreshTokenByEmail(user.Email,out _).Data.Expiration;
 
-            return new SuccessDataResult<AccessToken>(data: accessToken, Messages.AccessTokenCreated);
+            var token = _tokenHelper.CreateToken(user, claims, refreshTokenExp, populateExp);
+
+            _tokenService.SetRefreshTokenByEmail(user.Email, token.RefreshToken);
+
+            return new SuccessDataResult<TokenDto>(data: token, Messages.TokenCreated);
+        }
+
+        public IDataResult<TokenDto> RefreshToken(TokenForRefreshDto tokenForRefreshDto)
+        {
+            var principal = _tokenHelper.GetPrincipalFromExpiredToken(tokenForRefreshDto.AccessToken);
+
+            var email = principal.FindFirst(ClaimTypes.Email).Value;
+
+            var storedRefreshToken = _tokenService.GetRefreshTokenByEmail(email,out var user).Data;
+
+            var refreshTokenIsValid = _tokenHelper.CheckRefreshTokenIsValid(tokenForRefreshDto.RefreshToken, storedRefreshToken);
+
+            if (!refreshTokenIsValid)
+                return new ErrorDataResult<TokenDto>(Messages.RefreshTokenIsNotValid);            
+
+            return new SuccessDataResult<TokenDto>(CreateToken(user, false).Data);
+
         }
 
         public IDataResult<UserDto> Login(UserForLoginDto userForLoginDto)
@@ -38,7 +63,7 @@ namespace Business.Concrete
 
             var userToCheck = CheckIfUserExistsWithEmail(userForLoginDto.Email);
 
-            if (userToCheck.Success == false)
+            if (!userToCheck.Success)
                 return new ErrorDataResult<UserDto>();
 
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.Data.PasswordHash, userToCheck.Data.PasswordSalt))
@@ -69,7 +94,7 @@ namespace Business.Concrete
                 Status = true  //  keep true as default, it depends the system configuration
             };
 
-            var userDtoForManipulation = _mapper.Map<UserDtoForManipulation>(user);
+            var userDtoForManipulation = _mapper.Map<UserForManipulationDto>(user);
 
             var userDto = _mapper.Map<UserDto>(userDtoForManipulation);
             int userId = _userService.Add(userDtoForManipulation).Data;
