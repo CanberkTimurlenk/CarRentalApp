@@ -5,12 +5,12 @@ using Entities.Concrete;
 
 namespace Core.DataAccess
 {
-    public interface IRepositoryBase<TEntity, TRequestParameters>
+    public interface IRepositoryBase<TEntity>
             where TEntity : class, IEntity, new()
-            where TRequestParameters : RequestParameters, new()
+
     {
-        PagedList<TEntity> GetAll(TRequestParameters requestParameters, bool trackChanges);
-        PagedList<TEntity> GetAllByCondition(Expression<Func<TEntity, bool>> filter, TRequestParameters requestParameters, bool trackChanges);
+        PagedList<TEntity> GetAll(RequestParameters requestParameters, bool trackChanges);
+        PagedList<TEntity> GetAllByCondition(Expression<Func<TEntity, bool>> filter, RequestParameters requestParameters, bool trackChanges);
         IEnumerable<TEntity> GetAllAsEnumerable(bool trackChanges);
         IEnumerable<TEntity> GetAllByConditionAsEnumerable(Expression<Func<TEntity, bool>> filter, bool trackChanges);
         TEntity Get(Expression<Func<TEntity, bool>> filter, bool trackChanges);

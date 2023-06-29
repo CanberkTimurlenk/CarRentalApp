@@ -9,7 +9,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Abstract
 {
-    public interface IBrandDal : IRepositoryBase<Brand,BrandParameters>
+    public interface IBrandDal : IRepositoryBase<Brand>
     {
 
     }

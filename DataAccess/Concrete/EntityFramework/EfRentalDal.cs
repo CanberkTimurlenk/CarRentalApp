@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfRentalDal : EfEntityRepositoryBase<Rental, RentalParameters>, IRentalDal
+    public class EfRentalDal : EfEntityRepositoryBase<Rental>, IRentalDal
     {
         public EfRentalDal(CarAppContext context) : base(context)
         {

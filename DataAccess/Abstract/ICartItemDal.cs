@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DataAccess.Abstract
 {
-    public interface ICartItemDal : IRepositoryBase<CartItem, CartItemParameters>
+    public interface ICartItemDal : IRepositoryBase<CartItem>
     {
         PagedList<CartItemDetailDto> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges);
         PagedList<CartItemDetailDto> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges);

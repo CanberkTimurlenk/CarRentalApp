@@ -6,7 +6,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCustomerDal : EfEntityRepositoryBase<Customer, CustomerParamaters>, ICustomerDal
+    public class EfCustomerDal : EfEntityRepositoryBase<Customer>, ICustomerDal
     {
         public EfCustomerDal(CarAppContext context) : base(context)
         {

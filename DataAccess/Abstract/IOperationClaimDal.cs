@@ -5,7 +5,7 @@ using Entities.Concrete.Models;
 
 namespace DataAccess.Abstract
 {
-    public interface IOperationClaimDal : IRepositoryBase<OperationClaim, OperationClaimParameters>
+    public interface IOperationClaimDal : IRepositoryBase<OperationClaim>
     {
 
     }

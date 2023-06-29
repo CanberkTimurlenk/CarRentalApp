@@ -11,7 +11,7 @@ using DataAccess.Concrete.EntityFramework.Extensions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : EfEntityRepositoryBase<Car, CarParameters>, ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car>, ICarDal
     {
 
         public EfCarDal(CarAppContext context) : base(context)

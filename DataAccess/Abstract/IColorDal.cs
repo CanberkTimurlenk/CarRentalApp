@@ -4,7 +4,7 @@ using Entities.Concrete.Models;
 
 namespace DataAccess.Abstract
 {
-    public interface IColorDal : IRepositoryBase<Color,ColorParameters>
+    public interface IColorDal : IRepositoryBase<Color>
     {
     }
 }

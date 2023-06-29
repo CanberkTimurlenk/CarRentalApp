@@ -6,7 +6,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfColorDal : EfEntityRepositoryBase<Color, ColorParameters>, IColorDal
+    public class EfColorDal : EfEntityRepositoryBase<Color>, IColorDal
     {
         public EfColorDal(CarAppContext context) : base(context)
         {

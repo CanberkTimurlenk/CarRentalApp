@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace DataAccess.Abstract
 {
-    public interface IRentalDal : IRepositoryBase<Rental, RentalParameters>
+    public interface IRentalDal : IRepositoryBase<Rental>
     {
         PagedList<Rental> GetAllWithSorting(RentalParameters rentalParameters, bool trackChanges);
         PagedList<RentalDetailDto> GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges);

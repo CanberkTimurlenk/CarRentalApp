@@ -6,7 +6,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarImageDal : EfEntityRepositoryBase<CarImage,CarImageParameters>, ICarImageDal
+    public class EfCarImageDal : EfEntityRepositoryBase<CarImage>, ICarImageDal
     {
         public EfCarImageDal(CarAppContext context) : base(context)
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface ICarImageDal : IRepositoryBase<CarImage,CarImageParameters>
+    public interface ICarImageDal : IRepositoryBase<CarImage>
     {
 
 

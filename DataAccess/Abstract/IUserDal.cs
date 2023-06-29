@@ -10,7 +10,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Abstract
 {
-    public interface IUserDal : IRepositoryBase<User,UserParameters>
+    public interface IUserDal : IRepositoryBase<User>
     {
         IEnumerable<OperationClaim> GetOperationClaims(User user);
     }

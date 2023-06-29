@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCartItemDal : EfEntityRepositoryBase<CartItem, CartItemParameters>, ICartItemDal
+    public class EfCartItemDal : EfEntityRepositoryBase<CartItem>, ICartItemDal
     {
 
         public EfCartItemDal(CarAppContext context) : base(context)

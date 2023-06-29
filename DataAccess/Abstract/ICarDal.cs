@@ -8,7 +8,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Abstract
 {
-    public interface ICarDal : IRepositoryBase<Car,CarParameters>
+    public interface ICarDal : IRepositoryBase<Car>
     {
         PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParameters, bool trackChanges);
 

@@ -6,7 +6,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfBrandDal : EfEntityRepositoryBase<Brand, BrandParameters>, IBrandDal
+    public class EfBrandDal : EfEntityRepositoryBase<Brand>, IBrandDal
     {
         public EfBrandDal(CarAppContext context) : base(context)
         {
