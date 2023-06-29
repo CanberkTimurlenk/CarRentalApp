@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Business.Abstract
 {
-    public interface ICarImageService : IBusinessFileRepository<IFormFile, CarImageDto, CarImageDtoForManipulation, CarImageParameters>
+    public interface ICarImageService : IBusinessFileRepository<IFormFile, CarImageDto, CarImageForManipulationDto, CarImageParameters>
     {
         (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetByCarId(CarImageParameters carImageParameters, int carId, bool trackChanges);
 

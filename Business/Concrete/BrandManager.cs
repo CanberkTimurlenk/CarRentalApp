@@ -29,7 +29,7 @@ namespace Business.Concrete
         //[SecuredOperation("brand.add,admin")]
         [ValidationAspect(typeof(BrandValidator))]
         [PerformanceAspect(5)]
-        public IDataResult<int> Add(BrandDtoForManipulation brandDtoForManipulation)
+        public IDataResult<int> Add(BrandForManipulationDto brandDtoForManipulation)
         {
             //Thread.Sleep(2000); to test PerformanceAspect
 
@@ -67,7 +67,7 @@ namespace Business.Concrete
             return (new SuccessDataResult<IEnumerable<BrandDto>>(brands, Messages.BrandsListed), brandsWithMetaData.MetaData);
 
         }
-        public IResult Update(int id, BrandDtoForManipulation brandDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, BrandForManipulationDto brandDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.Brand.Get(b => b.Id == id, trackChanges);
             var mappedEntity = _mapper.Map(brandDtoForManipulation, entity);

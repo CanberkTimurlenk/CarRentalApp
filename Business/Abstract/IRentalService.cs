@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface IRentalService : IBusinessRepository<RentalDto,RentalDtoForManipulation,RentalParameters>
+    public interface IRentalService : IBusinessRepository<RentalDto,RentalForManipulationDto,RentalParameters>
     {        
         (IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData) GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges);
 

@@ -19,20 +19,8 @@ namespace WebAPI.Controllers
             _cartItemService = cartItemService;
         }
 
-        /*
-        * List of Operations
-        * 
-        * Add
-        * Update
-        * Delete
-        * GetById
-        * GetAll
-        * 
-        */
-
-
         [HttpPost("add")]
-        public IActionResult Add(CartItemDtoForManipulation cartItemDtoForManipulation)
+        public IActionResult Add(CartItemForManipulationDto cartItemDtoForManipulation)
         {
             var result = _cartItemService.Add(cartItemDtoForManipulation);
 
@@ -44,7 +32,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation)
+        public IActionResult Update(int id, CartItemForManipulationDto cartItemDtoForManipulation)
         {
             var result = _cartItemService.Update(id, cartItemDtoForManipulation, false);
 

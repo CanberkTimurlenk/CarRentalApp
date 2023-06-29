@@ -6,7 +6,7 @@ namespace Entities.Concrete.Models
     {
         public int Id { get; set; }
         public DateTime RentDate { get; set; }
-        public DateTime? ReturnDate { get; set; } //DateTime? bu değer null da olabilir anlamına gelir
+        public DateTime? ReturnDate { get; set; } 
 
         public int CarId { get; set; }
         public Car Car { get; set; }

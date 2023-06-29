@@ -30,7 +30,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(RentalValidator))]
-        public IDataResult<int> Add(RentalDtoForManipulation rentalDtoForManipulation)
+        public IDataResult<int> Add(RentalForManipulationDto rentalDtoForManipulation)
         {
             //  CheckIfAlreadyRented
             var result = _manager.Rental.Get(r => r.CarId == rentalDtoForManipulation.CarId && r.ReturnDate == null, false);
@@ -76,7 +76,7 @@ namespace Business.Concrete
 
             return new SuccessDataResult<RentalDto>(result, Messages.SuccessListedById);
         }
-        public IResult Update(int id, RentalDtoForManipulation rentalDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, RentalForManipulationDto rentalDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.Rental.Get(r => r.Id == id, trackChanges);
 

@@ -19,18 +19,8 @@ namespace WebAPI.Controllers
             _brandService = brandService;
         }
 
-        /*
-         * List of Operations
-         * Add
-         * Update
-         * Delete
-         * GetById
-         * GetAll
-         * 
-         */
-
         [HttpPost("add")]
-        public IActionResult Add(BrandDtoForManipulation brandDtoForManipulation)
+        public IActionResult Add(BrandForManipulationDto brandDtoForManipulation)
         {
             var result = _brandService.Add(brandDtoForManipulation);
 
@@ -42,7 +32,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, BrandDtoForManipulation brandDtoForManipulation)
+        public IActionResult Update(int id, BrandForManipulationDto brandDtoForManipulation)
         {
             var result = _brandService.Update(id, brandDtoForManipulation, false);
 

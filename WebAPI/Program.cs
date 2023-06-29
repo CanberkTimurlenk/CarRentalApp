@@ -3,9 +3,6 @@ using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers.Autofac;
 using Core.Utilities.Security.Jwt;
 using Core.Extensions;
-using WebAPI.ContextFactory;
-using Microsoft.EntityFrameworkCore.Design;
-using DataAccess.Concrete.EntityFramework.Contexts;
 using WebAPI.Extensions.ServicesExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,18 +20,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacBusinessModule()));
+builder.Services.AddDependencyResolvers(new ICoreModule[] { new CoreModule() });
+
 
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
-builder.Services.AddDependencyResolvers(new ICoreModule[] { new CoreModule() });
-builder.Services.AddSingleton<IDesignTimeDbContextFactory<CarAppContext>> (new CarAppContextFactory());
 
 //  Extension Methods
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ApplyAuthentication(tokenOptions);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureSqlContext(builder.Configuration);
-
 
 var app = builder.Build();
 

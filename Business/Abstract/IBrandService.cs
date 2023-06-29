@@ -4,7 +4,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace Business.Abstract
 {
-    public interface IBrandService : IBusinessRepository<BrandDto,BrandDtoForManipulation,BrandParameters>
+    public interface IBrandService : IBusinessRepository<BrandDto,BrandForManipulationDto,BrandParameters>
     {
         
 

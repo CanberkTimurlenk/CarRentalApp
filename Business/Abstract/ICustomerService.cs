@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface ICustomerService : IBusinessRepository<CustomerDto, CustomerDtoForManipulation,CustomerParamaters>
+    public interface ICustomerService : IBusinessRepository<CustomerDto, CustomerForManipulationDto, CustomerParamaters>
     {
 
 

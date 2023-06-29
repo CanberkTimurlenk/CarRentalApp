@@ -2,7 +2,7 @@
 
 namespace Entities.Concrete.DTOs.Car
 {
-    public record CarDtoForManipulation : IDto
+    public record CarForManipulationDto : IDto
     {        
         public int BrandId { get; init; }
         public int ColorId { get; init; }

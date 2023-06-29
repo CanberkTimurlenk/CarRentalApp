@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(UserDtoForManipulation userDtoForManipulation)
+        public IActionResult Add(UserForManipulationDto userDtoForManipulation)
         {
             var result = _userService.Add(userDtoForManipulation);
 
@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, UserDtoForManipulation userDtoForManipulation)
+        public IActionResult Update(int id, UserForManipulationDto userDtoForManipulation)
         {
             var result = _userService.Update(id, userDtoForManipulation, false);
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Entities.Concrete.DTOs.User;
 using Entities.Concrete.DTOs.Brand;
 using Entities.Concrete.DTOs.Car;
 using Entities.Concrete.DTOs.CarImage;
@@ -19,28 +20,28 @@ namespace WebAPI.Utilities.AutoMapper
         public MappingProfile()
         {
             CreateMap<Car, CarDto>().ReverseMap();
-            CreateMap<CarDtoForManipulation, Car>();
+            CreateMap<CarForManipulationDto, Car>();
 
             CreateMap<Brand, BrandDto>().ReverseMap();
-            CreateMap<BrandDtoForManipulation, Brand>();
+            CreateMap<BrandForManipulationDto, Brand>();
 
             CreateMap<Color, ColorDto>().ReverseMap();
-            CreateMap<ColorDtoForManipulation, Color>();
+            CreateMap<ColorForManipulationDto, Color>();
 
             CreateMap<CarImage, CarImageDto>().ReverseMap();
-            CreateMap<CarImageDtoForManipulation, CarImage>();
+            CreateMap<CarImageForManipulationDto, CarImage>();
 
             CreateMap<CartItem, CartItemDto>().ReverseMap();
-            CreateMap<CartItemDtoForManipulation, CartItem>();
+            CreateMap<CartItemForManipulationDto, CartItem>();
 
             CreateMap<Rental, RentalDto>().ReverseMap();
-            CreateMap<RentalDtoForManipulation, Rental>();
+            CreateMap<RentalForManipulationDto, Rental>();
 
             CreateMap<Customer, CustomerDto>().ReverseMap();
-            CreateMap<CustomerDtoForManipulation, Customer>();
+            CreateMap<CustomerForManipulationDto, Customer>();
 
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<UserDtoForManipulation, User>().ReverseMap();
+            CreateMap<UserForManipulationDto, User>().ReverseMap();
 
             CreateMap<OperationClaim, OperationClaimDto>().ReverseMap();
             CreateMap<OperationClaimDtoForManipulation, OperationClaim>();
@@ -48,9 +49,7 @@ namespace WebAPI.Utilities.AutoMapper
             CreateMap<UserOperationClaim, UserOperationClaimDto>().ReverseMap();
             CreateMap<UserOperationClaimDtoForManipulation, UserOperationClaim>();
 
-            CreateMap<UserDtoForManipulation, UserDto>();
-
-
+            CreateMap<UserForManipulationDto, UserDto>();
 
         }
     }

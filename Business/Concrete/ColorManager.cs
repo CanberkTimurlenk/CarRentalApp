@@ -25,7 +25,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ColorValidator))]
-        public IDataResult<int> Add(ColorDtoForManipulation colorDtoForManipulation)
+        public IDataResult<int> Add(ColorForManipulationDto colorDtoForManipulation)
         {
             var entity = _mapper.Map<Color>(colorDtoForManipulation);
 
@@ -61,7 +61,7 @@ namespace Business.Concrete
             return (new SuccessDataResult<IEnumerable<ColorDto>>(colors, Messages.CarsListed), colorsWithMetaData.MetaData);
 
         }
-        public IResult Update(int id, ColorDtoForManipulation colorDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, ColorForManipulationDto colorDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.Color.Get(c => c.Id == id, trackChanges);
 

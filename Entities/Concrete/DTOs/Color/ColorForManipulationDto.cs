@@ -2,7 +2,7 @@
 
 namespace Entities.Concrete.DTOs.Color
 {
-    public record ColorDtoForManipulation:IDto
+    public record ColorForManipulationDto:IDto
     {
         public string ColorName { get; init; }
 

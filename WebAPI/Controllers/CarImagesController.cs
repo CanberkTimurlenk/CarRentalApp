@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add([FromForm] IFormFile newFile, [FromForm] CarImageDtoForManipulation carImageDtoForManipulation)
+        public IActionResult Add([FromForm] IFormFile newFile, [FromForm] CarImageForManipulationDto carImageDtoForManipulation)
         {
 
             if (newFile is not null)
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update([FromForm] IFormFile newFile, int id, [FromForm] CarImageDtoForManipulation carImageDtoForManipulation)
+        public IActionResult Update([FromForm] IFormFile newFile, int id, [FromForm] CarImageForManipulationDto carImageDtoForManipulation)
         {
 
             var result = _carImageService.Update(newFile, id, carImageDtoForManipulation, false);

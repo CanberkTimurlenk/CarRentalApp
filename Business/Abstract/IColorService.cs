@@ -10,7 +10,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace Business.Abstract
 {
-    public interface IColorService : IBusinessRepository<ColorDto,ColorDtoForManipulation,ColorParameters>
+    public interface IColorService : IBusinessRepository<ColorDto,ColorForManipulationDto,ColorParameters>
     {
 
     }

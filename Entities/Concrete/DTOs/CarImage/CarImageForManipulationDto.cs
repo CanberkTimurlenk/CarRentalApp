@@ -2,7 +2,7 @@
 
 namespace Entities.Concrete.DTOs.CarImage
 {
-    public record CarImageDtoForManipulation : IDto
+    public record CarImageForManipulationDto : IDto
     {
         public int CarId { get; init; }
         public string ImagePath { get; init; }

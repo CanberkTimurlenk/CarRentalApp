@@ -23,7 +23,7 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-        public IDataResult<int> Add(CartItemDtoForManipulation carItemDtoForManipulation)
+        public IDataResult<int> Add(CartItemForManipulationDto carItemDtoForManipulation)
         {
             var entity = _mapper.Map<CartItem>(carItemDtoForManipulation);
 
@@ -72,7 +72,7 @@ namespace Business.Concrete
             return (new SuccessDataResult<IEnumerable<CartItemDetailDto>>(cartItems), cartItemsWithMetaData.MetaData);
 
         }
-        public IResult Update(int id, CartItemDtoForManipulation cartItemDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, CartItemForManipulationDto cartItemDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
 

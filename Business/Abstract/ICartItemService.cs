@@ -8,7 +8,7 @@ using Entities.Concrete.RequestFeatures;
 
 namespace Business.Abstract
 {
-    public interface ICartItemService: IBusinessRepository<CartItemDto, CartItemDtoForManipulation,CartItemParameters>
+    public interface ICartItemService: IBusinessRepository<CartItemDto, CartItemForManipulationDto,CartItemParameters>
     {
         (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id, CartItemParameters cartItemParameters, bool trackChanges);
        

@@ -44,7 +44,7 @@ namespace Business.Concrete
 
         //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
-        public IDataResult<int> Add(CarDtoForManipulation carDtoForManipulation)
+        public IDataResult<int> Add(CarForManipulationDto carDtoForManipulation)
         {
             var entity = _mapper.Map<Car>(carDtoForManipulation);
 
@@ -54,7 +54,7 @@ namespace Business.Concrete
             return new SuccessDataResult<int>(entity.Id, Messages.CarAdded);
         }
 
-        public IResult Update(int id, CarDtoForManipulation carDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, CarForManipulationDto carDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.Car.Get((c => c.Id == id), trackChanges);
             var mappedEntity = _mapper.Map(carDtoForManipulation, entity);

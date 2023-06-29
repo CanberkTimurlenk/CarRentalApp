@@ -2,7 +2,7 @@
 
 namespace Entities.Concrete.DTOs.Rental
 {
-    public record RentalDtoForManipulation : IDto
+    public record RentalForManipulationDto : IDto
     {        
         public int CarId { get; init; }
         public int CustomerId { get; init; }

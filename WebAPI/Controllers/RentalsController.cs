@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(RentalDtoForManipulation rentalDtoForManipulation)
+        public IActionResult Add(RentalForManipulationDto rentalDtoForManipulation)
         {
             var result = _rentalService.Add(rentalDtoForManipulation);
 
@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, RentalDtoForManipulation rentalDtoForManipulation)
+        public IActionResult Update(int id, RentalForManipulationDto rentalDtoForManipulation)
         {
             var result = _rentalService.Update(id, rentalDtoForManipulation, false);
 

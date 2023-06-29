@@ -17,20 +17,8 @@ namespace WebAPI.Controllers
             _colorService = colorService;
         }
 
-        /*
-        * List of Operations
-        * 
-        * Add
-        * Update
-        * Delete
-        * GetById
-        * GetAll
-        * 
-        */
-
-
         [HttpPost("add")]
-        public IActionResult Add(ColorDtoForManipulation colorDtoForManipulation)
+        public IActionResult Add(ColorForManipulationDto colorDtoForManipulation)
         {
             var result = _colorService.Add(colorDtoForManipulation);
 
@@ -42,7 +30,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, ColorDtoForManipulation colorDtoForManipulation)
+        public IActionResult Update(int id, ColorForManipulationDto colorDtoForManipulation)
         {
             var result = _colorService.Update(id, colorDtoForManipulation, false);
 

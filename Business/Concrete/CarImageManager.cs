@@ -28,7 +28,7 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-        public IResult Add(IFormFile file, CarImageDtoForManipulation carImageForManipulation)
+        public IResult Add(IFormFile file, CarImageForManipulationDto carImageForManipulation)
         {
             var ruleCheck = BusinessRules.Run(
                 CheckIfCarImageLimitExceed(carImageForManipulation.CarId)
@@ -50,7 +50,7 @@ namespace Business.Concrete
             return new ErrorResult();
 
         }
-        public IResult Update(IFormFile file, int id, CarImageDtoForManipulation carImageForManipulation, bool trackChanges)
+        public IResult Update(IFormFile file, int id, CarImageForManipulationDto carImageForManipulation, bool trackChanges)
         {
             var entity = _manager.CarImage.Get(c => c.Id == id, trackChanges);
 

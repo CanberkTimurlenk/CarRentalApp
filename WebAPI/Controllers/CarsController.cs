@@ -17,22 +17,8 @@ namespace WebAPI.Controllers
             _carService = carService;
         }
 
-        /*
-         * List of Operations
-         * 
-         * Add
-         * Update
-         * Delete
-         * GetAllCarDetails
-         * GetCarsByBrandId
-         * GetCarsByColorId
-         * GetById
-         * GetAll
-         * 
-         */
-
         [HttpPost("add")]
-        public IActionResult Add(CarDtoForManipulation carDtoForManipulation)
+        public IActionResult Add(CarForManipulationDto carDtoForManipulation)
         {
 
             var result = _carService.Add(carDtoForManipulation);
@@ -46,7 +32,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, CarDtoForManipulation carDtoForManipulation)
+        public IActionResult Update(int id, CarForManipulationDto carDtoForManipulation)
         {
             var result = _carService.Update(id, carDtoForManipulation, false);
 

@@ -18,19 +18,8 @@ namespace WebAPI.Controllers
             _customerService = customerService;
         }
 
-        /*
-        * List of Operations
-        * Add
-        * Update
-        * Delete
-        * GetById
-        * GetAll
-        * 
-        */
-
-
         [HttpPost("add")]
-        public IActionResult Add(CustomerDtoForManipulation customerDtoForManipulation)
+        public IActionResult Add([FromBody] CustomerForManipulationDto customerDtoForManipulation)
         {
             var result = _customerService.Add(customerDtoForManipulation);
 
@@ -42,7 +31,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation)
+        public IActionResult Update(int id, CustomerForManipulationDto customerDtoForManipulation)
         {
             var result = _customerService.Update(id, customerDtoForManipulation, false);
 

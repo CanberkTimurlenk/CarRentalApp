@@ -27,7 +27,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CustomerValidator))]
-        public IDataResult<int> Add(CustomerDtoForManipulation customerDtoForManipulation)
+        public IDataResult<int> Add(CustomerForManipulationDto customerDtoForManipulation)
         {
             var entity = _mapper.Map<Customer>(customerDtoForManipulation);
 
@@ -62,7 +62,7 @@ namespace Business.Concrete
 
             return new SuccessDataResult<CustomerDto>(result, Messages.SuccessListedById);
         }
-        public IResult Update(int id, CustomerDtoForManipulation customerDtoForManipulation, bool trackChanges)
+        public IResult Update(int id, CustomerForManipulationDto customerDtoForManipulation, bool trackChanges)
         {
             var entity = _manager.Customer.Get(c => c.Id == id, trackChanges);
 
