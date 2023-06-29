@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.Concrete.DTOs.Token
 {
-    public record AccessToken
+    public record RefreshToken
     {
         public string Token { get; init; }
         public DateTime Expiration { get; init; }
