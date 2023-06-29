@@ -27,28 +27,34 @@ namespace Business.DependencyResolvers.Autofac
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<CarManager>().As<ICarService>().SingleInstance();
-            builder.RegisterType<EfCarDal>().As<ICarDal>().SingleInstance();
 
-            builder.RegisterType<BrandManager>().As<IBrandService>().SingleInstance();
-            builder.RegisterType<EfBrandDal>().As<IBrandDal>().SingleInstance();
+            builder.RegisterType<CarManager>().As<ICarService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfCarDal>().As<ICarDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<ColorManager>().As<IColorService>().SingleInstance();
-            builder.RegisterType<EfColorDal>().As<IColorDal>().SingleInstance();
+            builder.RegisterType<BrandManager>().As<IBrandService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfBrandDal>().As<IBrandDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<CustomerManager>().As<ICustomerService>().SingleInstance();
-            builder.RegisterType<EfCustomerDal>().As<ICustomerDal>().SingleInstance();
+            builder.RegisterType<ColorManager>().As<IColorService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfColorDal>().As<IColorDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<RentalManager>().As<IRentalService>().SingleInstance();
-            builder.RegisterType<EfRentalDal>().As<IRentalDal>().SingleInstance();
+            builder.RegisterType<CustomerManager>().As<ICustomerService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfCustomerDal>().As<ICustomerDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
-            builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
+            builder.RegisterType<RentalManager>().As<IRentalService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfRentalDal>().As<IRentalDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<CarImageManager>().As<ICarImageService>().SingleInstance();
-            builder.RegisterType<EfCarImageDal>().As<ICarImageDal>().SingleInstance();
+            builder.RegisterType<UserManager>().As<IUserService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfUserDal>().As<IUserDal>().InstancePerLifetimeScope();
 
-            builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
+            builder.RegisterType<UserManager>().As<ITokenService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<CarImageManager>().As<ICarImageService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfCarImageDal>().As<ICarImageDal>().InstancePerLifetimeScope();
+
+            builder.RegisterType<CartItemManager>().As<ICartItemService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfCartItemDal>().As<ICartItemDal>().InstancePerLifetimeScope();
+
+            builder.RegisterType<AuthManager>().As<IAuthService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RepositoryManager>().As<IRepositoryManager>().InstancePerLifetimeScope();
 
@@ -58,7 +64,8 @@ namespace Business.DependencyResolvers.Autofac
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
 
-            
+
+
 
 
             //  get executing assembly and find the interceptors into it then call aspect interceptor selector
@@ -68,7 +75,7 @@ namespace Business.DependencyResolvers.Autofac
                 .EnableInterfaceInterceptors(new ProxyGenerationOptions()
                 {
                     Selector = new AspectInterceptorSelector()
-                }).SingleInstance();
+                }).InstancePerLifetimeScope();
 
         }
 
