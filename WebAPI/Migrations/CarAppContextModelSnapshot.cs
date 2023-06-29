@@ -22,7 +22,7 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Entities.Concrete.Brand", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Car", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Car", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -149,7 +149,7 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Concrete.CarImage", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.CarImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,7 +176,7 @@ namespace WebAPI.Migrations
                     b.ToTable("CarImages");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.CartItem", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.CartItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,7 +202,7 @@ namespace WebAPI.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Color", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Color", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,7 +242,7 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Customer", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -265,7 +265,7 @@ namespace WebAPI.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.OperationClaim", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.OperationClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -282,7 +282,7 @@ namespace WebAPI.Migrations
                     b.ToTable("OperationClaims");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Rental", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Rental", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -313,7 +313,7 @@ namespace WebAPI.Migrations
                     b.ToTable("Rentals");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.User", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -341,6 +341,12 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -349,7 +355,7 @@ namespace WebAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.UserOperationClaim", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.UserOperationClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -372,15 +378,15 @@ namespace WebAPI.Migrations
                     b.ToTable("UserOperationClaims");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Car", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Car", b =>
                 {
-                    b.HasOne("Entities.Concrete.Brand", "Brand")
+                    b.HasOne("Entities.Concrete.Models.Brand", "Brand")
                         .WithMany("Cars")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrete.Color", "Color")
+                    b.HasOne("Entities.Concrete.Models.Color", "Color")
                         .WithMany("Cars")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -391,9 +397,9 @@ namespace WebAPI.Migrations
                     b.Navigation("Color");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.CarImage", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.CarImage", b =>
                 {
-                    b.HasOne("Entities.Concrete.Car", "Car")
+                    b.HasOne("Entities.Concrete.Models.Car", "Car")
                         .WithMany("CarImages")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -402,15 +408,15 @@ namespace WebAPI.Migrations
                     b.Navigation("Car");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.CartItem", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.CartItem", b =>
                 {
-                    b.HasOne("Entities.Concrete.Car", "Car")
+                    b.HasOne("Entities.Concrete.Models.Car", "Car")
                         .WithMany("CartItems")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrete.Customer", "Customer")
+                    b.HasOne("Entities.Concrete.Models.Customer", "Customer")
                         .WithMany("CartItems")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -421,26 +427,26 @@ namespace WebAPI.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Customer", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Customer", b =>
                 {
-                    b.HasOne("Entities.Concrete.User", "User")
+                    b.HasOne("Entities.Concrete.Models.User", "User")
                         .WithOne("Customer")
-                        .HasForeignKey("Entities.Concrete.Customer", "UserId")
+                        .HasForeignKey("Entities.Concrete.Models.Customer", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Rental", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Rental", b =>
                 {
-                    b.HasOne("Entities.Concrete.Car", "Car")
+                    b.HasOne("Entities.Concrete.Models.Car", "Car")
                         .WithMany("Rentals")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrete.Customer", "Customer")
+                    b.HasOne("Entities.Concrete.Models.Customer", "Customer")
                         .WithMany("Rentals")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -451,15 +457,15 @@ namespace WebAPI.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.UserOperationClaim", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.UserOperationClaim", b =>
                 {
-                    b.HasOne("Entities.Concrete.OperationClaim", "OperationClaim")
+                    b.HasOne("Entities.Concrete.Models.OperationClaim", "OperationClaim")
                         .WithMany("UserOperationClaims")
                         .HasForeignKey("OperationClaimId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrete.User", "User")
+                    b.HasOne("Entities.Concrete.Models.User", "User")
                         .WithMany("UserOperationClaims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -470,12 +476,12 @@ namespace WebAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Brand", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Brand", b =>
                 {
                     b.Navigation("Cars");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Car", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Car", b =>
                 {
                     b.Navigation("CarImages");
 
@@ -484,24 +490,24 @@ namespace WebAPI.Migrations
                     b.Navigation("Rentals");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Color", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Color", b =>
                 {
                     b.Navigation("Cars");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Customer", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.Customer", b =>
                 {
                     b.Navigation("CartItems");
 
                     b.Navigation("Rentals");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.OperationClaim", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.OperationClaim", b =>
                 {
                     b.Navigation("UserOperationClaims");
                 });
 
-            modelBuilder.Entity("Entities.Concrete.User", b =>
+            modelBuilder.Entity("Entities.Concrete.Models.User", b =>
                 {
                     b.Navigation("Customer")
                         .IsRequired();
