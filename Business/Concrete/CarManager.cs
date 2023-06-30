@@ -12,6 +12,8 @@ using Entities.Concrete.DTOs.Car;
 using Entities.Concrete.RequestFeatures;
 using Core.Entities.Concrete.RequestFeatures;
 using DataAccess.Abstract.RepositoryManager;
+using Core.Aspects.Autofac.Performance;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
@@ -27,59 +29,61 @@ namespace Business.Concrete
         }
 
         //[CacheAspect]
-        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetAll(CarParameters carParameters, bool trackChanges)
+        [PerformanceAspect(2)]
+        public async Task<(IDataResult<IEnumerable<CarDto>> result, MetaData metaData)> GetAllAsync(CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _manager.Car.GetAllWithSorting(carParameters, trackChanges);
+            Thread.Sleep(3000);
+            var carsWithMetaData = await _manager.Car.GetAllWithSorting(carParameters, trackChanges);
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CarDto>>(cars, Messages.CarsListed), carsWithMetaData.MetaData);
 
         }
-        public IDataResult<CarDto> GetById(int id, bool trackChanges)
+        public async Task<IDataResult<CarDto>> GetByIdAsync(int id, bool trackChanges)
         {
-            var entity = _manager.Car.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.Car.GetAsync(c => c.Id == id, trackChanges);
 
             return new SuccessDataResult<CarDto>(_mapper.Map<CarDto>(entity), Messages.SuccessListedById);
         }
 
-        //[SecuredOperation("car.add,admin")]
+        [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
-        public IDataResult<int> Add(CarForManipulationDto carDtoForManipulation)
+        public async Task<IDataResult<int>> AddAsync(CarForManipulationDto carDtoForManipulation)
         {
             var entity = _mapper.Map<Car>(carDtoForManipulation);
 
-            _manager.Car.Add(entity);
-            _manager.Save();
+            await _manager.Car.AddAsync(entity);
+            await _manager.SaveAsync();
 
             return new SuccessDataResult<int>(entity.Id, Messages.CarAdded);
         }
 
-        public IResult Update(int id, CarForManipulationDto carDtoForManipulation, bool trackChanges)
+        public async Task<IResult> UpdateAsync(int id, CarForManipulationDto carDtoForManipulation, bool trackChanges)
         {
-            var entity = _manager.Car.Get((c => c.Id == id), trackChanges);
+            var entity = await _manager.Car.GetAsync((c => c.Id == id), trackChanges);
             var mappedEntity = _mapper.Map(carDtoForManipulation, entity);
 
             _manager.Car.Update(mappedEntity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.CarUpdated);
 
         }
 
-        public IResult Delete(int id, bool trackChanges)
+        public async Task<IResult> DeleteAsync(int id, bool trackChanges)
         {
-            var entity = _manager.Car.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.Car.GetAsync(c => c.Id == id, trackChanges);
 
             _manager.Car.Delete(entity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.CarDeleted);
 
         }
 
-        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByColorId(int colorId, CarParameters carParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<CarDto>> result, MetaData metaData)> GetCarsByColorIdAsync(int colorId, CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _manager.Car.GetAllByCondition(c => c.ColorId == colorId, carParameters, trackChanges);
+            var carsWithMetaData = await _manager.Car.GetAllByConditionAsync(c => c.ColorId == colorId, carParameters, trackChanges);
 
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
@@ -87,9 +91,9 @@ namespace Business.Concrete
 
         }
 
-        public (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByBrandId(int brandId, CarParameters carParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<CarDto>> result, MetaData metaData)> GetCarsByBrandIdAsync(int brandId, CarParameters carParameters, bool trackChanges)
         {
-            var carsWithMetaData = _manager.Car.GetAllByCondition(c => c.BrandId == brandId, carParameters, trackChanges);
+            var carsWithMetaData = await _manager.Car.GetAllByConditionAsync(c => c.BrandId == brandId, carParameters, trackChanges);
 
             var cars = _mapper.Map<IEnumerable<CarDto>>(carsWithMetaData);
 
@@ -98,9 +102,9 @@ namespace Business.Concrete
         }
 
         //[CacheAspect]
-        public (IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData) GetAllCarDetails(CarParameters carParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData)> GetAllCarDetailsAsync(CarParameters carParameters, bool trackChanges)
         {
-            var carDetailsWithMetaData = _manager.Car.GetAllCarDetails(carParameters, trackChanges);
+            var carDetailsWithMetaData = await _manager.Car.GetAllCarDetails(carParameters, trackChanges);
 
             var carDetails = _mapper.Map<IEnumerable<CarDetailDto>>(carDetailsWithMetaData);
 

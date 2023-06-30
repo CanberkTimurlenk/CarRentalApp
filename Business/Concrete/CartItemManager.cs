@@ -23,65 +23,65 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-        public IDataResult<int> Add(CartItemForManipulationDto carItemDtoForManipulation)
+        public async Task<IDataResult<int>> AddAsync(CartItemForManipulationDto carItemDtoForManipulation)
         {
             var entity = _mapper.Map<CartItem>(carItemDtoForManipulation);
 
-            _manager.CartItem.Add(entity);
-            _manager.Save();
+            await _manager.CartItem.AddAsync(entity);
+            await _manager.SaveAsync();
 
             return new SuccessDataResult<int>(entity.Id, Messages.CartItemAdded);
         }
-        public IResult Delete(int id, bool trackChanges)
+        public async Task<IResult> DeleteAsync(int id, bool trackChanges)
         {
-            var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.CartItem.GetAsync(c => c.Id == id, trackChanges);
 
             if (entity is not null)
             {
                 _manager.CartItem.Delete(entity);
-                _manager.Save();
+                await _manager.SaveAsync();
 
                 return new SuccessResult();
             }
 
             return new ErrorResult(Messages.CartItemNotExist);
         }
-        public (IDataResult<IEnumerable<CartItemDto>> result, MetaData metaData) GetAll(CartItemParameters cartItemParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<CartItemDto>> result, MetaData metaData)> GetAllAsync(CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemsWithMetaData = _manager.CartItem.GetAll(cartItemParameters, trackChanges);
+            var cartItemsWithMetaData = await _manager.CartItem.GetAllAsync(cartItemParameters, trackChanges);
             var cartItems = _mapper.Map<IEnumerable<CartItemDto>>(cartItemsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CartItemDto>>(cartItems, Messages.CarsListed), cartItemsWithMetaData.MetaData);
 
         }
-        public IDataResult<CartItemDto> GetById(int id, bool trackChanges)
+        public async Task<IDataResult<CartItemDto>> GetByIdAsync(int id, bool trackChanges)
         {
-            var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.CartItem.GetAsync(c => c.Id == id, trackChanges);
 
             var result = _mapper.Map<CartItemDto>(entity);
 
             return new SuccessDataResult<CartItemDto>(result);
 
         }
-        public (IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData) GetCartItemDetailsByCustomerId(int id, CartItemParameters cartItemParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<CartItemDetailDto>>, MetaData metaData)> GetCartItemDetailsByCustomerIdAsync(int id, CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemsWithMetaData = _manager.CartItem.GetAllByCondition(c => c.CustomerId == id, cartItemParameters, trackChanges);
+            var cartItemsWithMetaData = await _manager.CartItem.GetAllCartItemDetailsByCondition(c => c.CustomerId == id, cartItemParameters, trackChanges);
 
             var cartItems = _mapper.Map<IEnumerable<CartItemDetailDto>>(cartItemsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<CartItemDetailDto>>(cartItems), cartItemsWithMetaData.MetaData);
 
         }
-        public IResult Update(int id, CartItemForManipulationDto cartItemDtoForManipulation, bool trackChanges)
+        public async Task<IResult> UpdateAsync(int id, CartItemForManipulationDto cartItemDtoForManipulation, bool trackChanges)
         {
-            var entity = _manager.CartItem.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.CartItem.GetAsync(c => c.Id == id, trackChanges);
 
             if (entity is not null)
             {
                 var mappedEntity = _mapper.Map(cartItemDtoForManipulation, entity);
 
                 _manager.CartItem.Update(mappedEntity);
-                _manager.Save();
+                await _manager.SaveAsync();
 
                 return new SuccessResult();
             }

@@ -6,8 +6,8 @@ namespace Business.Abstract
 {
     public interface ITokenService
     {
-        IDataResult<RefreshToken> GetRefreshTokenByEmail(string email, out UserDto userDto);
-        IResult SetRefreshTokenByEmail(string email, RefreshToken refreshToken);
+        Task<IDataResult<RefreshToken>> GetRefreshTokenByEmailAsync(string email);
+        Task<IResult> SetRefreshTokenByEmailAsync(string email, RefreshToken refreshToken);
 
     }
 }

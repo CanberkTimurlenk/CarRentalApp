@@ -16,7 +16,7 @@ namespace Business.Abstract
 {
     public interface IRentalService : IBusinessRepository<RentalDto,RentalForManipulationDto,RentalParameters>
     {        
-        (IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData) GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges);
+        Task<(IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData)> GetAllRentalDetailsAsync(RentalParameters rentalParameters, bool trackChanges);
 
     }
 }

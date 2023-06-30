@@ -10,11 +10,11 @@ namespace Core.Business
         where TDtoForManipulation : class, IDto, new()
         where TRequestParameters : RequestParameters, new()
     {
-        IDataResult<int> Add(TDtoForManipulation addedItem);
-        IResult Update(int id, TDtoForManipulation updatedItem, bool trackChanges);
-        IResult Delete(int id, bool trackChanges);
-        IDataResult<TDto> GetById(int id, bool trackChanges);
-        (IDataResult<IEnumerable<TDto>> result, MetaData metaData) GetAll(TRequestParameters requestParameters, bool trackChanges);
+        Task<IDataResult<int>> AddAsync(TDtoForManipulation addedItem);
+        Task<IResult> UpdateAsync(int id, TDtoForManipulation updatedItem, bool trackChanges);
+        Task<IResult> DeleteAsync(int id, bool trackChanges);
+        Task<IDataResult<TDto>> GetByIdAsync(int id, bool trackChanges);
+        Task<(IDataResult<IEnumerable<TDto>> result, MetaData metaData)> GetAllAsync(TRequestParameters requestParameters, bool trackChanges);
 
 
     }

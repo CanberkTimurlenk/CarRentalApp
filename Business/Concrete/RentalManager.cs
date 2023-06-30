@@ -4,8 +4,6 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Cache;
 using Core.Aspects.Autofac.Validation;
-using Core.Business;
-using Core.Entities.Concrete;
 using Core.Entities.Concrete.RequestFeatures;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -30,17 +28,17 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(RentalValidator))]
-        public IDataResult<int> Add(RentalForManipulationDto rentalDtoForManipulation)
+        public async Task<IDataResult<int>> AddAsync(RentalForManipulationDto rentalDtoForManipulation)
         {
             //  CheckIfAlreadyRented
-            var result = _manager.Rental.Get(r => r.CarId == rentalDtoForManipulation.CarId && r.ReturnDate == null, false);
+            var result = await _manager.Rental.GetAsync(r => r.CarId == rentalDtoForManipulation.CarId && r.ReturnDate == null, false);
 
             if (result is null)
             {
                 var mappedEntity = _mapper.Map<Rental>(rentalDtoForManipulation);
 
-                _manager.Rental.Add(mappedEntity);
-                _manager.Save();
+                await _manager.Rental.AddAsync(mappedEntity);
+                await _manager.SaveAsync();
 
                 return new SuccessDataResult<int>(mappedEntity.Id, Messages.RentalAdded);
             }
@@ -48,49 +46,49 @@ namespace Business.Concrete
             return new ErrorDataResult<int>(Messages.InvalidRentalAdd);
 
         }
-        public IResult Delete(int id, bool trackChanges)
+        public async Task<IResult> DeleteAsync(int id, bool trackChanges)
         {
-            var entity = _manager.Rental.Get(r => r.Id == id, trackChanges);
+            var entity = await _manager.Rental.GetAsync(r => r.Id == id, trackChanges);
 
             _manager.Rental.Delete(entity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.RentalDeleted);
 
-        }        
+        }
         [CacheAspect]
-        public (IDataResult<IEnumerable<RentalDto>> result, MetaData metaData) GetAll(RentalParameters rentalParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<RentalDto>> result, MetaData metaData)> GetAllAsync(RentalParameters rentalParameters, bool trackChanges)
         {
-            var rentalsWithMetaData = _manager.Rental.GetAllWithSorting(rentalParameters, trackChanges);
+            var rentalsWithMetaData = await _manager.Rental.GetAllWithSorting(rentalParameters, trackChanges);
 
             var rentals = _mapper.Map<IEnumerable<RentalDto>>(rentalsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<RentalDto>>(rentals, Messages.CarsListed), rentalsWithMetaData.MetaData);
 
         }
-        public IDataResult<RentalDto> GetById(int id, bool trackChanges)
+        public async Task<IDataResult<RentalDto>> GetByIdAsync(int id, bool trackChanges)
         {
-            var entity = _manager.Rental.Get(r => r.Id == id, trackChanges);
+            var entity = await _manager.Rental.GetAsync(r => r.Id == id, trackChanges);
 
             var result = _mapper.Map<RentalDto>(entity);
 
             return new SuccessDataResult<RentalDto>(result, Messages.SuccessListedById);
         }
-        public IResult Update(int id, RentalForManipulationDto rentalDtoForManipulation, bool trackChanges)
+        public async Task<IResult> UpdateAsync(int id, RentalForManipulationDto rentalDtoForManipulation, bool trackChanges)
         {
-            var entity = _manager.Rental.Get(r => r.Id == id, trackChanges);
+            var entity = await _manager.Rental.GetAsync(r => r.Id == id, trackChanges);
 
             var mappedEntity = _mapper.Map(rentalDtoForManipulation, entity);
 
             _manager.Rental.Update(mappedEntity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.RentalUpdated);
-        }        
+        }
         [CacheAspect]
-        public (IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData) GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<RentalDetailDto>> result, MetaData metaData)> GetAllRentalDetailsAsync(RentalParameters rentalParameters, bool trackChanges)
         {
-            var rentalDetailsWithMetaData = _manager.Rental.GetAllRentalDetails(rentalParameters, trackChanges);
+            var rentalDetailsWithMetaData = await _manager.Rental.GetAllRentalDetails(rentalParameters, trackChanges);
 
             var rentalDetails = _mapper.Map<IEnumerable<RentalDetailDto>>(rentalDetailsWithMetaData);
 

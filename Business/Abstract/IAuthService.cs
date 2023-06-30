@@ -15,12 +15,10 @@ namespace Business.Abstract
 {
     public interface IAuthService
     {
-        IDataResult<UserDto> Register(UserForRegisterDto userForRegisterDto);
-        IDataResult<UserDto> Login(UserForLoginDto userForLoginDto);
-        IDataResult<TokenDto> CreateToken(UserDto userDto, bool populateExp);
-        IDataResult<TokenDto> RefreshToken(TokenForRefreshDto refreshTokenDto);
-
-
+        Task<IDataResult<UserDto>> Register(UserForRegisterDto userForRegisterDto);
+        Task<IDataResult<UserDto>> Login(UserForLoginDto userForLoginDto);
+        Task<IDataResult<TokenDto>> CreateToken(UserDto userDto, bool populateExp);
+        Task<IDataResult<TokenDto>> RefreshToken(TokenForRefreshDto refreshTokenDto);
 
     }
 }

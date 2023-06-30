@@ -28,40 +28,49 @@ namespace Business.Concrete
             _tokenService = tokenService;
         }
 
-        public IDataResult<TokenDto> CreateToken(UserDto user, bool populateExp)
+        public async Task<IDataResult<TokenDto>> CreateToken(UserDto user, bool populateExp)
         {
-            var claims = _userService.GetOperationClaims(user, false).Data;
+            var claims = (await _userService.GetOperationClaimsAsync(user, false)).Data;
 
-            var refreshTokenExp = _tokenService.GetRefreshTokenByEmail(user.Email,out _).Data.Expiration;
+            var refreshTokenExp = (await _tokenService
+                                            .GetRefreshTokenByEmailAsync(user.Email))
+                                            .Data
+                                            .Expiration;
 
+                                                                                       
             var token = _tokenHelper.CreateToken(user, claims, refreshTokenExp, populateExp);
 
-            _tokenService.SetRefreshTokenByEmail(user.Email, token.RefreshToken);
+            await _tokenService.SetRefreshTokenByEmailAsync(user.Email, token.RefreshToken);
 
             return new SuccessDataResult<TokenDto>(data: token, Messages.TokenCreated);
         }
 
-        public IDataResult<TokenDto> RefreshToken(TokenForRefreshDto tokenForRefreshDto)
+        public async Task<IDataResult<TokenDto>> RefreshToken(TokenForRefreshDto tokenForRefreshDto)
         {
             var principal = _tokenHelper.GetPrincipalFromExpiredToken(tokenForRefreshDto.AccessToken);
 
             var email = principal.FindFirst(ClaimTypes.Email).Value;
 
-            var storedRefreshToken = _tokenService.GetRefreshTokenByEmail(email,out var user).Data;
+            var storedRefreshToken = (await _tokenService.GetRefreshTokenByEmailAsync(email)).Data;
+
+            var user = (await _userService.GetByEmailAsync(email,false)).Data;
+                                        
 
             var refreshTokenIsValid = _tokenHelper.CheckRefreshTokenIsValid(tokenForRefreshDto.RefreshToken, storedRefreshToken);
 
             if (!refreshTokenIsValid)
                 return new ErrorDataResult<TokenDto>(Messages.RefreshTokenIsNotValid);            
 
-            return new SuccessDataResult<TokenDto>(CreateToken(user, false).Data);
+            return new SuccessDataResult<TokenDto>((
+                await CreateToken(user, false))
+                .Data);
 
         }
 
-        public IDataResult<UserDto> Login(UserForLoginDto userForLoginDto)
+        public async Task<IDataResult<UserDto>> Login(UserForLoginDto userForLoginDto)
         {
 
-            var userToCheck = CheckIfUserExistsWithEmail(userForLoginDto.Email);
+            var userToCheck = (await CheckIfUserExistsWithEmail(userForLoginDto.Email));
 
             if (!userToCheck.Success)
                 return new ErrorDataResult<UserDto>();
@@ -73,10 +82,11 @@ namespace Business.Concrete
 
         }
 
-        public IDataResult<UserDto> Register(UserForRegisterDto userForRegisterDto)
+        public async Task<IDataResult<UserDto>> Register(UserForRegisterDto userForRegisterDto)
         {
 
-            var userExist = CheckIfUserExistsWithEmail(userForRegisterDto.Email).Success;
+            var userExist = (await CheckIfUserExistsWithEmail(userForRegisterDto.Email))
+                                .Success;
 
             if (userExist == true)
                 return new ErrorDataResult<UserDto>(Messages.UserExists);
@@ -97,15 +107,15 @@ namespace Business.Concrete
             var userDtoForManipulation = _mapper.Map<UserForManipulationDto>(user);
 
             var userDto = _mapper.Map<UserDto>(userDtoForManipulation);
-            int userId = _userService.Add(userDtoForManipulation).Data;
+            int userId = (await _userService.AddAsync(userDtoForManipulation)).Data;
 
             return new SuccessDataResult<UserDto>(userDto with { Id = userId }, Messages.UserRegistered);
 
         }
 
-        private IDataResult<UserDto> CheckIfUserExistsWithEmail(string email)
+        private async Task<IDataResult<UserDto>> CheckIfUserExistsWithEmail(string email)
         {
-            var result = _userService.GetByEmail(email, false);
+            var result = await _userService.GetByEmailAsync(email, false);
 
             if (result.Data != null)
                 return new SuccessDataResult<UserDto>(result.Data, Messages.UserExists);

@@ -18,11 +18,11 @@ namespace Core.Business
             where TFileDtoForManipulation : class, IDto, new()
             where TRequestParameters : RequestParameters, new()
     {
-        IResult Add(TFormFile file, TFileDtoForManipulation addedFileEntity);
-        IResult Update(TFormFile file, int id, TFileDtoForManipulation updatedFileEntity, bool trackChanges);
-        IResult Delete(int id, bool trackChanges);
-        IDataResult<TFileDto> GetById(int id, bool trackChanges);
-        (IDataResult<IEnumerable<TFileDto>> result, MetaData metaData) GetAll(TRequestParameters requestParameters, bool trackChanges);
+        Task<IResult> AddAsync(TFormFile file, TFileDtoForManipulation addedFileEntity);
+        Task<IResult> UpdateAsync(TFormFile file, int id, TFileDtoForManipulation updatedFileEntity, bool trackChanges);
+        Task<IResult> DeleteAsync(int id, bool trackChanges);
+        Task<IDataResult<TFileDto>> GetByIdAsync(int id, bool trackChanges);
+        Task<(IDataResult<IEnumerable<TFileDto>> result, MetaData metaData)> GetAllAsync(TRequestParameters requestParameters, bool trackChanges);
 
     }
 }

@@ -28,10 +28,10 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-        public IResult Add(IFormFile file, CarImageForManipulationDto carImageForManipulation)
+        public async Task<IResult> AddAsync(IFormFile file, CarImageForManipulationDto carImageForManipulation)
         {
             var ruleCheck = BusinessRules.Run(
-                CheckIfCarImageLimitExceed(carImageForManipulation.CarId)
+                await CheckIfCarImageLimitExceed(carImageForManipulation.CarId)
                 );
 
             if (ruleCheck is null)
@@ -39,10 +39,10 @@ namespace Business.Concrete
                 var entity = _mapper.Map<CarImage>(carImageForManipulation);
 
                 entity.Date = DateTime.Now;
-                entity.ImagePath = _fileHelper.UploadFile(file, Paths.CarImageFolder).Data;
+                entity.ImagePath = (await _fileHelper.UploadFile(file, Paths.CarImageFolder)).Data;
 
-                _manager.CarImage.Add(entity);
-                _manager.Save();
+                await _manager.CarImage.AddAsync(entity);
+                await _manager.SaveAsync();
 
                 return new SuccessResult();
             }
@@ -50,9 +50,9 @@ namespace Business.Concrete
             return new ErrorResult();
 
         }
-        public IResult Update(IFormFile file, int id, CarImageForManipulationDto carImageForManipulation, bool trackChanges)
+        public async Task<IResult> UpdateAsync(IFormFile file, int id, CarImageForManipulationDto carImageForManipulation, bool trackChanges)
         {
-            var entity = _manager.CarImage.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.CarImage.GetAsync(c => c.Id == id, trackChanges);
 
             var carImage = _mapper.Map(carImageForManipulation, entity);
 
@@ -60,14 +60,14 @@ namespace Business.Concrete
             {
                 var oldImageRelativePath = carImage.ImagePath;
 
-                var result = _fileHelper.UpdateFile(file, Path.Combine(Paths.CarImageFolder, oldImageRelativePath));
+                var result = await _fileHelper.UpdateFile(file, Path.Combine(Paths.CarImageFolder, oldImageRelativePath));
 
                 carImage.Date = DateTime.Now;
 
                 carImage.ImagePath = result.Data;
 
                 _manager.CarImage.Update(carImage);
-                _manager.Save();
+                await _manager.SaveAsync();
 
                 if (result.Success)
                     return new SuccessResult();
@@ -75,9 +75,9 @@ namespace Business.Concrete
 
             return new ErrorResult();
         }
-        public IResult Delete(int id, bool trackChanges)
+        public async Task<IResult> DeleteAsync(int id, bool trackChanges)
         {
-            var entity = _manager.CarImage.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.CarImage.GetAsync(c => c.Id == id, trackChanges);
 
             var deletedImagePath = entity.ImagePath;
 
@@ -86,7 +86,7 @@ namespace Business.Concrete
                         Paths.CarImageFolder, deletedImagePath));
 
             _manager.CarImage.Delete(entity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             if (result.Success)
                 return new SuccessResult(Messages.CarImageDeleted);
@@ -94,10 +94,10 @@ namespace Business.Concrete
             return new ErrorResult();
 
         }
-        public (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetByCarId(CarImageParameters carImageParameters, int carId, bool trackChanges)    //  If the car do not have an image, it returns ErrorResult
+        public async Task<(IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData)> GetByCarIdAsync(CarImageParameters carImageParameters, int carId, bool trackChanges)    //  If the car do not have an image, it returns ErrorResult
         {
             var ruleCheck = BusinessRules.Run(
-                CheckIfMentionedCarHaveAnyImage(carId)
+                await CheckIfMentionedCarHaveAnyImage(carId)
                 );
 
             IEnumerable<CarImageDto> result = new List<CarImageDto>();
@@ -109,25 +109,25 @@ namespace Business.Concrete
 
             }
 
-            var entitiesByCarId = _manager.CarImage.GetAllByCondition(c => c.CarId == carId, carImageParameters, trackChanges);
+            var entitiesByCarId = await _manager.CarImage.GetAllByConditionAsync(c => c.CarId == carId, carImageParameters, trackChanges);
 
             result = _mapper.Map<IEnumerable<CarImageDto>>(entitiesByCarId);
 
             return (new SuccessDataResult<IEnumerable<CarImageDto>>(result, Messages.SuccessListedById), entitiesByCarId.MetaData);
 
         }
-        public IDataResult<CarImageDto> GetById(int carImageId, bool trackChanges)
+        public async Task<IDataResult<CarImageDto>> GetByIdAsync(int carImageId, bool trackChanges)
         {
-            var entity = _manager.CarImage.Get(c => c.Id == carImageId, trackChanges);
+            var entity = await _manager.CarImage.GetAsync(c => c.Id == carImageId, trackChanges);
 
             var result = _mapper.Map<CarImageDto>(entity);
 
             return new SuccessDataResult<CarImageDto>(result, Messages.SuccessListedById);
 
         }
-        public (IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData) GetAll(CarImageParameters carImageParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<CarImageDto>> result, MetaData metaData)> GetAllAsync(CarImageParameters carImageParameters, bool trackChanges)
         {
-            var carImagesWithMetaData = _manager.CarImage.GetAll(carImageParameters, trackChanges);
+            var carImagesWithMetaData = await _manager.CarImage.GetAllAsync(carImageParameters, trackChanges);
 
             var carImages = _mapper.Map<IEnumerable<CarImageDto>>(carImagesWithMetaData);
 
@@ -135,9 +135,11 @@ namespace Business.Concrete
         }
 
 
-        private IResult CheckIfCarImageLimitExceed(int carId)
+        private async Task<IResult> CheckIfCarImageLimitExceed(int carId)
         {
-            var result = _manager.CarImage.GetAllByConditionAsEnumerable(c => c.CarId == carId, false).Count();
+            var result = (await _manager.CarImage.GetAllByConditionAsEnumerableAsync
+                                                    (c => c.CarId == carId, false))
+                                                    .Count();
 
             if (result >= Restrictions.CarImageLimit)
                 return new ErrorResult(Messages.CarImageLimitExceed);
@@ -145,9 +147,9 @@ namespace Business.Concrete
             return new SuccessResult();
 
         }
-        private IResult CheckIfMentionedCarHaveAnyImage(int carId)
+        private async Task<IResult> CheckIfMentionedCarHaveAnyImage(int carId)
         {
-            var result = _manager.CarImage.GetAllByConditionAsEnumerable(c => c.CarId == carId, false);
+            var result = await _manager.CarImage.GetAllByConditionAsEnumerableAsync(c => c.CarId == carId, false);
 
             if (!result.Any())
                 return new ErrorResult();

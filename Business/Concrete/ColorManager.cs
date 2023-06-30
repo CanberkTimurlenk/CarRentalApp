@@ -25,50 +25,50 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(ColorValidator))]
-        public IDataResult<int> Add(ColorForManipulationDto colorDtoForManipulation)
+        public async Task<IDataResult<int>> AddAsync(ColorForManipulationDto colorDtoForManipulation)
         {
             var entity = _mapper.Map<Color>(colorDtoForManipulation);
 
-            _manager.Color.Add(entity);
-            _manager.Save();
+            await _manager.Color.AddAsync(entity);
+            await _manager.SaveAsync();
 
             return new SuccessDataResult<int>(entity.Id, Messages.ColorAdded);
 
         }
-        public IResult Delete(int id, bool trackChanges)
+        public async Task<IResult> DeleteAsync(int id, bool trackChanges)
         {
-            var entity = _manager.Color.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.Color.GetAsync(c => c.Id == id, trackChanges);
 
             _manager.Color.Delete(entity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.ColorDeleted);
         }
-        public IDataResult<ColorDto> GetById(int id, bool trackChanges)
+        public async Task<IDataResult<ColorDto>> GetByIdAsync(int id, bool trackChanges)
         {
             var entity = _mapper.Map<ColorDto>
-                (_manager.Color.Get(c => c.Id == id, trackChanges));
+                (await _manager.Color.GetAsync(c => c.Id == id, trackChanges));
 
             return new SuccessDataResult<ColorDto>(entity, Messages.SuccessListedById);
 
         }
-        public (IDataResult<IEnumerable<ColorDto>> result, MetaData metaData) GetAll(ColorParameters colorParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<ColorDto>> result, MetaData metaData)> GetAllAsync(ColorParameters colorParameters, bool trackChanges)
         {
-            var colorsWithMetaData = _manager.Color.GetAll(colorParameters, trackChanges);
+            var colorsWithMetaData = await _manager.Color.GetAllAsync(colorParameters, trackChanges);
 
             var colors = _mapper.Map<IEnumerable<ColorDto>>(colorsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<ColorDto>>(colors, Messages.CarsListed), colorsWithMetaData.MetaData);
 
         }
-        public IResult Update(int id, ColorForManipulationDto colorDtoForManipulation, bool trackChanges)
+        public async Task<IResult> UpdateAsync(int id, ColorForManipulationDto colorDtoForManipulation, bool trackChanges)
         {
-            var entity = _manager.Color.Get(c => c.Id == id, trackChanges);
+            var entity = await _manager.Color.GetAsync(c => c.Id == id, trackChanges);
 
             var mappedEntity = _mapper.Map(colorDtoForManipulation, entity);
 
             _manager.Color.Update(mappedEntity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.ColorUpdated);
 

@@ -29,51 +29,51 @@ namespace Business.Concrete
         //[SecuredOperation("brand.add,admin")]
         [ValidationAspect(typeof(BrandValidator))]
         [PerformanceAspect(5)]
-        public IDataResult<int> Add(BrandForManipulationDto brandDtoForManipulation)
+        public async Task<IDataResult<int>> AddAsync(BrandForManipulationDto brandDtoForManipulation)
         {
             //Thread.Sleep(2000); to test PerformanceAspect
 
             var entity = _mapper.Map<Brand>(brandDtoForManipulation);
 
-            _manager.Brand.Add(entity);
-            _manager.Save();
+            await _manager.Brand.AddAsync(entity);
+            await _manager.SaveAsync();
 
             return new SuccessDataResult<int>(entity.Id, Messages.BrandAdded);
 
         }
-        public IResult Delete(int id, bool trackChanges)
+        public async Task<IResult> DeleteAsync(int id, bool trackChanges)
         {
-            var entity = _manager.Brand.Get(b => b.Id == id, trackChanges);
+            var entity = await _manager.Brand.GetAsync(b => b.Id == id, trackChanges);
 
             _manager.Brand.Delete(entity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.BrandDeleted);
 
         }
-        public IDataResult<BrandDto> GetById(int brandId, bool trackChanges)
+        public async Task<IDataResult<BrandDto>> GetByIdAsync(int brandId, bool trackChanges)
         {
-            var entity = _manager.Brand.Get(b => b.Id == brandId, trackChanges);
+            var entity = await _manager.Brand.GetAsync(b => b.Id == brandId, trackChanges);
             var result = _mapper.Map<BrandDto>(entity);
 
             return new SuccessDataResult<BrandDto>(result, Messages.SuccessListedById);
 
         }
-        public (IDataResult<IEnumerable<BrandDto>> result, MetaData metaData) GetAll(BrandParameters brandParameters, bool trackChanges)
+        public async Task<(IDataResult<IEnumerable<BrandDto>> result, MetaData metaData)> GetAllAsync(BrandParameters brandParameters, bool trackChanges)
         {
-            var brandsWithMetaData = _manager.Brand.GetAll(brandParameters, trackChanges);
+            var brandsWithMetaData = await _manager.Brand.GetAllAsync(brandParameters, trackChanges);
             var brands = _mapper.Map<IEnumerable<BrandDto>>(brandsWithMetaData);
 
             return (new SuccessDataResult<IEnumerable<BrandDto>>(brands, Messages.BrandsListed), brandsWithMetaData.MetaData);
 
         }
-        public IResult Update(int id, BrandForManipulationDto brandDtoForManipulation, bool trackChanges)
+        public async Task<IResult> UpdateAsync(int id, BrandForManipulationDto brandDtoForManipulation, bool trackChanges)
         {
-            var entity = _manager.Brand.Get(b => b.Id == id, trackChanges);
+            var entity = await _manager.Brand.GetAsync(b => b.Id == id, trackChanges);
             var mappedEntity = _mapper.Map(brandDtoForManipulation, entity);
 
             _manager.Brand.Update(mappedEntity);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             return new SuccessResult(Messages.BrandUpdated);
         }

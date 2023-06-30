@@ -9,9 +9,9 @@ namespace Business.Abstract
 {
     public interface ICarService : IBusinessRepository<CarDto, CarForManipulationDto, CarParameters>
     {
-        (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByColorId(int colorId, CarParameters carParameters, bool trackChanges);
-        (IDataResult<IEnumerable<CarDto>> result, MetaData metaData) GetCarsByBrandId(int brandId, CarParameters carParameters, bool trackChanges);
-        (IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData) GetAllCarDetails(CarParameters carParameters, bool trackChanges);
+        Task<(IDataResult<IEnumerable<CarDto>> result, MetaData metaData)> GetCarsByColorIdAsync(int colorId, CarParameters carParameters, bool trackChanges);
+        Task<(IDataResult<IEnumerable<CarDto>> result, MetaData metaData)> GetCarsByBrandIdAsync(int brandId, CarParameters carParameters, bool trackChanges);
+        Task<(IDataResult<IEnumerable<CarDetailDto>> result, MetaData metaData)> GetAllCarDetailsAsync(CarParameters carParameters, bool trackChanges);
     }
 
 }
