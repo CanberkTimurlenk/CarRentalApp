@@ -1,19 +1,16 @@
 ﻿using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebAPI.Extensions.ServicesExtensions
+namespace WebAPI.Extensions
 {
     public static class ServicesExtensions
     {
-
         public static void ApplyAuthentication(this IServiceCollection services, TokenOptions tokenOptions)
         {
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -28,9 +25,6 @@ namespace WebAPI.Extensions.ServicesExtensions
 
                 };
             });
-
-
-
         }
 
         public static void ConfigureCors(this IServiceCollection services)
@@ -53,7 +47,7 @@ namespace WebAPI.Extensions.ServicesExtensions
                 (options => options
                                     .UseSqlServer
                                     (configuration.GetConnectionString("sqlConnection")));
-                
+
         }
     }
 }

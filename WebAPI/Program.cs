@@ -3,7 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Business.DependencyResolvers.Autofac;
 using Core.Utilities.Security.Jwt;
 using Core.Extensions;
-using WebAPI.Extensions.ServicesExtensions;
+using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +32,7 @@ builder.Services.ApplyAuthentication(tokenOptions);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,6 +43,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
+
+app.ConfigureExceptionHandler();
 
 app.UseCors("CorsPolicy");
 
