@@ -19,12 +19,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add([FromForm] IFormFile newFile, [FromForm] CarImageForManipulationDto carImageDtoForManipulation)
+        public async Task<IActionResult> Add([FromForm] IFormFile newFile, [FromForm] CarImageForManipulationDto carImageDtoForManipulation)
         {
 
             if (newFile is not null)
             {
-                var result = _carImageService.Add(newFile, carImageDtoForManipulation);
+                var result = await _carImageService.AddAsync(newFile, carImageDtoForManipulation);
 
                 if (result.Success)
                     return Ok();
@@ -35,10 +35,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update([FromForm] IFormFile newFile, int id, [FromForm] CarImageForManipulationDto carImageDtoForManipulation)
+        public async Task<IActionResult> Update([FromForm] IFormFile newFile, int id, [FromForm] CarImageForManipulationDto carImageDtoForManipulation)
         {
 
-            var result = _carImageService.Update(newFile, id, carImageDtoForManipulation, false);
+            var result = await _carImageService.UpdateAsync(newFile, id, carImageDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -48,9 +48,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete([FromForm] int id)
+        public async Task<IActionResult> Delete([FromForm] int id)
         {
-            var result = _carImageService.Delete(id, false);
+            var result = await _carImageService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -60,9 +60,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbycarid")]
-        public IActionResult GetByCarId([FromForm] int carImageId, [FromQuery] CarImageParameters carImageParameters)
+        public async Task<IActionResult> GetByCarId([FromForm] int carImageId, [FromQuery] CarImageParameters carImageParameters)
         {
-            var pagedResult = _carImageService.GetByCarId(carImageParameters, carImageId, false);
+            var pagedResult = await _carImageService.GetByCarIdAsync(carImageParameters, carImageId, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -75,9 +75,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById([FromForm] int carImageId)
+        public async Task<IActionResult> GetById([FromForm] int carImageId)
         {
-            var result = _carImageService.GetById(carImageId, false);
+            var result = await _carImageService.GetByIdAsync(carImageId, false);
 
             if (result.Success)
                 return Ok(result);
@@ -87,9 +87,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] CarImageParameters carImageParameters)
+        public async Task<IActionResult> GetAll([FromQuery] CarImageParameters carImageParameters)
         {
-            var pagedResult = _carImageService.GetAll(carImageParameters, false);
+            var pagedResult = await _carImageService.GetAllAsync(carImageParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

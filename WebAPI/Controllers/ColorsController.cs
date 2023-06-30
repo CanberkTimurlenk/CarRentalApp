@@ -18,9 +18,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(ColorForManipulationDto colorDtoForManipulation)
+        public async Task<IActionResult> Add(ColorForManipulationDto colorDtoForManipulation)
         {
-            var result = _colorService.Add(colorDtoForManipulation);
+            var result = await _colorService.AddAsync(colorDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -30,9 +30,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, ColorForManipulationDto colorDtoForManipulation)
+        public async Task<IActionResult> Update(int id, ColorForManipulationDto colorDtoForManipulation)
         {
-            var result = _colorService.Update(id, colorDtoForManipulation, false);
+            var result = await _colorService.UpdateAsync(id, colorDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -42,9 +42,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _colorService.Delete(id, false);
+            var result = await _colorService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -54,9 +54,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _colorService.GetById(id, false);
+            var result = await _colorService.GetByIdAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -66,9 +66,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] ColorParameters colorParameters)
+        public async Task<IActionResult> GetAll([FromQuery] ColorParameters colorParameters)
         {
-            var pagedResult = _colorService.GetAll(colorParameters, false);
+            var pagedResult = await _colorService.GetAllAsync(colorParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

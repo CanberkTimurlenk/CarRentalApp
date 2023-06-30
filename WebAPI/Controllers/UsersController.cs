@@ -17,9 +17,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(UserForManipulationDto userDtoForManipulation)
+        public async Task<IActionResult> Add(UserForManipulationDto userDtoForManipulation)
         {
-            var result = _userService.Add(userDtoForManipulation);
+            var result = await _userService.AddAsync(userDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -29,9 +29,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, UserForManipulationDto userDtoForManipulation)
+        public async Task<IActionResult> Update(int id, UserForManipulationDto userDtoForManipulation)
         {
-            var result = _userService.Update(id, userDtoForManipulation, false);
+            var result = await _userService.UpdateAsync(id, userDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -41,9 +41,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _userService.Delete(id, false);
+            var result = await _userService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -53,9 +53,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _userService.GetById(id, false);
+            var result = await _userService.GetByIdAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -65,9 +65,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] UserParameters userParameters)
+        public async Task<IActionResult> GetAll([FromQuery] UserParameters userParameters)
         {
-            var pagedResult = _userService.GetAll(userParameters, false);
+            var pagedResult = await _userService.GetAllAsync(userParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

@@ -19,9 +19,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(RentalForManipulationDto rentalDtoForManipulation)
+        public async Task<IActionResult> Add(RentalForManipulationDto rentalDtoForManipulation)
         {
-            var result = _rentalService.Add(rentalDtoForManipulation);
+            var result = await _rentalService.AddAsync(rentalDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -31,9 +31,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, RentalForManipulationDto rentalDtoForManipulation)
+        public async Task<IActionResult> Update(int id, RentalForManipulationDto rentalDtoForManipulation)
         {
-            var result = _rentalService.Update(id, rentalDtoForManipulation, false);
+            var result = await _rentalService.UpdateAsync(id, rentalDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -43,9 +43,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _rentalService.Delete(id, false);
+            var result = await _rentalService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -55,9 +55,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _rentalService.GetById(id, false);
+            var result = await _rentalService.GetByIdAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -67,9 +67,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] RentalParameters rentalParameters)
+        public async Task<IActionResult> GetAll([FromQuery] RentalParameters rentalParameters)
         {
-            var pagedResult = _rentalService.GetAll(rentalParameters, false);
+            var pagedResult = await _rentalService.GetAllAsync(rentalParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -82,9 +82,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getallrentaldetails")]
-        public IActionResult GetAllRentalDetails([FromQuery] RentalParameters rentalParameters)
+        public async Task<IActionResult> GetAllRentalDetails([FromQuery] RentalParameters rentalParameters)
         {
-            var pagedResult = _rentalService.GetAllRentalDetails(rentalParameters, false);
+            var pagedResult = await _rentalService.GetAllRentalDetailsAsync(rentalParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

@@ -20,9 +20,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(BrandForManipulationDto brandDtoForManipulation)
+        public async Task<IActionResult> Add(BrandForManipulationDto brandDtoForManipulation)
         {
-            var result = _brandService.Add(brandDtoForManipulation);
+            var result = await _brandService.AddAsync(brandDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -32,9 +32,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, BrandForManipulationDto brandDtoForManipulation)
+        public async Task<IActionResult> Update(int id, BrandForManipulationDto brandDtoForManipulation)
         {
-            var result = _brandService.Update(id, brandDtoForManipulation, false);
+            var result = await _brandService.UpdateAsync(id, brandDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -44,9 +44,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _brandService.Delete(id, false);
+            var result = await _brandService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -55,9 +55,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int brandId)
+        public async Task<IActionResult> GetById(int brandId)
         {
-            var result = _brandService.GetById(brandId, false);
+            var result = await _brandService.GetByIdAsync(brandId, false);
 
             if (result.Success)
                 return Ok(result);
@@ -67,9 +67,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] BrandParameters brandParameters)
+        public async Task<IActionResult> GetAll([FromQuery] BrandParameters brandParameters)
         {
-            var pagedResult = _brandService.GetAll(brandParameters, false);
+            var pagedResult = await _brandService.GetAllAsync(brandParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

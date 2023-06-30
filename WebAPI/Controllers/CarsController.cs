@@ -18,10 +18,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(CarForManipulationDto carDtoForManipulation)
+        public async Task<IActionResult> Add(CarForManipulationDto carDtoForManipulation)
         {
 
-            var result = _carService.Add(carDtoForManipulation);
+            var result = await _carService.AddAsync(carDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -32,9 +32,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, CarForManipulationDto carDtoForManipulation)
+        public async Task<IActionResult> Update(int id, CarForManipulationDto carDtoForManipulation)
         {
-            var result = _carService.Update(id, carDtoForManipulation, false);
+            var result = await _carService.UpdateAsync(id, carDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -44,9 +44,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _carService.Delete(id, false);
+            var result = await _carService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -56,9 +56,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getallcardetails")]
-        public IActionResult GetAllCarDetails(CarParameters carParameters)
+        public async Task<IActionResult> GetAllCarDetails(CarParameters carParameters)
         {
-            var pagedResult = _carService.GetAllCarDetails(carParameters, false);
+            var pagedResult = await _carService.GetAllCarDetailsAsync(carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -71,9 +71,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getcarsbycolorid")]
-        public IActionResult GetCarsByColorId(int colorId, [FromQuery] CarParameters carParameters)
+        public async Task<IActionResult> GetCarsByColorId(int colorId, [FromQuery] CarParameters carParameters)
         {
-            var pagedResult = _carService.GetCarsByColorId(colorId, carParameters, false);
+            var pagedResult = await _carService.GetCarsByColorIdAsync(colorId, carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -86,9 +86,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getcarsbybrandid")]
-        public IActionResult GetCarsByBrandId(int brandId, [FromQuery] CarParameters carParameters)
+        public async Task<IActionResult> GetCarsByBrandId(int brandId, [FromQuery] CarParameters carParameters)
         {
-            var pagedResult = _carService.GetCarsByBrandId(brandId, carParameters, false);
+            var pagedResult = await _carService.GetCarsByBrandIdAsync(brandId, carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
@@ -100,9 +100,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _carService.GetById(id, false);
+            var result = await _carService.GetByIdAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -112,9 +112,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] CarParameters carParameters)
+        public async Task<IActionResult> GetAll([FromQuery] CarParameters carParameters)
         {
-            var pagedResult = _carService.GetAll(carParameters, false);
+            var pagedResult = await _carService.GetAllAsync(carParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

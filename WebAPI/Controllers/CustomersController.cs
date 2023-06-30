@@ -19,9 +19,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add([FromBody] CustomerForManipulationDto customerDtoForManipulation)
+        public async Task<IActionResult> Add([FromBody] CustomerForManipulationDto customerDtoForManipulation)
         {
-            var result = _customerService.Add(customerDtoForManipulation);
+            var result = await _customerService.AddAsync(customerDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -31,9 +31,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, CustomerForManipulationDto customerDtoForManipulation)
+        public async Task<IActionResult> Update(int id, CustomerForManipulationDto customerDtoForManipulation)
         {
-            var result = _customerService.Update(id, customerDtoForManipulation, false);
+            var result = await _customerService.UpdateAsync(id, customerDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -43,9 +43,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _customerService.Delete(id, false);
+            var result = await _customerService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -55,9 +55,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _customerService.GetById(id, false);
+            var result = await _customerService.GetByIdAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -67,9 +67,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll(CustomerParamaters customerParameters)
+        public async Task<IActionResult> GetAll(CustomerParamaters customerParameters)
         {
-            var pagedResult = _customerService.GetAll(customerParameters, false);
+            var pagedResult = await _customerService.GetAllAsync(customerParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));

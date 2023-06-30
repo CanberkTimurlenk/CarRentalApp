@@ -20,9 +20,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(CartItemForManipulationDto cartItemDtoForManipulation)
+        public async Task<IActionResult> Add(CartItemForManipulationDto cartItemDtoForManipulation)
         {
-            var result = _cartItemService.Add(cartItemDtoForManipulation);
+            var result = await _cartItemService.AddAsync(cartItemDtoForManipulation);
 
             if (result.Success)
                 return Ok(result);
@@ -32,9 +32,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(int id, CartItemForManipulationDto cartItemDtoForManipulation)
+        public async Task<IActionResult> Update(int id, CartItemForManipulationDto cartItemDtoForManipulation)
         {
-            var result = _cartItemService.Update(id, cartItemDtoForManipulation, false);
+            var result = await _cartItemService.UpdateAsync(id, cartItemDtoForManipulation, false);
 
             if (result.Success)
                 return Ok(result);
@@ -44,9 +44,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _cartItemService.Delete(id, false);
+            var result = await _cartItemService.DeleteAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -56,9 +56,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _cartItemService.GetById(id, false);
+            var result = await _cartItemService.GetByIdAsync(id, false);
 
             if (result.Success)
                 return Ok(result);
@@ -68,9 +68,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        public IActionResult GetAll([FromQuery] CartItemParameters cartItemParameters)
+        public async Task<IActionResult> GetAll([FromQuery] CartItemParameters cartItemParameters)
         {
-            var pagedResult = _cartItemService.GetAll(cartItemParameters, false);
+            var pagedResult = await _cartItemService.GetAllAsync(cartItemParameters, false);
 
             Response.Headers
                     .Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
