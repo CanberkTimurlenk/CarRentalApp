@@ -48,12 +48,8 @@ namespace DataAccess.RepositoryManager
         public IRentalDal Rental => _rentalDal;
         public IUserDal User => _userDal;
 
-        public void Save()
-        {
-            _context.SaveChanges();
-            
+        public async Task SaveAsync() => await _context.SaveChangesAsync();
 
-        }
 
     }
 }

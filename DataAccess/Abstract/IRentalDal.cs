@@ -9,9 +9,9 @@ namespace DataAccess.Abstract
 {
     public interface IRentalDal : IRepositoryBase<Rental>
     {
-        PagedList<Rental> GetAllWithSorting(RentalParameters rentalParameters, bool trackChanges);
-        PagedList<RentalDetailDto> GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges);
-        PagedList<RentalDetailDto> GetAllRentalDetailsByCondition(Expression<Func<RentalDetailDto, bool>> filter, RentalParameters rentalParameters, bool trackChanges);
+        Task<PagedList<Rental>> GetAllWithSorting(RentalParameters rentalParameters, bool trackChanges);
+        Task<PagedList<RentalDetailDto>> GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges);
+        Task<PagedList<RentalDetailDto>> GetAllRentalDetailsByCondition(Expression<Func<RentalDetailDto, bool>> filter, RentalParameters rentalParameters, bool trackChanges);
 
     }
 }

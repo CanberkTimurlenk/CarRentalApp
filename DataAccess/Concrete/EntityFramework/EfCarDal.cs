@@ -19,28 +19,23 @@ namespace DataAccess.Concrete.EntityFramework
 
         }
         
-        public PagedList<Car> GetAllWithSorting(CarParameters carParamaters, bool trackChanges)
+        public async Task<PagedList<Car>> GetAllWithSorting(CarParameters carParamaters, bool trackChanges)
         {
-            var query = GetAllAsQueryable(trackChanges).Sort(carParamaters.OrderBy);
+            var query = await GetAllAsQueryable(trackChanges).Sort(carParamaters.OrderBy).ToListAsync();
 
             return PagedList<Car>.ToPagedList(query, carParamaters.PageNumber, carParamaters.PageSize);
         }         
-        public PagedList<CarDetailDto> GetAllCarDetails(CarParameters carParamaters, bool trackChanges)
+        public async Task<PagedList<CarDetailDto>> GetAllCarDetails(CarParameters carParamaters, bool trackChanges)
         {
-            var carDetails = GetAllCarDetailsAsQueryable(carParamaters, trackChanges);
-
-            
-            
+            var carDetails = await GetAllCarDetailsAsQueryable(carParamaters, trackChanges).ToListAsync();
 
             return PagedList<CarDetailDto>
                     .ToPagedList(carDetails, carParamaters.PageNumber, carParamaters.PageSize);
 
-            
-
         }
-        public PagedList<CarDetailDto> GetAllCarDetailsByCondition(Expression<Func<CarDetailDto, bool>> filter, CarParameters carParamaters, bool trackChanges)
+        public async Task<PagedList<CarDetailDto>> GetAllCarDetailsByCondition(Expression<Func<CarDetailDto, bool>> filter, CarParameters carParamaters, bool trackChanges)
         {
-            var carDetails = GetAllCarDetailsAsQueryable(carParamaters, trackChanges).Where(filter);
+            var carDetails = await GetAllCarDetailsAsQueryable(carParamaters, trackChanges).Where(filter).ToListAsync();
 
             return PagedList<CarDetailDto>
                     .ToPagedList(carDetails, carParamaters.PageNumber, carParamaters.PageSize);

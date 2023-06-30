@@ -18,17 +18,17 @@ namespace DataAccess.Concrete.EntityFramework
 
         }
 
-        public PagedList<CartItemDetailDto> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges)
+        public async Task<PagedList<CartItemDetailDto>> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemDetails = GetAllCartItemDetailsAsQueryable(trackChanges);
+            var cartItemDetails = await GetAllCartItemDetailsAsQueryable(trackChanges).ToListAsync();
 
             return PagedList<CartItemDetailDto>
                     .ToPagedList(cartItemDetails, cartItemParameters.PageNumber, cartItemParameters.PageSize);
 
         }
-        public PagedList<CartItemDetailDto> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges)
+        public async Task<PagedList<CartItemDetailDto>> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges)
         {
-            var cartItemDetails = GetAllCartItemDetailsAsQueryable(trackChanges).Where(filter);
+            var cartItemDetails = await GetAllCartItemDetailsAsQueryable(trackChanges).Where(filter).ToListAsync();
 
             return PagedList<CartItemDetailDto>
                     .ToPagedList(cartItemDetails, cartItemParameters.PageNumber, cartItemParameters.PageSize);

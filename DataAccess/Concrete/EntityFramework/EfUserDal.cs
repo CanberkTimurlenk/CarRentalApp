@@ -27,7 +27,7 @@ namespace DataAccess.Concrete.EntityFramework
             
         }
 
-        public IEnumerable<OperationClaim> GetOperationClaims(User user)
+        public async Task<IEnumerable<OperationClaim>> GetOperationClaims(User user)
         {
             var operationClaims = _context.Set<OperationClaim>();
             var userOperationClaims = _context.Set<UserOperationClaim>();
@@ -41,7 +41,7 @@ namespace DataAccess.Concrete.EntityFramework
                          where userOperationClaim.UserId == user.Id
                          select new OperationClaim { Id = operationClaim.Id, OperationClaimName = operationClaim.OperationClaimName };
 
-            return result.ToList();
+            return await result.ToListAsync();
 
         }
     }

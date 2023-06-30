@@ -12,6 +12,6 @@ namespace DataAccess.Abstract
 {
     public interface IUserDal : IRepositoryBase<User>
     {
-        IEnumerable<OperationClaim> GetOperationClaims(User user);
+        Task<IEnumerable<OperationClaim>> GetOperationClaims(User user);
     }
 }

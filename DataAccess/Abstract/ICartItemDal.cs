@@ -9,7 +9,7 @@ namespace DataAccess.Abstract
 {
     public interface ICartItemDal : IRepositoryBase<CartItem>
     {
-        PagedList<CartItemDetailDto> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges);
-        PagedList<CartItemDetailDto> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges);
+        Task<PagedList<CartItemDetailDto>> GetAllCartItemDetails(CartItemParameters cartItemParameters, bool trackChanges);
+        Task<PagedList<CartItemDetailDto>> GetAllCartItemDetailsByCondition(Expression<Func<CartItemDetailDto, bool>> filter, CartItemParameters cartItemParameters, bool trackChanges);
     }
 }

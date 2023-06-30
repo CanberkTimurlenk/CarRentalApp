@@ -18,23 +18,23 @@ namespace DataAccess.Concrete.EntityFramework
 
         }
 
-        public PagedList<Rental> GetAllWithSorting(RentalParameters rentalParameters, bool trackChanges)
+        public async Task<PagedList<Rental>> GetAllWithSorting(RentalParameters rentalParameters, bool trackChanges)
         {
-            var query = GetAllAsQueryable(trackChanges).Sort(rentalParameters.OrderBy);
+            var query = await GetAllAsQueryable(trackChanges).Sort(rentalParameters.OrderBy).ToListAsync();
 
             return PagedList<Rental>.ToPagedList(query, rentalParameters.PageNumber, rentalParameters.PageSize);
         }
-        public PagedList<RentalDetailDto> GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges)
+        public async Task<PagedList<RentalDetailDto>> GetAllRentalDetails(RentalParameters rentalParameters, bool trackChanges)
         {
-            var rentalDetails = GetAllRentalDetailsAsQueryable(rentalParameters, trackChanges);
+            var rentalDetails = await GetAllRentalDetailsAsQueryable(rentalParameters, trackChanges).ToListAsync();
 
             return PagedList<RentalDetailDto>
                     .ToPagedList(rentalDetails, rentalParameters.PageNumber, rentalParameters.PageSize);
 
         }
-        public PagedList<RentalDetailDto> GetAllRentalDetailsByCondition(Expression<Func<RentalDetailDto, bool>> filter, RentalParameters rentalParameters, bool trackChanges)
+        public async Task<PagedList<RentalDetailDto>> GetAllRentalDetailsByCondition(Expression<Func<RentalDetailDto, bool>> filter, RentalParameters rentalParameters, bool trackChanges)
         {
-            var rentalDetails = GetAllRentalDetailsAsQueryable(rentalParameters, trackChanges).Where(filter);
+            var rentalDetails = await GetAllRentalDetailsAsQueryable(rentalParameters, trackChanges).Where(filter).ToListAsync();
 
             return PagedList<RentalDetailDto>
                     .ToPagedList(rentalDetails, rentalParameters.PageNumber, rentalParameters.PageSize);

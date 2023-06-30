@@ -16,7 +16,7 @@ namespace DataAccess.Abstract.RepositoryManager
         ICustomerDal Customer { get; }
         IRentalDal Rental { get; }
         IUserDal User { get; }        
-        void Save();
+        Task SaveAsync();
 
     }
 }

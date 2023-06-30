@@ -8,49 +8,49 @@ namespace Core.DataAccess.EntityFramework
 {
     public class EfEntityRepositoryBase<TEntity> : IRepositoryBase<TEntity>
         where TEntity : class, IEntity, new()
-        
+
     {
         protected DbContext _context;
         public EfEntityRepositoryBase(DbContext context)
         {
-            _context = context;            
+            _context = context;
         }
 
-        public void Add(TEntity entity) => _context.Set<TEntity>().Add(entity);
+        public async Task AddAsync(TEntity entity) => await _context.Set<TEntity>().AddAsync(entity);
         public void Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);
         public void Update(TEntity entity) => _context.Set<TEntity>().Update(entity);
-       
-        public TEntity Get(Expression<Func<TEntity, bool>> filter, bool trackChanges)
-            => GetAllAsQueryable(trackChanges).SingleOrDefault(filter);
-               
-        public PagedList<TEntity> GetAll(RequestParameters requestParameters, bool trackChanges)
+
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter, bool trackChanges)
+            => await GetAllAsQueryable(trackChanges).SingleOrDefaultAsync(filter);
+
+        public async Task<PagedList<TEntity>> GetAllAsync(RequestParameters requestParameters, bool trackChanges)
         {
-            var query = GetAllAsQueryable(trackChanges);
+            var query = await GetAllAsQueryable(trackChanges).ToListAsync();
 
             return PagedList<TEntity>.ToPagedList(query, requestParameters.PageNumber, requestParameters.PageSize);
         }
 
-        public PagedList<TEntity> GetAllByCondition(Expression<Func<TEntity, bool>> filter, RequestParameters requestParameters, bool trackChanges)
+        public async Task<PagedList<TEntity>> GetAllByConditionAsync(Expression<Func<TEntity, bool>> filter, RequestParameters requestParameters, bool trackChanges)
 
         {
-            var query = GetAllByConditionAsQueryable(filter, trackChanges);
+            var query = await GetAllByConditionAsQueryable(filter, trackChanges).ToListAsync();
 
             return PagedList<TEntity>.ToPagedList(query, requestParameters.PageNumber, requestParameters.PageSize);
         }
-        
-        
-        public IEnumerable<TEntity> GetAllAsEnumerable(bool trackChanges)
-            => GetAllAsQueryable(trackChanges);                
-        public IEnumerable<TEntity> GetAllByConditionAsEnumerable(Expression<Func<TEntity, bool>> filter, bool trackChanges)
-            => GetAllByConditionAsQueryable(filter,trackChanges);
-        
+
+
+        public async Task<IEnumerable<TEntity>> GetAllAsEnumerableAsync(bool trackChanges)
+            => await GetAllAsQueryable(trackChanges).ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetAllByConditionAsEnumerableAsync(Expression<Func<TEntity, bool>> filter, bool trackChanges)
+            => await GetAllByConditionAsQueryable(filter, trackChanges).ToListAsync();
+
 
         protected IQueryable<TEntity> GetAllAsQueryable(bool trackChanges)
-            =>  !trackChanges
+            => !trackChanges
                 ? _context.Set<TEntity>().AsNoTracking()
                 : _context.Set<TEntity>();
         protected IQueryable<TEntity> GetAllByConditionAsQueryable(Expression<Func<TEntity, bool>> filter, bool trackChanges)
-            => GetAllAsQueryable(trackChanges).Where(filter);       
+            => GetAllAsQueryable(trackChanges).Where(filter);
 
     }
 }

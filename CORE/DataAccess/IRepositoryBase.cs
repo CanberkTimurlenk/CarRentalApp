@@ -9,12 +9,12 @@ namespace Core.DataAccess
             where TEntity : class, IEntity, new()
 
     {
-        PagedList<TEntity> GetAll(RequestParameters requestParameters, bool trackChanges);
-        PagedList<TEntity> GetAllByCondition(Expression<Func<TEntity, bool>> filter, RequestParameters requestParameters, bool trackChanges);
-        IEnumerable<TEntity> GetAllAsEnumerable(bool trackChanges);
-        IEnumerable<TEntity> GetAllByConditionAsEnumerable(Expression<Func<TEntity, bool>> filter, bool trackChanges);
-        TEntity Get(Expression<Func<TEntity, bool>> filter, bool trackChanges);
-        void Add(TEntity entity);
+        Task<PagedList<TEntity>> GetAllAsync(RequestParameters requestParameters, bool trackChanges);
+        Task<PagedList<TEntity>> GetAllByConditionAsync(Expression<Func<TEntity, bool>> filter, RequestParameters requestParameters, bool trackChanges);
+        Task<IEnumerable<TEntity>> GetAllAsEnumerableAsync(bool trackChanges);
+        Task<IEnumerable<TEntity>> GetAllByConditionAsEnumerableAsync(Expression<Func<TEntity, bool>> filter, bool trackChanges);
+        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter, bool trackChanges);
+        Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
 
