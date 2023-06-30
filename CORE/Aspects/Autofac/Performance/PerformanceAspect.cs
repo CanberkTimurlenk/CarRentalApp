@@ -32,8 +32,8 @@ namespace Core.Aspects.Autofac.Performance
         {
             if (_stopwatch.Elapsed.TotalSeconds > _interval)
             {
-                Debug.WriteLine($"Performance : {invocation.Method.DeclaringType.FullName}.{invocation.Method.Name}-->{_stopwatch.Elapsed.TotalSeconds}");
-                Debug.WriteLine("Yeter");
+                Debug.WriteLine($"Performance : {invocation.Method.DeclaringType.Name}.{invocation.Method.Name}-->{_stopwatch.Elapsed.TotalSeconds}");
+                Debug.WriteLine("Time Limit Exceed!!");
             }
             _stopwatch.Reset();
         }

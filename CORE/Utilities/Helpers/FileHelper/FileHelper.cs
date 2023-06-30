@@ -14,7 +14,7 @@ namespace Core.Utilities.Helpers.FileHelper
 {
     public class FileHelper : IFileHelper
     {
-        public IDataResult<string> UploadFile(IFormFile uploadedFile, string root)
+        public async Task<IDataResult<string>> UploadFile(IFormFile uploadedFile, string root)
         {
             //
             // Summary:
@@ -25,12 +25,7 @@ namespace Core.Utilities.Helpers.FileHelper
             {
 
                 if (!Directory.Exists(root))
-                {
-
                     Directory.CreateDirectory(root);  // create directory if it is not exists
-
-
-                }
 
                 string extension;
                 string guid;
@@ -43,11 +38,10 @@ namespace Core.Utilities.Helpers.FileHelper
 
                 using (FileStream fileStream = File.Create(Path.Combine(root, relativeFilepath)))
                 {
-                    uploadedFile.CopyTo(fileStream);
-                    fileStream.Flush();
-
-
+                    await uploadedFile.CopyToAsync(fileStream);
+                    await fileStream.FlushAsync(); 
                 }
+
                 return new SuccessDataResult<string>(relativeFilepath,FileHelperMessages.FileUploaded);    // has two string parameter, indicate call with data
             }
 
@@ -67,16 +61,12 @@ namespace Core.Utilities.Helpers.FileHelper
 
                 return new SuccessResult(FileHelperMessages.FileDeleted);
 
-
-
             }
 
             return new ErrorResult(FileHelperMessages.FileNotExist);
 
-
-
         }
-        public IDataResult<string> UpdateFile(IFormFile newFile, string oldFileAbsoluteFilepath)
+        public async Task<IDataResult<string>> UpdateFile(IFormFile newFile, string oldFileAbsoluteFilepath)
         {
             //
             // Summary:
@@ -88,11 +78,12 @@ namespace Core.Utilities.Helpers.FileHelper
                 var newFilePath = Path.GetDirectoryName(oldFileAbsoluteFilepath) ;
 
                 File.Delete(oldFileAbsoluteFilepath);
-                
 
-                var result = UploadFile(newFile, newFilePath).Data;
 
-                return new SuccessDataResult<string>(result,FileHelperMessages.FileUpdated);
+                var result = await UploadFile(newFile, newFilePath);
+
+
+                return new SuccessDataResult<string>(result.Data,FileHelperMessages.FileUpdated);
 
 
             }

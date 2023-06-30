@@ -10,9 +10,9 @@ namespace Core.Utilities.Helpers.FileHelper
 {
     public interface IFileHelper
     {
-        IDataResult<string> UploadFile(IFormFile uploadedFile, string root);
+        Task<IDataResult<string>> UploadFile(IFormFile uploadedFile, string root);
         IResult DeleteFile(string deletedFileAbsoluteFilepath);
-        IDataResult<string> UpdateFile (IFormFile newFile, string oldFileAbsoluteFilepath);
+        Task<IDataResult<string>> UpdateFile(IFormFile newFile, string oldFileAbsoluteFilepath);
 
     }
 }
