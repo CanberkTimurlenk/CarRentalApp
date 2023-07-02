@@ -22,7 +22,7 @@ Richardson API Maturity Level : 2 out of 3 (Multiple URIs Based Resources and Mu
 <br>
 
 
-* ## To Accomplish the Task Requriements
+* ## To Accomplish the Task Requirements
 
 
 Result Types
