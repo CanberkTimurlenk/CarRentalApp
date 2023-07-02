@@ -10,6 +10,8 @@ The project includes improvements made by myself along with the project requirem
 
 The development of the backend side of a car rental website on ASP.NET Core Web API along with the features and technologies specified  below
 
+Richardson API Maturity Level : 2 out of 3 (Multiple URIs Based Resources and Multiple HTTP Verbs)
+
 <br>
 <br>
 
@@ -20,8 +22,6 @@ The development of the backend side of a car rental website on ASP.NET Core Web 
 
 
 * ## To Accomplish the Task Requriements
-
-Richardson API Maturity Level : 2 out of 3 (Multiple URIs Based Resources and Multiple HTTP Verbs)
 
 
 Result Types
