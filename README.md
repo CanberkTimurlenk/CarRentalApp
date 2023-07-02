@@ -12,6 +12,7 @@ The development of the backend side of a car rental website on ASP.NET Core Web 
 
 Richardson API Maturity Level : 2 out of 3 (Multiple URIs Based Resources and Multiple HTTP Verbs)
 
+
 <br>
 <br>
 
@@ -43,6 +44,8 @@ Global Exception Handling,
 JWT Access Token (Refresh Token Feature was also added by me)
 
 Repository Design Pattern Implementation
+
+RESTful API Design
 
 <br> 
 
