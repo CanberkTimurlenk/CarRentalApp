@@ -36,10 +36,12 @@ Fluent Validation
 Entity Framework
 
 Aspect Oriented Programming Support
-•	Validation, Cache, Performance, Transaction, Authorization Aspects Included
+
+* Validation, Cache, Performance, Transaction, Authorization Aspects Included
 
 Global Exception Handling, 
-•	Custom Exceptions could be added by selecting one of the HTTP status Codes
+
+* Custom Exceptions could be added by selecting one of the HTTP status Codes
 
 JWT Access Token (Refresh Token Feature was also added by me)
 
@@ -71,4 +73,4 @@ Paginated Response Support
 
   This helps reduce the load on the server, decrease network traffic, and allows for faster responses on the client side.
 
-  API supports to generation of paginated responses. PageSize and Current Page could be set via query string. Generated responses has also a header that named "X-Pagination" that include information about pagination applied.
+  API supports to generation of paginated responses. PageSize and Current Page could be set via query string. Generated responses has also a header named "X-Pagination" which includes information about pagination applied.
