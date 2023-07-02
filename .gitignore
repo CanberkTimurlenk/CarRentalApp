@@ -100,7 +100,8 @@ StyleCopReport.xml
 
 # img
 *.jpg
-.png
+*.jpeg
+*.png
 img/
 
 # Chutzpah Test files

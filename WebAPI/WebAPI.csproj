@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="Formatter\" />
+    <Folder Include="wwwroot\Uploads\Images\CarImages\" />
   </ItemGroup>
 
 </Project>
