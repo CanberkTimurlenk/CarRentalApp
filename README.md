@@ -27,7 +27,7 @@ Richardson API Maturity Level : 2 out of 3 (Multiple URIs Based Resources and Mu
 
 Result Types
 
-* Service Methods could returns a custom type which could include success Flag, message and if existed also data could be returnable from the service methods
+* Service Methods could returns a custom type which could include success flag, message and if existed also data could be returnable from the service methods
 
 Autofac IOC Container
 
@@ -71,4 +71,4 @@ Paginated Response Support
 
   This helps reduce the load on the server, decrease network traffic, and allows for faster responses on the client side.
 
-  API supports to generation of paginated responses. PageSize and Current Page could be set by query string. Generated responses has also a header that named "X-Pagination" that include information about pagination applied.
+  API supports to generation of paginated responses. PageSize and Current Page could be set via query string. Generated responses has also a header that named "X-Pagination" that include information about pagination applied.
