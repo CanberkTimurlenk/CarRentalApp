@@ -27,7 +27,7 @@ Richardson API Maturity Level : 2 out of 3 (Multiple URIs Based Resources and Mu
 
 Result Types
 
-* Service Methods could returns a custom type which could include success flag, message and if existed also data could be returnable from the service methods
+* Service Methods could returns a custom type which could include success flag, message and if existed also could be returned from the service methods
 
 Autofac IOC Container
 
